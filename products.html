@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Products - People Plus Network</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #ffd700 !important;
+        }
+        
+        .btn-join {
+            background: #ffd700;
+            color: #333 !important;
+            border-radius: 50px;
+            padding: 8px 25px !important;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .product-card .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .product-card .mrp {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .btn-add-cart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            width: 100%;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar h4 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .category-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .category-list li {
+            margin-bottom: 10px;
+        }
+        
+        .category-list a {
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .category-list a:hover {
+            color: #667eea;
+            padding-left: 5px;
+        }
+        
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> PEOPLE PLUS NETWORK</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon bg-white rounded"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html">Products</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
+                </li>
+                                
+                <li class="nav-item">
+                    <a class="nav-link btn-join" href="register.html"><i class="fas fa-user-plus"></i> Join Now</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1 class="fw-bold">OUR PRODUCTS</h1>
+        <p class="lead">High quality products for better life</p>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="container my-5">
+    <!-- Top Filter & Category Bar -->
+    <div class="row mb-4 align-items-center">
+        <!-- Sort By Dropdown -->
+        <div class="col-md-3 mb-3 mb-md-0">
+            <label class="fw-bold mb-2">Refine</label>
+            <select class="form-select border-primary shadow-sm">
+                <option value="relevance">Sort by: Relevance</option>
+                <option value="popularity">Sort by: Popularity</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Newest First</option>
+            </select>
+        </div>
+        
+        <!-- Horizontal Categories with Images -->
+        <div class="col-md-9">
+            <div class="d-flex overflow-auto gap-3 pb-2" style="scrollbar-width: thin;">
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/667eea/ffffff?text=All" class="rounded-circle mb-2" alt="All">
+                    <h6 class="text-dark small m-0 fw-bold">All Products</h6>
+                </a>
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/11998e/ffffff?text=Health" class="rounded-circle mb-2" alt="Health">
+                    <h6 class="text-dark small m-0 fw-bold">Health Sup.</h6>
+                </a>
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/ff9900/ffffff?text=Ayur" class="rounded-circle mb-2" alt="Ayur">
+                    <h6 class="text-dark small m-0 fw-bold">Ayurvedic</h6>
+                </a>
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/764ba2/ffffff?text=Teas" class="rounded-circle mb-2" alt="Teas">
+                    <h6 class="text-dark small m-0 fw-bold">Herbal Teas</h6>
+                </a>
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/e83e8c/ffffff?text=Skin" class="rounded-circle mb-2" alt="Skin">
+                    <h6 class="text-dark small m-0 fw-bold">Skin Care</h6>
+                </a>
+                
+                <a href="#" class="text-decoration-none text-center bg-white p-2 rounded shadow-sm border" style="min-width: 120px; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="https://via.placeholder.com/60x60/28a745/ffffff?text=Nutri" class="rounded-circle mb-2" alt="Nutri">
+                    <h6 class="text-dark small m-0 fw-bold">Nutrition</h6>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/667eea/white?text=Ayurvedic+Protein" alt="Product">
+                        <div class="p-3">
+                            <h5>Ayurvedic Protein Powder</h5>
+                            <p class="price">₹999 <span class="mrp">₹1,499</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Ayurvedic Protein Powder', 999, 'https://via.placeholder.com/300x250/667eea/white?text=Ayurvedic+Protein')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/764ba2/white?text=Herbal+Tea" alt="Product">
+                        <div class="p-3">
+                            <h5>Herbal Immunity Tea</h5>
+                            <p class="price">₹599 <span class="mrp">₹999</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Herbal Immunity Tea', 599, 'https://via.placeholder.com/300x250/764ba2/white?text=Herbal+Tea')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/667eea/white?text=Skin+Cream" alt="Product">
+                        <div class="p-3">
+                            <h5>Organic Skin Cream</h5>
+                            <p class="price">₹799 <span class="mrp">₹1,299</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Organic Skin Cream', 799, 'https://via.placeholder.com/300x250/667eea/white?text=Skin+Cream')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/764ba2/white?text=Nutrition" alt="Product">
+                        <div class="p-3">
+                            <h5>Daily Nutrition Pack</h5>
+                            <p class="price">₹1499 <span class="mrp">₹2,499</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Daily Nutrition Pack', 1499, 'https://via.placeholder.com/300x250/764ba2/white?text=Nutrition')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/667eea/white?text=Aloe+Vera" alt="Product">
+                        <div class="p-3">
+                            <h5>Aloe Vera Juice</h5>
+                            <p class="price">₹499 <span class="mrp">₹799</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Aloe Vera Juice', 499, 'https://via.placeholder.com/300x250/667eea/white?text=Aloe+Vera')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/300x250/764ba2/white?text=Vitamin+C" alt="Product">
+                        <div class="p-3">
+                            <h5>Vitamin C Tablets</h5>
+                            <p class="price">₹349 <span class="mrp">₹599</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('Vitamin C Tablets', 349, 'https://via.placeholder.com/300x250/764ba2/white?text=Vitamin+C')"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <nav class="pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h4><i class="fas fa-users"></i> People Plus Network</h4>
+                <p>Build your future, empower lives. Join us and be a part of our growing network.</p>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Support</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Contact</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-phone"></i> +91 82357 72175</li>
+                    <li><i class="fas fa-envelope"></i> support@peopleplus.com</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center">
+            <p>&copy; 2024 People Plus Network. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    function updateCartCount() {
+        let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const countElem = document.getElementById('cartCount');
+        if (countElem) {
+            countElem.innerText = count;
+        }
+    }
+    
+    function addToCart(name, price, image) {
+        let existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ name, price, image, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        alert(name + " added to cart!");
+    }
+    
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+    <script src="auth-check.js"></script>
+</body>
+</html>

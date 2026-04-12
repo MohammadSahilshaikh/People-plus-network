@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - People Plus Network</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white !important;
+        }
+        .nav-link { color: white !important; }
+        
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .form-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .form-section h4 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+        .btn-place-order {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .payment-method {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method:hover, .payment-method.active {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> PEOPLE PLUS NETWORK</a>
+    </div>
+</nav>
+
+<div class="checkout-container">
+    <div class="row">
+        <div class="col-lg-7">
+            <!-- Delivery Address -->
+            <div class="form-section">
+                <h4><i class="fas fa-map-marker-alt"></i> Delivery Address</h4>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> First time? Please fill your address below. It will be saved for future purchases.
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Full Name *</label>
+                        <input type="text" class="form-control" placeholder="Enter full name">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Phone Number *</label>
+                        <input type="tel" class="form-control" placeholder="10-digit mobile number">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label>Address *</label>
+                        <input type="text" class="form-control" placeholder="House/Flat No., Building Name">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>City *</label>
+                        <input type="text" class="form-control" list="indiaCities" placeholder="City">
+                        <datalist id="indiaCities">
+                            <option value="Agra">
+                            <option value="Ahmedabad">
+                            <option value="Allahabad">
+                            <option value="Amritsar">
+                            <option value="Aurangabad">
+                            <option value="Bangalore">
+                            <option value="Bhopal">
+                            <option value="Bhubaneswar">
+                            <option value="Chandigarh">
+                            <option value="Chennai">
+                            <option value="Coimbatore">
+                            <option value="Darbhanga">
+                            <option value="Dehradun">
+                            <option value="Delhi">
+                            <option value="Faridabad">
+                            <option value="Ghaziabad">
+                            <option value="Guwahati">
+                            <option value="Hyderabad">
+                            <option value="Indore">
+                            <option value="Jaipur">
+                            <option value="Jodhpur">
+                            <option value="Kanpur">
+                            <option value="Kochi">
+                            <option value="Kolkata">
+                            <option value="Lucknow">
+                            <option value="Ludhiana">
+                            <option value="Madurai">
+                            <option value="Meerut">
+                            <option value="Mumbai">
+                            <option value="Mysore">
+                            <option value="Nagpur">
+                            <option value="Nashik">
+                            <option value="Patna">
+                            <option value="Pune">
+                            <option value="Raipur">
+                            <option value="Rajkot">
+                            <option value="Ranchi">
+                            <option value="Surat">
+                            <option value="Thiruvananthapuram">
+                            <option value="Varanasi">
+                            <option value="Visakhapatnam">
+                        </datalist>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>State *</label>
+                        <select class="form-select">
+                            <option value="">Select State</option>
+                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                            <option value="Daman and Diu">Daman and Diu</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Ladakh">Ladakh</option>
+                            <option value="Lakshadweep">Lakshadweep</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Puducherry">Puducherry</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Pincode *</label>
+                        <input type="text" class="form-control" placeholder="Pincode">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="saveAddress">
+                            <label class="form-check-label" for="saveAddress">Save this address for future purchases</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Method -->
+            <div class="form-section">
+                <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
+                <div class="payment-method active">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="payment" id="razorpay" checked>
+                        <label class="form-check-label" for="razorpay">
+                            <strong>Razorpay</strong> - Credit/Debit Card, UPI, Netbanking
+                        </label>
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="payment" id="cod">
+                        <label class="form-check-label" for="cod">
+                            <strong>Cash on Delivery</strong> - Pay when you receive
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-5">
+            <div class="order-summary">
+                <h4>Order Summary</h4>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Ayurvedic Protein Powder × 1</span><span>₹999</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Herbal Immunity Tea × 2</span><span>₹1,198</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Organic Skin Cream × 1</span><span>₹799</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span><span>₹2,996</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Shipping</span><span>₹50</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>GST</span><span>₹180</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4">
+                    <strong>Total Amount</strong><strong class="text-primary fs-4">₹3,226</strong>
+                </div>
+                
+                <!-- Commission Info -->
+                <div class="alert alert-success small">
+                    <i class="fas fa-gift"></i> You will earn <strong>10% commission (₹322)</strong> on your own purchase!
+                </div>
+                
+                <button class="btn-place-order" onclick="processOrder()">
+                    <i class="fas fa-lock"></i> Place Order & Pay
+                </button>
+                <p class="text-muted small text-center mt-3">
+                    <i class="fas fa-shield-alt"></i> Your payment information is secure
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container text-center">
+        <p>&copy; 2024 People Plus Network. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function() {
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Uncheck other radios to visually fix
+            document.querySelectorAll('input[name="payment"]').forEach(r => r.checked = false);
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+    
+    function processOrder() {
+        const btn = document.querySelector('.btn-place-order');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            alert('Payment Successful & Order Placed! Thank you for shopping with People Plus Network.');
+            window.location.href = 'user-dashboard.html';
+        }, 1500);
+    }
+</script>
+    <script src="auth-check.js"></script>
+</body>
+</html>

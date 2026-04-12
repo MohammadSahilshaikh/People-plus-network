@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - People Plus Network</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .otp-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .otp-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .otp-icon i { font-size: 2.5rem; color: white; }
+        .otp-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .otp-input {
+            width: 55px;
+            height: 55px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .otp-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+        }
+        .btn-verify {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 50px;
+            font-weight: 600;
+            width: 100%;
+        }
+        .timer-text { color: #667eea; font-weight: 600; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 480px) {
+            .otp-input { width: 45px; height: 45px; font-size: 1.2rem; }
+            .otp-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="otp-card">
+    <div class="otp-icon">
+        <i class="fas fa-mobile-alt"></i>
+    </div>
+    <h3>Verify Your Phone</h3>
+    <p class="text-muted">We've sent a 6-digit OTP to <br><strong>+91 98765 ****0</strong></p>
+    
+    <div class="otp-inputs">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 0)">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 1)">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 2)">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 3)">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 4)">
+        <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 5)">
+    </div>
+    
+    <button class="btn-verify" onclick="verifyOTP()">
+        <i class="fas fa-check-circle"></i> Verify & Continue
+    </button>
+    
+    <div class="mt-4">
+        <p class="text-muted">Didn't receive the code?</p>
+        <a href="#" id="resendLink" onclick="resendOTP(event)">Resend OTP</a>
+        <p class="timer-text mt-2" id="timer">00:30</p>
+    </div>
+</div>
+
+<script>
+    let timerInterval;
+    let timeLeft = 30;
+    
+    function startTimer() {
+        timerInterval = setInterval(function() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').innerHTML = 'Ready to resend';
+                document.getElementById('resendLink').style.pointerEvents = 'auto';
+            } else {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timer').innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timeLeft--;
+            }
+        }, 1000);
+    }
+    
+    function moveToNext(input, index) {
+        if (input.value.length === 1 && index < 5) {
+            document.querySelectorAll('.otp-input')[index + 1].focus();
+        }
+    }
+    
+    function verifyOTP() {
+        let otp = '';
+        document.querySelectorAll('.otp-input').forEach(input => { otp += input.value; });
+        if (otp.length === 6) {
+            alert('OTP Verified Successfully! Redirecting to dashboard...');
+            window.location.href = 'user-dashboard.html';
+        } else {
+            alert('Please enter complete 6-digit OTP');
+        }
+    }
+    
+    function resendOTP(event) {
+        event.preventDefault();
+        if (timeLeft <= 0) {
+            timeLeft = 30;
+            startTimer();
+            alert('OTP resent to your mobile number!');
+            document.getElementById('resendLink').style.pointerEvents = 'none';
+        }
+    }
+    
+    startTimer();
+    document.getElementById('resendLink').style.pointerEvents = 'none';
+</script>
+    <script src="auth-check.js"></script>
+</body>
+</html>

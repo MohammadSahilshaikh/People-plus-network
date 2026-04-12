@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - People Plus Network</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 260px;
+        }
+        .sidebar .brand { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8); padding: 12px 25px; margin: 5px 0;
+            border-radius: 10px; transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
+        .sidebar .nav-link i { width: 25px; margin-right: 10px; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: white; padding: 15px 20px; border-radius: 15px; margin-bottom: 25px; }
+        .orders-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .order-header { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .track-progress { display: flex; justify-content: space-between; margin: 20px 0; position: relative; }
+        .track-step { text-align: center; flex: 1; position: relative; }
+        .track-step .step-icon { width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; display: inline-flex; align-items: center; justify-content: center; }
+        .track-step.completed .step-icon { background: #28a745; color: white; }
+        .track-step.active .step-icon { background: #667eea; color: white; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="brand"><h3 class="d-flex align-items-center justify-content-center"><img src="site-logo.jpg" alt="People Plus" style="height: 40px; border-radius: 5px; margin-right: 10px; background: white; padding: 2px;"> PeoplePlus</h3><small>Member Dashboard</small></div>
+    <nav class="nav flex-column">
+        <a class="nav-link" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="user-genealogy.html"><i class="fas fa-tree"></i> Genealogy Tree</a>
+        <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
+        <a class="nav-link" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
+        <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdrawal</a>
+        <a class="nav-link active" href="user-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a>
+        <a class="nav-link" href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+        <hr class="bg-light"><a class="nav-link" href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+
+<div class="main-content">
+    <div class="top-navbar d-flex justify-content-between align-items-center">
+        <button class="btn btn-sm btn-outline-primary sidebar-toggle d-md-none"><i class="fas fa-bars"></i></button>
+        <h4 class="mb-0">My Orders</h4>
+        <div><span><i class="fas fa-user-circle fa-2x"></i></span></div>
+    </div>
+    
+    <div class="orders-card">
+        <div class="order-header d-flex justify-content-between align-items-center">
+            <div><strong>Order #ORD001</strong><br><small>Placed on: 2024-12-15</small></div>
+            <div><span class="badge bg-success">Delivered</span></div>
+            <div><strong>Total: ₹999</strong></div>
+        </div>
+        <div class="row">
+            <div class="col-3"><img src="https://via.placeholder.com/80x80/667eea/white?text=Product" class="rounded" width="80"></div>
+            <div class="col-6"><h6>Ayurvedic Protein Powder</h6><p class="text-muted small">Quantity: 1 | Price: ₹999</p></div>
+            <div class="col-3 text-end"><button class="btn btn-sm btn-outline-primary">Track Order</button><br><button class="btn btn-sm btn-link mt-1">Reorder</button></div>
+        </div>
+        <div class="track-progress mt-3">
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Shipped</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Delivered</div></div>
+        </div>
+    </div>
+    
+    <div class="orders-card">
+        <div class="order-header d-flex justify-content-between align-items-center">
+            <div><strong>Order #ORD002</strong><br><small>Placed on: 2024-12-10</small></div>
+            <div><span class="badge bg-warning">Processing</span></div>
+            <div><strong>Total: ₹1,298</strong></div>
+        </div>
+        <div class="row">
+            <div class="col-3"><img src="https://via.placeholder.com/80x80/764ba2/white?text=Product" class="rounded" width="80"></div>
+            <div class="col-9"><h6>Herbal Immunity Booster (2 items)</h6><p class="text-muted small">Quantity: 2 | Price: ₹599 each</p></div>
+        </div>
+        <div class="track-progress mt-3">
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
+            <div class="track-step active"><div class="step-icon"><i class="fas fa-spinner fa-spin"></i></div><div class="small">Confirmed</div></div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div></div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div></div>
+        </div>
+    </div>
+    
+    <div class="orders-card">
+        <div class="order-header d-flex justify-content-between align-items-center">
+            <div><strong>Order #ORD003</strong><br><small>Placed on: 2024-12-05</small></div>
+            <div><span class="badge bg-info">Shipped</span></div>
+            <div><strong>Total: ₹399</strong></div>
+        </div>
+        <div class="row"><div class="col-3"><img src="https://via.placeholder.com/80x80/11998e/white?text=Product" class="rounded" width="80"></div><div class="col-9"><h6>Organic Green Tea</h6><p class="text-muted small">Quantity: 1 | Price: ₹399</p></div></div>
+        <div class="track-progress mt-3">
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div></div>
+            <div class="track-step active"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div></div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('.sidebar-toggle')?.addEventListener('click', function() {
+        document.querySelector('.sidebar').classList.toggle('show');
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="auth-check.js"></script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - People Plus Network</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-container {
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .auth-header h2 {
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .nav-pills {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+            margin: 0 auto;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-pills .nav-link {
+            color: white;
+            border-radius: 50px;
+            padding: 8px 30px;
+            font-weight: 600;
+        }
+
+        .nav-pills .nav-link.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-body {
+            padding: 35px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            opacity: 0.9;
+        }
+
+        .home-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .home-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fas fa-users-cog fa-3x mb-3"></i>
+                <h2>Welcome to People Plus</h2>
+
+                <ul class="nav nav-pills" id="authTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="login-tab" data-bs-toggle="pill" data-bs-target="#login"
+                            type="button" role="tab">Login</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="register-tab" data-bs-toggle="pill" data-bs-target="#register"
+                            type="button" role="tab">Join Now</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="auth-body">
+                <div class="tab-content" id="authTabContent">
+
+                    <!-- Login Tab -->
+                    <div class="tab-pane fade fade-in" id="login" role="tabpanel">
+                        <form id="loginForm" autocomplete="off">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="loginEmail" autocomplete="off" placeholder="Enter your email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Password</label>
+                                <input type="password" id="loginPassword" autocomplete="new-password" placeholder="Enter your password" required>
+                            </div>
+
+                            <button type="submit" class="btn-auth">
+                                <i class="fas fa-sign-in-alt"></i> Login Securely
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Register Tab -->
+                    <div class="tab-pane fade show active fade-in" id="register" role="tabpanel">
+                        <form id="registerForm" autocomplete="off">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Full Name *</label>
+                                <input type="text" id="regName" autocomplete="off" placeholder="Enter your full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Email Address *</label>
+                                <input type="email" id="regEmail" autocomplete="off" placeholder="Enter your email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-phone"></i> Phone Number *</label>
+                                <input type="tel" id="regPhone" placeholder="10-digit mobile number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Password *</label>
+                                <input type="password" id="regPassword" autocomplete="new-password" placeholder="Create a strong password" required>
+                            </div>
+
+                            <div class="form-group border rounded p-3 text-center mb-3 payment-box">
+                                <label class="text-danger fw-bold"><i class="fas fa-qrcode"></i> Account Activation Fee:
+                                    ₹499</label>
+                                <p class="small text-muted mb-2">Scan the QR below with PhonePe, GPay, or Paytm to pay.
+                                </p>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=paytmqr2810050501011sq8k6p1f3k2@paytm" alt="Payment QR Code"
+                                    style="width: 160px; border-radius: 5px; border: 4px solid black; padding: 5px; background: white; margin-bottom: 10px;">
+
+                                <label class="text-start mt-2"><i class="fas fa-receipt"></i> Enter Transaction ID / UTR
+                                    No *</label>
+                                <input type="text" id="regTransactionId" placeholder="12-digit UTR Number" required>
+
+                                <label class="text-start mt-2"><i class="fas fa-rupee-sign"></i> Amount Paid *</label>
+                                <input type="number" id="regAmount" placeholder="Enter Amount (Must be 499)" required>
+
+                                <p class="small text-success mt-1 fw-bold">Verification is automatic! Fill correctly to
+                                    activate.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-user-friends"></i> Sponsor ID</label>
+                                <input type="text" placeholder="Enter sponsor ID (Optional)">
+                            </div>
+
+                            <button type="submit" class="btn-auth">
+                                <i class="fas fa-rocket"></i> Create Account
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="home-link">
+                    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Login Logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.error || 'Login failed');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred during login');
+            }
+        });
+
+        // Register Logic
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const transactionId = document.getElementById('regTransactionId').value;
+            const amount = document.getElementById('regAmount').value;
+
+            if (amount !== "499") {
+                return alert("Registration failed! You must pay exactly ₹499 to create an account.");
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, password, transactionId, amount })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Payment Verified! Account created successfully. Logging you in...');
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginPassword').value = password;
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                } else {
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred during registration');
+            }
+        });
+    </script>
+</body>
+
+</html>
