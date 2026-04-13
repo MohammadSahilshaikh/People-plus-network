@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,322 +11,624 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Custom Style -->
-    <link rel="stylesheet" href="style.css">
 
     <style>
-        /* Any page-specific overrides can go here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #ffd700 !important;
+        }
+
+        .btn-join {
+            background: #ffd700;
+            color: #333 !important;
+            border-radius: 50px;
+            padding: 8px 25px !important;
+        }
+
+        .btn-join:hover {
+            background: #ffed4a;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 100px 0;
             color: white;
             position: relative;
             overflow: hidden;
-            padding: 100px 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero .btn {
+            margin: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+        }
+
+        .hero .btn-primary {
+            background: #ffd700;
+            border: none;
+            color: #333;
+        }
+
+        .hero .btn-primary:hover, .hero .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Trust Badges */
+        .trust-badge {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .trust-badge:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .trust-badge i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .trust-badge h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* How It Works */
+        .step-card {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .step-icon.step1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .step-icon.step2 { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .step-icon.step3 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-card .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .product-card .mrp {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-add-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        /* Business Plan Section */
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .plan-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 0;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer .social-icons a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero h2 { font-size: 1.3rem; }
+            .hero { padding: 50px 0; }
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            margin-bottom: 40px;
         }
     </style>
 </head>
-
-
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo"
-                    style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                PEOPLE PLUS NETWORK</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon bg-white rounded bg-white rounded"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="products.html">Products</a>
-                    </li>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+            <img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            PEOPLE PLUS NETWORK
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon bg-white rounded"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 15px;">
+                            <img src="default-avatar.png" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3" aria-labelledby="userMenu">
+                            <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span
-                                id="cartCount" class="badge bg-danger">0</span></a>
-                    </li>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container text-center" style="position: relative; z-index: 10;">
+        <h1 class="fade-in-up">BUILD YOUR FUTURE</h1>
+        <h2 class="fade-in-up">EMPOWER LIVES</h2>
+        <p class="lead mb-4 fade-in-up">People Plus Network is more than a business, it's a movement. <br>Join us and be a part of our network and grow together.</p>
+        <div>
+            <a href="https://wa.me/qr/IG74VRFZSKIRN1" class="btn btn-whatsapp btn-lg">
+                <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a href="register.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus"></i> Join Now
+            </a>
+        </div>
+    </div>
+</section>
 
-                    <li class="nav-item">
-                        <a class="nav-link btn-join" href="register.html"><i class="fas fa-user-plus"></i> Join Now</a>
-                    </li>
+<!-- Trust Badges -->
+<section class="container my-5 py-4">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="trust-badge fade-in-up">
+                <i class="fas fa-truck-fast"></i>
+                <h5>Fast Delivery</h5>
+                <p class="text-muted">Curated products delivered to your doorstep</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="trust-badge fade-in-up">
+                <i class="fas fa-medal"></i>
+                <h5>Quality Guaranteed</h5>
+                <p class="text-muted">7-day replacement warranty</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="trust-badge fade-in-up">
+                <i class="fas fa-headset"></i>
+                <h5>Expert Support</h5>
+                <p class="text-muted">Lifetime support from our experts</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">HOW IT WORKS</h2>
+        <p class="section-subtitle">Simple plan. Unlimited possibilities.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="register.html" style="text-decoration:none; color:inherit; display:block;">
+                <div class="step-card">
+                    <div class="step-icon step1">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4>1. JOIN</h4>
+                    <p class="text-muted">Become a member with a simple registration</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="step-card">
+                <div class="step-icon step2">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>2. BUILD</h4>
+                <p class="text-muted">Build your team and help others grow</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="step-card">
+                <div class="step-icon step3">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h4>3. EARN</h4>
+                <p class="text-muted">Earn unlimited income from multiple sources</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">OUR PRODUCTS</h2>
+        <a href="products.html" class="btn btn-outline-primary">View All Products →</a>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250/667eea/white?text=Product+1" alt="Product">
+                <div class="p-3">
+                    <h5>Ayurvedic Protein</h5>
+                    <p class="price">₹999 <span class="mrp">₹1,499</span></p>
+                    <button class="btn-add-cart" onclick="addToCart('Ayurvedic Protein', 999, 'https://via.placeholder.com/300x250/667eea/white?text=Product+1')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250/764ba2/white?text=Product+2" alt="Product">
+                <div class="p-3">
+                    <h5>Herbal Tea</h5>
+                    <p class="price">₹599 <span class="mrp">₹999</span></p>
+                    <button class="btn-add-cart" onclick="addToCart('Herbal Tea', 599, 'https://via.placeholder.com/300x250/764ba2/white?text=Product+2')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250/667eea/white?text=Product+3" alt="Product">
+                <div class="p-3">
+                    <h5>Skin Care Cream</h5>
+                    <p class="price">₹799 <span class="mrp">₹1,299</span></p>
+                    <button class="btn-add-cart" onclick="addToCart('Skin Care Cream', 799, 'https://via.placeholder.com/300x250/667eea/white?text=Product+3')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250/764ba2/white?text=Product+4" alt="Product">
+                <div class="p-3">
+                    <h5>Nutrition Supplement</h5>
+                    <p class="price">₹1499 <span class="mrp">₹2,499</span></p>
+                    <button class="btn-add-cart" onclick="addToCart('Nutrition Supplement', 1499, 'https://via.placeholder.com/300x250/764ba2/white?text=Product+4')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Business Plan Section -->
+<section class="bg-light py-5 my-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">OUR BUSINESS PLAN</h2>
+            <p class="section-subtitle">SIMPLE PLAN. UNLIMITED POSSIBILITIES.</p>
+            <p class="text-primary fw-bold fs-5">EARN LUCRATIVE INCOME THROUGH OUR WELL-STRUCTURED COMPENSATION PLAN</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="plan-card">
+                    <i class="fas fa-chart-line text-primary"></i>
+                    <h4>Binary Plan</h4>
+                    <p>Earn commission from your weaker leg volume. Build two legs - left and right.</p>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fas fa-check-circle text-success"></i> 10% commission on weaker leg</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Unlimited depth</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Daily payouts</li>
+                        <li><i class="fas fa-check-circle text-success"></i> No monthly maintenance</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="plan-card">
+                    <i class="fas fa-trophy text-warning"></i>
+                    <h4>Rank Benefits</h4>
+                    <p>Achieve ranks and unlock higher commissions and bonuses.</p>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fas fa-check-circle text-success"></i> Bronze: 5% matching bonus</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Silver: 10% matching bonus</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Gold: 15% matching bonus</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Platinum: Car fund + 20% bonus</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h3 class="fw-bold">START YOUR JOURNEY TODAY</h3>
+        <p class="lead mb-4">Join thousands of successful people and build your dreams with People Plus Network</p>
+        <a href="register.html" class="btn btn-warning btn-lg text-dark fw-bold px-5">
+            <i class="fas fa-rocket"></i> Join Now - It's Free!
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h4><i class="fas fa-users"></i> People Plus Network</h4>
+                <p>Build your future, empower lives. Join us and be a part of our growing network.</p>
+                <div class="social-icons mt-3">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/qr/IG74VRFZSKIRN1"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Support</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-phone"></i> +91 82357 72175</li>
+                    <li><i class="fas fa-envelope"></i> support@peopleplus.com</li>
+                    <li><i class="fab fa-whatsapp"></i> Chat on WhatsApp</li>
                 </ul>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container text-center fade-in-up" style="position: relative; z-index: 10;">
-            <h1>BUILD YOUR FUTURE</h1>
-            <h2 class="display-6 mb-4">EMPOWER LIVES</h2>
-            <p class="lead mb-4">People Plus Network is more than a business, it's a movement. Join us and be a part of
-                our network and grow together.</p>
-            <div>
-                <a href="https://wa.me/qr/IG74VRFZSKIRN1" class="btn btn-success btn-lg">
-                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
-                </a>
-                <a href="register.html" class="btn btn-warning btn-lg text-dark">
-                    <i class="fas fa-user-plus"></i>Join Now</a>
-            </div>
+        <hr class="bg-light">
+        <div class="text-center">
+            <p>&copy; 2024 People Plus Network. All rights reserved.</p>
         </div>
-    </section>
+    </div>
+</footer>
 
-    <!-- Trust Badges -->
-    <section class="container my-5">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="trust-badge">
-                    <i class="fas fa-truck-fast"></i>
-                    <h5>Fast Delivery</h5>
-                    <p class="text-muted">Products delivered to your doorstep</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="trust-badge">
-                    <i class="fas fa-medal"></i>
-                    <h5>Quality Guaranteed</h5>
-                    <p class="text-muted">7-day replacement warranty</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="trust-badge">
-                    <i class="fas fa-headset"></i>
-                    <h5>Expert Support</h5>
-                    <p class="text-muted">Lifetime support from our experts</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    <!-- How It Works -->
-    <section class="container my-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">HOW IT WORKS</h2>
-            <p class="text-muted">Simple plan. Unlimited possibilities.</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <a href="register.html" style="text-decoration:none; color:inherit; display:block;">
-                    <div class="step-card" style="transition: transform 0.3s; cursor: pointer;"
-                        onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        <div class="step-icon bg-primary text-white">
-                            <i class="fas fa-user-plus fa-2x"></i>
-                        </div>
-                        <h4>1. JOIN</h4>
-                        <p>Become a member with a simple registration</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-icon bg-success text-white">
-                        <i class="fas fa-users fa-2x"></i>
-                    </div>
-                    <h4>2. BUILD</h4>
-                    <p>Build your team and help others grow</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-icon bg-warning text-dark">
-                        <i class="fas fa-coins fa-2x"></i>
-                    </div>
-                    <h4>3. EARN</h4>
-                    <p>Earn unlimited income from multiple sources</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    function updateCartCount() {
+        let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const countElem = document.getElementById('cartCount');
+        if (countElem) countElem.innerText = count;
+    }
 
-    <!-- Products Section -->
-    <section class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">OUR PRODUCTS</h2>
-            <a href="products.html" class="btn btn-outline-primary">View All Products →</a>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x250/667eea/white?text=Product+1" alt="Product">
-                    <div class="p-3">
-                        <h5>Ayurvedic Protein</h5>
-                        <p class="price">₹999 <span class="mrp">₹1,499</span></p>
-                        <button class="btn-add-cart"
-                            onclick="addToCart('Ayurvedic Protein', 999, 'https://via.placeholder.com/300x250/667eea/white?text=Product+1')"><i
-                                class="fas fa-shopping-cart"></i> Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x250/764ba2/white?text=Product+2" alt="Product">
-                    <div class="p-3">
-                        <h5>Herbal Tea</h5>
-                        <p class="price">₹599 <span class="mrp">₹999</span></p>
-                        <button class="btn-add-cart"
-                            onclick="addToCart('Herbal Tea', 599, 'https://via.placeholder.com/300x250/764ba2/white?text=Product+2')"><i
-                                class="fas fa-shopping-cart"></i> Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x250/667eea/white?text=Product+3" alt="Product">
-                    <div class="p-3">
-                        <h5>Skin Care Cream</h5>
-                        <p class="price">₹799 <span class="mrp">₹1,299</span></p>
-                        <button class="btn-add-cart"
-                            onclick="addToCart('Skin Care Cream', 799, 'https://via.placeholder.com/300x250/667eea/white?text=Product+3')"><i
-                                class="fas fa-shopping-cart"></i> Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/300x250/764ba2/white?text=Product+4" alt="Product">
-                    <div class="p-3">
-                        <h5>Nutrition Supplement</h5>
-                        <p class="price">₹1499 <span class="mrp">₹2,499</span></p>
-                        <button class="btn-add-cart"
-                            onclick="addToCart('Nutrition Supplement', 1499, 'https://via.placeholder.com/300x250/764ba2/white?text=Product+4')"><i
-                                class="fas fa-shopping-cart"></i> Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Business Plan -->
-    <section class="bg-white py-5 my-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">OUR BUSINESS PLAN</h2>
-                <p class="text-muted">SIMPLE PLAN. UNLIMITED POSSIBILITIES.</p>
-                <p class="text-primary fw-bold">EARN LUCRATIVE INCOME THROUGH OUR WELL-STRUCTURED COMPENSATION PLAN</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="p-4 border rounded-4">
-                        <h4><i class="fas fa-chart-line text-primary"></i> Binary Plan</h4>
-                        <p>Earn commission from your weaker leg volume. Build two legs - left and right.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check-circle text-success"></i> 10% commission on weaker leg</li>
-                            <li><i class="fas fa-check-circle text-success"></i> Unlimited depth</li>
-                            <li><i class="fas fa-check-circle text-success"></i> Daily payouts</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-4 border rounded-4">
-                        <h4><i class="fas fa-trophy text-warning"></i> Rank Benefits</h4>
-                        <p>Achieve ranks and unlock higher commissions and bonuses.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check-circle text-success"></i> Bronze: 5% matching bonus</li>
-                            <li><i class="fas fa-check-circle text-success"></i> Silver: 10% matching bonus</li>
-                            <li><i class="fas fa-check-circle text-success"></i> Gold: 15% matching bonus + Car fund
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="bg-primary text-white py-5">
-        <div class="container text-center">
-            <h3 class="fw-bold">START YOUR JOURNEY TODAY</h3>
-            <p class="lead mb-4">Join thousands of successful people and build your dreams with People Plus Network</p>
-            <a href="register.html" class="btn btn-warning btn-lg text-dark fw-bold">
-                <i class="fas fa-rocket"></i> Join Now
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h4><i class="fas fa-users"></i> People Plus Network</h4>
-                    <p>Build your future, empower lives. Join us and be a part of our growing network.</p>
-                    <div class="mt-3">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-whatsapp fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-telegram fa-2x"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="products.html">Products</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Support</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Refund Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Contact Us</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-phone"></i> +91 82357 72175</li>
-                        <li><i class="fas fa-envelope"></i> support@peopleplus.com</li>
-                        <li><i class="fab fa-whatsapp"></i> Chat on WhatsApp</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="bg-light">
-            <div class="text-center">
-                <p>&copy; 2024 People Plus Network. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        function updateCartCount() {
-            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const countElem = document.getElementById('cartCount');
-            if (countElem) {
-                countElem.innerText = count;
-            }
+    function addToCart(name, price, image) {
+        let existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ name, price, image, quantity: 1 });
         }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        alert(name + " added to cart!");
+    }
 
-        function addToCart(name, price, image) {
-            let existingItem = cart.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ name, price, image, quantity: 1 });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            alert(name + " added to cart!");
-        }
-
-        document.addEventListener('DOMContentLoaded', updateCartCount);
-    </script>
-    <script src="auth-check.js"></script>
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+<script src="auth-check.js"></script>
 </body>
-
 </html>
