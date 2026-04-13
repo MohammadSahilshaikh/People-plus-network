@@ -59,9 +59,26 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .main-container {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
         }
         .otp-card {
             background: white;
@@ -167,6 +184,8 @@
     </div>
 </nav>
 
+<div class="main-container">
+
 
 <div class="otp-card">
     <div class="otp-icon">
@@ -195,10 +214,19 @@
     </div>
 </div>
 
+</div> <!-- End main-container -->
+
 <script>
     let timerInterval;
     let timeLeft = 30;
-    
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+
+    // Show email in text
+    if (email) {
+        document.querySelector('.text-muted strong').innerText = email;
+    }
+
     function startTimer() {
         timerInterval = setInterval(function() {
             if (timeLeft <= 0) {
@@ -220,24 +248,56 @@
         }
     }
     
-    function verifyOTP() {
+    async function verifyOTP() {
         let otp = '';
         document.querySelectorAll('.otp-input').forEach(input => { otp += input.value; });
-        if (otp.length === 6) {
-            alert('OTP Verified Successfully! Redirecting to dashboard...');
-            window.location.href = 'user-dashboard.html';
-        } else {
+        
+        if (otp.length !== 6) {
             alert('Please enter complete 6-digit OTP');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                alert('OTP Verified Successfully!');
+                window.location.href = data.redirect || 'user-dashboard.html';
+            } else {
+                alert(data.error || 'Invalid or expired OTP. Please try again.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Server error. Please try again.');
         }
     }
     
-    function resendOTP(event) {
+    async function resendOTP(event) {
         event.preventDefault();
         if (timeLeft <= 0) {
-            timeLeft = 30;
-            startTimer();
-            alert('OTP resent to your mobile number!');
-            document.getElementById('resendLink').style.pointerEvents = 'none';
+            try {
+                const response = await fetch('/api/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    timeLeft = 30;
+                    startTimer();
+                    alert('OTP resent to your email!');
+                    document.getElementById('resendLink').style.pointerEvents = 'none';
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert('Failed to resend OTP');
+            }
         }
     }
     
