@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/')));
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require('connect-mongo');
 
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -164,6 +164,9 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+module.exports = app;
