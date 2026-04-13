@@ -20,7 +20,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 1rem 0;
         }
-        .navbar-brand {
+        .navbar-brand fw-bold {
             font-size: 1.5rem;
             font-weight: 800;
             color: white !important;
@@ -78,19 +78,18 @@
             margin: 10px;
         }
         
-        @media (max-width: 768px) {
-            .sidebar { margin-bottom: 20px; }
+        
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> PEOPLE PLUS NETWORK</a>
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> PEOPLE PLUS NETWORK</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
+            <span class="navbar-toggler-icon bg-white rounded bg-white rounded"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
@@ -111,8 +110,8 @@
                         <div class="sidebar">
                 <div class="text-center mb-3">
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="80" alt="User">
-                    <h5 class="mt-2">Rajesh Kumar</h5>
-                    <p class="text-muted small">Member ID: PPN10001</p>
+                    <h5 class="mt-2"><span class="display-user-name">Rajesh Kumar</span></h5>
+                    <p class="text-muted small">Member ID: <span class="display-user-id">PPN10001</span></p>
                     <span class="badge bg-success">Active</span>
                 </div>
                 <hr>
@@ -205,7 +204,7 @@
                     <a href="user-commissions.html" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <div class="table-responsive"><table class="table table-hover">
                         <thead>
                             <tr><th>Date</th><th>Source</th><th>Amount</th><th>Status</th></tr>
                         </thead>
@@ -215,7 +214,7 @@
                             <tr><td>Dec 13, 2024</td><td>Left Leg</td><td>₹320</td><td><span class="badge bg-success">Credited</span></td></tr>
                             <tr><td>Dec 12, 2024</td><td>Right Leg</td><td>₹150</td><td><span class="badge bg-success">Credited</span></td></tr>
                         </tbody>
-                    </table>
+                    </table></div>
                 </div>
             </div>
             

@@ -12,36 +12,35 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
-        .admin-sidebar {
+        .admin-sidebar sidebar {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 260px;
         }
-        .admin-sidebar .brand { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .admin-sidebar .nav-link {
+        .admin-sidebar sidebar .brand { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .admin-sidebar sidebar .nav-link {
             color: rgba(255,255,255,0.7); padding: 12px 25px; margin: 5px 0; border-radius: 10px;
         }
-        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
-        .admin-sidebar .nav-link i { width: 25px; margin-right: 10px; }
+        .admin-sidebar sidebar .nav-link:hover, .admin-sidebar sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .admin-sidebar sidebar .nav-link i { width: 25px; margin-right: 10px; }
         .admin-content { margin-left: 260px; padding: 20px; }
         .admin-navbar { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; }
         .product-table { background: white; border-radius: 15px; padding: 20px; }
         .btn-add { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
-        @media (max-width: 768px) {
-            .admin-sidebar { transform: translateX(-100%); }
+        
             .admin-content { margin-left: 0; }
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
-<div class="admin-sidebar">
+<div class="admin-sidebar sidebar sidebar">
     <div class="brand text-center p-3">
                 <img src="site-logo.jpg" alt="Logo" style="height: 50px; border-radius: 8px; margin-bottom: 10px; background: white; padding: 2px;">
                 <h3 class="text-white mb-0">PeoplePlus</h3>
                 <small class="opacity-75">Admin Panel</small>
             </div>
     <nav class="nav flex-column">
-        <a class="nav-link" href="admin-index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a class="nav-link active" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
         
@@ -59,20 +58,20 @@
     
     <div class="product-table">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <div class="table-responsive"><table class="table table-hover">
                 <thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                     <tr><td>1</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Ayurvedic Protein Powder</td><td>₹999</td><td>250</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
                     <tr><td>2</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Herbal Immunity Booster</td><td>₹599</td><td>500</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
                     <tr><td>3</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Organic Green Tea</td><td>₹399</td><td>1000</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
                 </tbody>
-            </table>
+            </table></div>
         </div>
     </div>
 </div>
 
 <!-- Add Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5>Add New Product</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form><div class="row"><div class="col-md-6 mb-3"><label>Product Name</label><input type="text" class="form-control"></div><div class="col-md-6 mb-3"><label>Category</label><select class="form-select"><option>Health Supplements</option><option>Herbal Products</option></select></div><div class="col-md-6 mb-3"><label>Price (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>MRP (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Stock</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Product Image</label><input type="file" class="form-control"></div><div class="col-12 mb-3"><label>Description</label><textarea class="form-control" rows="3"></textarea></div></div></form></div><div class="modal-footer"><button class="btn btn-primary">Save Product</button><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div></div></div></div>
+<div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5>Add New Product</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form><div class="row"><div class="col-md-6 mb-3"><label>Product Name</label><input type="text" class="form-control"></div><div class="col-md-6 mb-3"><label>Category</label><select class="form-select"><option>Health Supplements</option><option>Herbal Products</option></select></div><div class="col-md-6 mb-3"><label>Price (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>MRP (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Stock</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Product Image</label><input type="file" class="form-control"></div><div class="col-12 mb-3"><label>Description</label><textarea class="form-control" rows="3"></textarea></div></form></div><div class="modal-footer"><button class="btn btn-primary">Save Product</button><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="auth-check.js"></script>

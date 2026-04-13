@@ -1,59 +1,38 @@
 const fs = require('fs');
 const path = require('path');
 
-const dir = __dirname;
+const dir = 'c:\\\\People plus network';
 const files = fs.readdirSync(dir).filter(f => f.endsWith('.html'));
 
 files.forEach(file => {
-    let content = fs.readFileSync(path.join(dir, file), 'utf8');
-    let original = content;
-
-    // 1. Change "Login / Join" to "Join"
-    content = content.replace(/>Login \/ Join</g, '>Join<');
-
-    // 2. Add About link to navbar if missing
-    // Find where the Cart or Blog is, and insert About.
-    if (!content.includes('<a class="nav-link" href="about.html">About</a>')) {
-        // Find Blog or another nav-item to insert after
-        content = content.replace(
-            /(<li class="nav-item">\s*<a class="nav-link" href="blog\.html".*?<\/a>\s*<\/li>)/,
-            '$1\n                <li class="nav-item">\n                    <a class="nav-link" href="about.html">About</a>\n                </li>'
-        );
+    const fullPath = path.join(dir, file);
+    let content = fs.readFileSync(fullPath, 'utf8');
+    
+    // 1. Add global style.css link if not present
+    if (!content.includes('style.css')) {
+        content = content.replace('</head>', '    <link rel="stylesheet" href="style.css">\\n</head>');
     }
     
-    // In case there is no Blog, find Products
-    if (!content.includes('<a class="nav-link" href="about.html">About</a>')) {
-        content = content.replace(
-            /(<li class="nav-item">\s*<a class="nav-link" href="products\.html".*?<\/a>\s*<\/li>)/,
-            '$1\n                <li class="nav-item">\n                    <a class="nav-link" href="about.html">About</a>\n                </li>'
-        );
-    }
+    // 2. Add table-responsive to all tables if missing
+    content = content.replace(/<table/g, '<div class="table-responsive"><table');
+    content = content.replace(/<\/table>/g, '</table></div>');
+    // Fix double wrapping
+    content = content.replace(/<div class="table-responsive"><div class="table-responsive">/g, '<div class="table-responsive">');
+    content = content.replace(/<\/div><\/div>/g, '</div>');
 
-    // 3. Update WhatsApp links
-    // Update any wa.me link
-    content = content.replace(/href="https:\/\/wa\.me\/[0-9]+"/g, 'href="https://wa.me/918235772175"');
+    // 3. Inject dynamic user info classes where static info was hardcoded
+    // Fix names like "Rajesh Kumar" or "Admin User"
+    content = content.replace(/Rajesh Kumar/g, '<span class="display-user-name">Rajesh Kumar</span>');
+    content = content.replace(/PPN10001/g, '<span class="display-user-id">PPN10001</span>');
     
-    // Update footer WhatsApp phone numbers if any
-    content = content.replace(/\+91\s*98765\s*43210/g, '+91 82357 72175');
-
-    if (content !== original) {
-        fs.writeFileSync(path.join(dir, file), content);
-        console.log(`Updated ${file}`);
+    // 4. Improve navbarbrand on mobile (make it slightly smaller / responsive)
+    content = content.replace(/navbar-brand/g, 'navbar-brand fw-bold');
+    
+    // 5. Ensure all admin sidebars are responsive
+    if (file.includes('admin')) {
+        content = content.replace(/admin-sidebar/g, 'admin-sidebar sidebar');
     }
+
+    fs.writeFileSync(fullPath, content);
+    console.log(`Processed ${file}`);
 });
-
-// Specific fix for about.html (Fixing duplicate HTML and changing founder)
-let aboutContent = fs.readFileSync(path.join(dir, 'about.html'), 'utf8');
-
-// The user diff accidentally duplicated the whole document.
-// Let's just catch the first </html> and truncate the rest.
-const endTagIndex = aboutContent.indexOf('</html>');
-if (endTagIndex !== -1) {
-    aboutContent = aboutContent.substring(0, endTagIndex + 7);
-}
-
-// Change Rajesh Sharma to MOHAMMAD ASHRAF
-aboutContent = aboutContent.replace(/Rajesh Sharma/g, 'MOHAMMAD ASHRAF');
-
-fs.writeFileSync(path.join(dir, 'about.html'), aboutContent);
-console.log('Fixed about.html specific data.');

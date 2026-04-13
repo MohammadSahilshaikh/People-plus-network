@@ -124,12 +124,11 @@
         .legend { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
         .legend span { display: inline-block; width: 20px; height: 20px; border-radius: 5px; margin-right: 5px; }
         
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
+        
             .main-content { margin-left: 0; }
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
 <div class="sidebar">
@@ -158,7 +157,7 @@
             <ul>
                 <li>
                     <div class="node">
-                        <div class="name"><i class="fas fa-user-circle"></i> Rajesh Kumar</div>
+                        <div class="name"><i class="fas fa-user-circle"></i> <span class="display-user-name">Rajesh Kumar</span></div>
                         <div class="id">ID: PPN1001</div>
                         <div class="small">Left: 60 | Right: 65</div>
                     </div>
@@ -170,10 +169,10 @@
                                 <div class="small">Team: 60 members</div>
                             </div>
                             <ul>
-                                <li><div class="node"><div class="name">Neha Gupta</div><div class="id">Team: 30</div></div>
-                                    <ul><li><div class="node"><div class="name">Rohan</div><div class="id">Team: 10</div></div></li></ul>
+                                <li><div class="node"><div class="name">Neha Gupta</div><div class="id">Team: 30</div>
+                                    <ul><li><div class="node"><div class="name">Rohan</div><div class="id">Team: 10</div></li></ul>
                                 </li>
-                                <li><div class="node"><div class="name">Priya Singh</div><div class="id">Team: 30</div></div></li>
+                                <li><div class="node"><div class="name">Priya Singh</div><div class="id">Team: 30</div></li>
                             </ul>
                         </li>
                         <li>
@@ -183,8 +182,8 @@
                                 <div class="small">Team: 65 members</div>
                             </div>
                             <ul>
-                                <li><div class="node"><div class="name">Meera Das</div><div class="id">Team: 35</div></div></li>
-                                <li><div class="node"><div class="name">Vikram Singh</div><div class="id">Team: 30</div></div></li>
+                                <li><div class="node"><div class="name">Meera Das</div><div class="id">Team: 35</div></li>
+                                <li><div class="node"><div class="name">Vikram Singh</div><div class="id">Team: 30</div></li>
                             </ul>
                 </li>
             </ul>
@@ -201,7 +200,7 @@
         <div class="col-md-6">
             <div class="bg-white p-3 rounded-3">
                 <h5><i class="fas fa-chart-pie"></i> Leg Summary</h5>
-                <div class="progress mb-2"><div class="progress-bar bg-success" style="width: 48%">Left: 60</div><div class="progress-bar bg-danger" style="width: 52%">Right: 65</div></div>
+                <div class="progress mb-2"><div class="progress-bar bg-success" style="width: 48%">Left: 60</div><div class="progress-bar bg-danger" style="width: 52%">Right: 65</div>
                 <p class="mt-2">Weaker Leg: <strong>Left Leg (60 members)</strong><br>Commission Rate: <strong>10%</strong></p>
             </div>
         </div>
@@ -210,7 +209,7 @@
                 <h5><i class="fas fa-chart-line"></i> Performance</h5>
                 <p>Weekly Growth: <strong>+12 members</strong></p>
                 <p>Monthly Target: <strong>150/200 members (75%)</strong></p>
-                <div class="progress"><div class="progress-bar" style="width: 75%"></div></div>
+                <div class="progress"><div class="progress-bar" style="width: 75%"></div>
             </div>
         </div>
     </div>

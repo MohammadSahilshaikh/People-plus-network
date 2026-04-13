@@ -65,13 +65,12 @@
             border-radius: 20px;
             font-size: 0.75rem;
         }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
+        
             .main-content { margin-left: 0; }
             .sidebar.show { transform: translateX(0); }
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
 <div class="sidebar">
@@ -137,7 +136,7 @@
         </div>
         
         <div class="table-responsive">
-            <table class="table table-hover">
+            <div class="table-responsive"><table class="table table-hover">
                 <thead>
                     <tr><th>ID</th><th>Name</th><th>Phone</th><th>Join Date</th><th>Level</th><th>Status</th><th>Sales</th></tr>
                 </thead>
@@ -145,11 +144,11 @@
                     <tr><td>PPN1001</td><td><i class="fas fa-user-circle"></i> Amit Sharma</td><td>9876543210</td><td>2024-12-01</td><td><span class="level-badge">Level 1</span></td><td><span class="badge bg-success">Active</span></td><td>₹5,000</td></tr>
                     <tr><td>PPN1002</td><td><i class="fas fa-user-circle"></i> Neha Gupta</td><td>9876543211</td><td>2024-12-02</td><td><span class="level-badge">Level 1</span></td><td><span class="badge bg-success">Active</span></td><td>₹3,200</td></tr>
                     <tr><td>PPN1003</td><td><i class="fas fa-user-circle"></i> Priya Singh</td><td>9876543212</td><td>2024-12-03</td><td><span class="level-badge">Level 2</span></td><td><span class="badge bg-success">Active</span></td><td>₹7,500</td></tr>
-                    <tr><td>PPN1004</td><td><i class="fas fa-user-circle"></i> Rajesh Kumar</td><td>9876543213</td><td>2024-12-04</td><td><span class="level-badge">Level 1</span></td><td><span class="badge bg-warning">Inactive</span></td><td>₹0</td></tr>
+                    <tr><td>PPN1004</td><td><i class="fas fa-user-circle"></i> <span class="display-user-name">Rajesh Kumar</span></td><td>9876543213</td><td>2024-12-04</td><td><span class="level-badge">Level 1</span></td><td><span class="badge bg-warning">Inactive</span></td><td>₹0</td></tr>
                     <tr><td>PPN1005</td><td><i class="fas fa-user-circle"></i> Sohan Verma</td><td>9876543214</td><td>2024-12-05</td><td><span class="level-badge">Level 2</span></td><td><span class="badge bg-success">Active</span></td><td>₹4,200</td></tr>
                     <tr><td>PPN1006</td><td><i class="fas fa-user-circle"></i> Meera Das</td><td>9876543215</td><td>2024-12-06</td><td><span class="level-badge">Level 3</span></td><td><span class="badge bg-success">Active</span></td><td>₹9,000</td></tr>
                 </tbody>
-            </table>
+            </table></div>
         </div>
         
         <nav><ul class="pagination justify-content-center mt-3"><li class="page-item active"><a class="page-link" href="#">1</a></li><li class="page-item"><a class="page-link" href="#">2</a></li><li class="page-item"><a class="page-link" href="#">3</a></li></ul></nav>

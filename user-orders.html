@@ -32,12 +32,11 @@
         .track-step .step-icon { width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; display: inline-flex; align-items: center; justify-content: center; }
         .track-step.completed .step-icon { background: #28a745; color: white; }
         .track-step.active .step-icon { background: #667eea; color: white; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
+        
             .main-content { margin-left: 0; }
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
 <div class="sidebar">
@@ -73,10 +72,10 @@
             <div class="col-3 text-end"><button class="btn btn-sm btn-outline-primary">Track Order</button><br><button class="btn btn-sm btn-link mt-1">Reorder</button></div>
         </div>
         <div class="track-progress mt-3">
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div></div>
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Shipped</div></div>
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Delivered</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Shipped</div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Delivered</div>
         </div>
     </div>
     
@@ -91,10 +90,10 @@
             <div class="col-9"><h6>Herbal Immunity Booster (2 items)</h6><p class="text-muted small">Quantity: 2 | Price: ₹599 each</p></div>
         </div>
         <div class="track-progress mt-3">
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
-            <div class="track-step active"><div class="step-icon"><i class="fas fa-spinner fa-spin"></i></div><div class="small">Confirmed</div></div>
-            <div class="track-step"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div></div>
-            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div>
+            <div class="track-step active"><div class="step-icon"><i class="fas fa-spinner fa-spin"></i></div><div class="small">Confirmed</div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div>
         </div>
     </div>
     
@@ -104,12 +103,12 @@
             <div><span class="badge bg-info">Shipped</span></div>
             <div><strong>Total: ₹399</strong></div>
         </div>
-        <div class="row"><div class="col-3"><img src="https://via.placeholder.com/80x80/11998e/white?text=Product" class="rounded" width="80"></div><div class="col-9"><h6>Organic Green Tea</h6><p class="text-muted small">Quantity: 1 | Price: ₹399</p></div></div>
+        <div class="row"><div class="col-3"><img src="https://via.placeholder.com/80x80/11998e/white?text=Product" class="rounded" width="80"></div><div class="col-9"><h6>Organic Green Tea</h6><p class="text-muted small">Quantity: 1 | Price: ₹399</p></div>
         <div class="track-progress mt-3">
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div></div>
-            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div></div>
-            <div class="track-step active"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div></div>
-            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div></div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Ordered</div>
+            <div class="track-step completed"><div class="step-icon"><i class="fas fa-check"></i></div><div class="small">Confirmed</div>
+            <div class="track-step active"><div class="step-icon"><i class="fas fa-truck"></i></div><div class="small">Shipped</div>
+            <div class="track-step"><div class="step-icon"><i class="fas fa-box"></i></div><div class="small">Delivered</div>
         </div>
     </div>
 </div>

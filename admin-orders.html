@@ -7,26 +7,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#f4f6f9}
-        .admin-sidebar{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:white;position:fixed;left:0;top:0;width:260px}
-        .admin-sidebar .brand{padding:25px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1)}
-        .admin-sidebar .nav-link{color:rgba(255,255,255,0.7);padding:12px 25px;margin:5px 0;border-radius:10px}
-        .admin-sidebar .nav-link:hover,.admin-sidebar .nav-link.active{background:rgba(255,255,255,0.1);color:white}
-        .admin-sidebar .nav-link i{width:25px;margin-right:10px}
+        .admin-sidebar sidebar{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:white;position:fixed;left:0;top:0;width:260px}
+        .admin-sidebar sidebar .brand{padding:25px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .admin-sidebar sidebar .nav-link{color:rgba(255,255,255,0.7);padding:12px 25px;margin:5px 0;border-radius:10px}
+        .admin-sidebar sidebar .nav-link:hover,.admin-sidebar sidebar .nav-link.active{background:rgba(255,255,255,0.1);color:white}
+        .admin-sidebar sidebar .nav-link i{width:25px;margin-right:10px}
         .admin-content{margin-left:260px;padding:20px}
         .admin-navbar{background:white;padding:15px 20px;border-radius:10px;margin-bottom:25px}
         .orders-table{background:white;border-radius:15px;padding:20px}
-        @media(max-width:768px){.admin-sidebar{transform:translateX(-100%)}.admin-content{margin-left:0}}
+        @media(max-width:768px){.admin-sidebar sidebar{transform:translateX(-100%)}.admin-content{margin-left:0}}
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
-<div class="admin-sidebar">
+<div class="admin-sidebar sidebar sidebar">
     <div class="brand text-center p-3">
                 <img src="site-logo.jpg" alt="Logo" style="height: 50px; border-radius: 8px; margin-bottom: 10px; background: white; padding: 2px;">
                 <h3 class="text-white mb-0">PeoplePlus</h3>
                 <small class="opacity-75">Admin Panel</small>
             </div>
     <nav class="nav flex-column">
-        <a class="nav-link" href="admin-index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
         
@@ -36,8 +36,8 @@
     </nav>
 </div>
 <div class="admin-content">
-    <div class="admin-navbar d-flex justify-content-between align-items-center"><h4 class="mb-0">Order Management</h4><div><select class="form-select"><option>All Orders</option><option>Pending</option><option>Processing</option><option>Delivered</option></select></div></div>
-    <div class="orders-table"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody><tr><td>#ORD001</td><td>Rajesh Kumar</td><td>₹999</td><td>Razorpay</td><td><span class="badge bg-success">Paid</span></td><td>2024-12-15</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD002</td><td>Priya Singh</td><td>₹1,298</td><td>COD</td><td><span class="badge bg-warning">Pending</span></td><td>2024-12-14</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD003</td><td>Amit Sharma</td><td>₹399</td><td>Razorpay</td><td><span class="badge bg-info">Processing</span></td><td>2024-12-13</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr></tbody></table></div></div>
+    <div class="admin-navbar d-flex justify-content-between align-items-center"><h4 class="mb-0">Order Management</h4><div><select class="form-select"><option>All Orders</option><option>Pending</option><option>Processing</option><option>Delivered</option></select></div>
+    <div class="orders-table"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody><tr><td>#ORD001</td><td><span class="display-user-name">Rajesh Kumar</span></td><td>₹999</td><td>Razorpay</td><td><span class="badge bg-success">Paid</span></td><td>2024-12-15</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD002</td><td>Priya Singh</td><td>₹1,298</td><td>COD</td><td><span class="badge bg-warning">Pending</span></td><td>2024-12-14</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD003</td><td>Amit Sharma</td><td>₹399</td><td>Razorpay</td><td><span class="badge bg-info">Processing</span></td><td>2024-12-13</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr></tbody></table></div></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="auth-check.js"></script>

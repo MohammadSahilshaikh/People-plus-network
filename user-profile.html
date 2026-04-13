@@ -30,12 +30,11 @@
         .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; margin-bottom: 15px; object-fit: cover; }
         .form-control { border-radius: 10px; padding: 12px; }
         .btn-update { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px; border-radius: 10px; font-weight: 600; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
+        
             .main-content { margin-left: 0; }
         }
     </style>
-</head>
+    <link rel="stylesheet" href="style.css">\n</head>
 <body>
 
 <div class="sidebar">
@@ -64,12 +63,12 @@
             <div class="profile-card">
                 <div class="profile-header">
                     <img src="https://via.placeholder.com/120x120/white/667eea?text=User" alt="Profile" class="profile-img">
-                    <h4>Rajesh Kumar</h4>
+                    <h4><span class="display-user-name">Rajesh Kumar</span></h4>
                     <p>Member ID: PPN1001</p>
                     <p>Sponsor ID: PPN0001</p>
                 </div>
                 <div class="p-4">
-                    <div class="mb-3"><label>Referral Link</label><div class="input-group"><input type="text" class="form-control" value="https://peopleplus.com/ref/RAJESH123" readonly><button class="btn btn-primary" onclick="copyLink()">Copy</button></div></div>
+                    <div class="mb-3"><label>Referral Link</label><div class="input-group"><input type="text" class="form-control" value="https://peopleplus.com/ref/RAJESH123" readonly><button class="btn btn-primary" onclick="copyLink()">Copy</button></div>
                     <div><label>Rank</label><h5 class="text-primary">Gold Member <i class="fas fa-crown"></i></h5></div>
                 </div>
             </div>
@@ -79,7 +78,7 @@
                 <h5><i class="fas fa-user-edit"></i> Personal Information</h5>
                 <form>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label>Full Name</label><input type="text" class="form-control" value="Rajesh Kumar"></div>
+                        <div class="col-md-6 mb-3"><label>Full Name</label><input type="text" class="form-control" value="<span class="display-user-name">Rajesh Kumar</span>"></div>
                         <div class="col-md-6 mb-3"><label>Email ID</label><input type="email" class="form-control" value="rajesh@example.com"></div>
                         <div class="col-md-6 mb-3"><label>Phone Number</label><input type="tel" class="form-control" value="+91 82357 72175"></div>
                         <div class="col-md-6 mb-3"><label>Date of Birth</label><input type="date" class="form-control" value="1990-01-01"></div>
@@ -96,7 +95,7 @@
                 <form>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label>Bank Name</label><input type="text" class="form-control" placeholder="Enter bank name" value="State Bank of India"></div>
-                        <div class="col-md-6 mb-3"><label>Account Holder Name</label><input type="text" class="form-control" placeholder="Enter name" value="Rajesh Kumar"></div>
+                        <div class="col-md-6 mb-3"><label>Account Holder Name</label><input type="text" class="form-control" placeholder="Enter name" value="<span class="display-user-name">Rajesh Kumar</span>"></div>
                         <div class="col-md-6 mb-3"><label>Account Number</label><input type="text" class="form-control" placeholder="Enter account number" value="XXXXXXXXXX1234"></div>
                         <div class="col-md-6 mb-3"><label>IFSC Code</label><input type="text" class="form-control" placeholder="Enter IFSC" value="SBIN0012345"></div>
                         <div class="col-12"><button type="submit" class="btn-update w-100"><i class="fas fa-save"></i> Update Bank Details</button></div>
