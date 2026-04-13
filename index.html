@@ -13,6 +13,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            position: relative;
+        }
+        .nav-link:hover {
+            color: #ffd700 !important;
+        }
+        .nav-link.active {
+            color: #ffd700 !important;
+            font-weight: 700;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 2px;
+        }
+        .btn-join {
+            background: #ffd700;
+            color: #333 !important;
+            border-radius: 50px;
+            padding: 8px 25px !important;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -24,42 +67,7 @@
             background: #f5f7fa;
         }
 
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: white !important;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .nav-link {
-            color: white !important;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin: 0 10px;
-        }
-
-        .nav-link:hover {
-            transform: translateY(-2px);
-            color: #ffd700 !important;
-        }
-
-        .btn-join {
-            background: #ffd700;
-            color: #333 !important;
-            border-radius: 50px;
-            padding: 8px 25px !important;
-        }
+        
 
         .btn-join:hover {
             background: #ffed4a;
@@ -340,16 +348,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
+                    <a class="nav-link active" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="products.html">Products</a>
+                    <a class="nav-link " href="products.html">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link " href="about.html">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
+                    <a class="nav-link " href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
