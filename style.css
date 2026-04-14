@@ -108,14 +108,7 @@ body {
     color: var(--dark) !important;
     border-radius: 50px !important;
     padding: 8px 25px !important;
-    opacity: 0; /* Hide initially to prevent flash */
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.auth-visible {
-    opacity: 1 !important;
-    pointer-events: auto !important;
+    transition: all 0.3s ease;
 }
 
 

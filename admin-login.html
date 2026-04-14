@@ -76,27 +76,17 @@
 </div>
 
 <script>
-    async function adminLogin(event) {
+function adminLogin(event) {
         event.preventDefault();
         const email = document.getElementById('adminEmail').value;
         const password = document.getElementById('adminPassword').value;
         
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await response.json();
-
-            if (data.success && data.user.role === 'admin') {
-                alert('Login Successful!');
-                window.location.href = 'admin.html';
-            } else {
-                alert(data.error || 'Login failed! Check credentials.');
-            }
-        } catch (err) {
-            alert('Server error occurred');
+        if (email === 'admin@peopleplus.com' && password === 'admin123') {
+            localStorage.setItem('adminLoggedIn', 'true');
+            alert('Login Successful!');
+            window.location.href = 'admin.html';
+        } else {
+            alert('Invalid credentials!');
         }
     }
 </script>
