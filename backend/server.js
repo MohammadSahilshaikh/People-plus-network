@@ -11,15 +11,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://atlas-sql-69dbae96c82ec649be3f78d7-ibwsos.a.query.mongodb.net/peopleplus?ssl=true&authSource=admin';
+// MongoDB Connection - Fixed (no deprecated options)
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  console.error("❌ Fatal Error: MONGODB_URI environment variable is not set.");
+  process.exit(1);
+}
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(MONGODB_URI)
 .then(() => console.log('✅ MongoDB Atlas Connected Successfully!'))
-.catch(err => console.error('❌ MongoDB Connection Error:', err));
+.catch(err => {
+  console.error('❌ MongoDB Connection Error:', err);
+  process.exit(1);
+});
 
 // ============ SCHEMAS ============
 
@@ -260,6 +264,26 @@ app.delete('/api/users/:id', authMiddleware, adminMiddleware, async (req, res) =
     }
 });
 
+// Get user profile
+app.get('/api/profile', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId).select('-password');
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Update user profile
+app.put('/api/profile', authMiddleware, async (req, res) => {
+    try {
+        await User.findByIdAndUpdate(req.user.userId, req.body);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ============ ORDER ROUTES ============
 
 // Create order
@@ -399,25 +423,6 @@ app.put('/api/withdrawals/:id/reject', authMiddleware, adminMiddleware, async (r
         
         // Refund to wallet
         await User.findByIdAndUpdate(withdrawal.userId, { $inc: { wallet: withdrawal.amount } });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// ============ USER PROFILE ============
-app.get('/api/profile', authMiddleware, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.userId).select('-password');
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.put('/api/profile', authMiddleware, async (req, res) => {
-    try {
-        await User.findByIdAndUpdate(req.user.userId, req.body);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
