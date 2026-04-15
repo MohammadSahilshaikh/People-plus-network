@@ -2,9 +2,9 @@
   "name": "people-plus-network",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,16 +12,10 @@
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "connect-mongo": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
-    "express-session": "^1.19.0",
-    "mongoose": "^9.4.1",
-    "multer": "^2.1.1",
-    "mysql2": "^3.22.0",
-    "nodemailer": "^8.0.5",
-    "serverless-http": "^3.2.0",
-    "sqlite3": "^6.0.1"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.4.1"
   }
 }
