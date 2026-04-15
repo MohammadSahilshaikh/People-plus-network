@@ -73,39 +73,6 @@
             background: #f5f7fa;
         }
 
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0;
-        }
-
-        .navbar-brand fw-bold {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: white !important;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .nav-link {
-            color: white !important;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin: 0 10px;
-        }
-
-        .nav-link:hover {
-            transform: translateY(-2px);
-            color: #ffd700 !important;
-        }
-
-        .btn-join {
-            background: #ffd700;
-            color: #333 !important;
-            border-radius: 50px;
-            padding: 8px 25px !important;
-        }
-
         .page-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 60px 0;
@@ -119,7 +86,10 @@
             overflow: hidden;
             transition: all 0.3s;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
+            margin-bottom: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {
@@ -147,52 +117,43 @@
         }
 
         .btn-add-cart {
-            background: #ffd700;
-            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 25px;
-            font-weight: 700;
+            font-weight: 600;
+            transition: all 0.3s ease;
             width: 100%;
-            transition: all 0.3s;
+            margin-top: 5px;
+            margin-bottom: 0;
         }
 
         .btn-add-cart:hover {
-            background: #ffc800;
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .sidebar {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        .product-card .p-3 {
+            padding: 12px !important;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .sidebar h4 {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+        .product-card h5 {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
 
-        .category-list {
-            list-style: none;
-            padding: 0;
+        .product-card .price {
+            margin-bottom: 8px;
         }
 
-        .category-list li {
-            margin-bottom: 10px;
-        }
-
-        .category-list a {
-            color: #333;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .category-list a:hover {
-            color: #667eea;
-            padding-left: 5px;
+        .row > [class*="col-"] {
+            margin-bottom: 25px;
         }
 
         .footer {
@@ -206,16 +167,7 @@
             color: #ffd700;
             text-decoration: none;
         }
-
-        .pagination {
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-
-        }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -234,16 +186,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link " href="index.html">Home</a>
+                        <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="products.html">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="about.html">About</a>
+                        <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span
+                        <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span
                                 id="cartCount" class="badge bg-danger">0</span></a>
                     </li>
                     <li class="nav-item">
@@ -277,85 +229,8 @@
 
     <!-- Products Section -->
     <section class="container my-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://placehold.co/300x250/667eea/white?text=Product" alt="Product">
-                            <div class="p-3">
-                                <h5>Ayurvedic Protein Powder</h5>
-                                <p class="price">₹999 <span class="mrp">₹1,499</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Ayurvedic Protein Powder', 999, 'https://placehold.co/300x250/667eea/white?text=Product')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://placehold.co/300x250/764ba2/white?text=Product" alt="Product">
-                            <div class="p-3">
-                                <h5>Herbal Immunity Tea</h5>
-                                <p class="price">₹599 <span class="mrp">₹999</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Herbal Immunity Tea', 599, 'https://placehold.co/300x250/764ba2/white?text=Product')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://placehold.co/300x250/667eea/white?text=Product" alt="Product">
-                            <div class="p-3">
-                                <h5>Organic Skin Cream</h5>
-                                <p class="price">₹799 <span class="mrp">₹1,299</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Organic Skin Cream', 799, 'https://placehold.co/300x250/667eea/white?text=Product')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://placehold.co/300x250/764ba2/white?text=Product" alt="Product">
-                            <div class="p-3">
-                                <h5>Daily Nutrition Pack</h5>
-                                <p class="price">₹1499 <span class="mrp">₹2,499</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Daily Nutrition Pack', 1499, 'https://placehold.co/300x250/764ba2/white?text=Product')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://via.placeholder.com/300x250/667eea/white?text=Aloe+Vera" alt="Product">
-                            <div class="p-3">
-                                <h5>Aloe Vera Juice</h5>
-                                <p class="price">₹499 <span class="mrp">₹799</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Aloe Vera Juice', 499, 'https://via.placeholder.com/300x250/667eea/white?text=Aloe+Vera')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product-card">
-                            <img src="https://via.placeholder.com/300x250/764ba2/white?text=Vitamin+C" alt="Product">
-                            <div class="p-3">
-                                <h5>Vitamin C Tablets</h5>
-                                <p class="price">₹349 <span class="mrp">₹599</span></p>
-                                <button class="btn-add-cart"
-                                    onclick="addToCart('Vitamin C Tablets', 349, 'https://via.placeholder.com/300x250/764ba2/white?text=Vitamin+C')"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
+        <div class="row" id="productsContainer">
+            <!-- Products will be loaded dynamically -->
         </div>
     </section>
 
@@ -421,9 +296,43 @@
             alert(name + " added to cart!");
         }
 
-        document.addEventListener('DOMContentLoaded', updateCartCount);
-    </script>
+        // Load products from localStorage (synced with admin)
+        function loadProducts() {
+            let products = JSON.parse(localStorage.getItem('publicProducts')) || [];
+            
+            // If no products in localStorage, use default
+            if (products.length === 0) {
+                products = [
+                    { id: 1, name: 'Ayurvedic Protein Powder', price: 999, mrp: 1499, image: 'https://via.placeholder.com/300x250/667eea/white?text=Protein', desc: 'Pure Ayurvedic protein powder' },
+                    { id: 2, name: 'Herbal Immunity Tea', price: 599, mrp: 999, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Tea', desc: 'Boost your immunity' },
+                    { id: 3, name: 'Organic Skin Cream', price: 799, mrp: 1299, image: 'https://via.placeholder.com/300x250/667eea/white?text=Cream', desc: 'Natural skin care' },
+                    { id: 4, name: 'Nutrition Supplement', price: 1499, mrp: 2499, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Supplement', desc: 'Complete nutrition' }
+                ];
+                localStorage.setItem('publicProducts', JSON.stringify(products));
+            }
+            
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = products.map(product => `
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="p-3">
+                            <h5>${product.name}</h5>
+                            <p class="price">₹${product.price} <span class="mrp">₹${product.mrp}</span></p>
+                            <button class="btn-add-cart" onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            updateCartCount();
+        });
+    </script>
 </body>
 
 </html>

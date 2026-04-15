@@ -1,46 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin - Orders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Orders</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#f4f6f9}
-        .admin-sidebar sidebar{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:white;position:fixed;left:0;top:0;width:260px}
-        .admin-sidebar sidebar .brand{padding:25px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1)}
-        .admin-sidebar sidebar .nav-link{color:rgba(255,255,255,0.7);padding:12px 25px;margin:5px 0;border-radius:10px}
-        .admin-sidebar sidebar .nav-link:hover,.admin-sidebar sidebar .nav-link.active{background:rgba(255,255,255,0.1);color:white}
-        .admin-sidebar sidebar .nav-link i{width:25px;margin-right:10px}
-        .admin-content{margin-left:260px;padding:20px}
-        .admin-navbar{background:white;padding:15px 20px;border-radius:10px;margin-bottom:25px}
-        .orders-table{background:white;border-radius:15px;padding:20px}
-        @media(max-width:768px){.admin-sidebar sidebar{transform:translateX(-100%)}.admin-content{margin-left:0}}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .admin-sidebar .brand {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-sidebar .brand img {
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            padding: 2px;
+        }
+        .admin-sidebar .brand h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 12px 25px;
+            margin: 5px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .admin-sidebar .nav-link i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .admin-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .admin-header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .orders-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .sidebar-toggle {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            .admin-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="admin-sidebar sidebar sidebar">
-    <div class="brand text-center p-3">
-                <img src="site-logo.jpg" alt="Logo" style="height: 50px; border-radius: 8px; margin-bottom: 10px; background: white; padding: 2px;">
-                <h3 class="text-white mb-0">PeoplePlus</h3>
-                <small class="opacity-75">Admin Panel</small>
-            </div>
+
+<!-- Admin Sidebar -->
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="brand">
+        <img src="site-logo.jpg" alt="Logo">
+        <h3 class="text-white">PeoplePlus</h3>
+        <small class="opacity-75">Admin Panel</small>
+    </div>
     <nav class="nav flex-column">
         <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
-        
-        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link active" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
-        <hr class="bg-light"><a class="nav-link" href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr class="bg-light">
+        <a class="nav-link" href="index.html"><i class="fas fa-globe"></i> View Website</a>
+        <a class="nav-link" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
 </div>
+
+<!-- Main Content -->
 <div class="admin-content">
-    <div class="admin-navbar d-flex justify-content-between align-items-center"><h4 class="mb-0">Order Management</h4><div><select class="form-select"><option>All Orders</option><option>Pending</option><option>Processing</option><option>Delivered</option></select></div>
-    <div class="orders-table"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody><tr><td>#ORD001</td><td><span class="display-user-name">Rajesh Kumar</span></td><td>₹999</td><td>Razorpay</td><td><span class="badge bg-success">Paid</span></td><td>2024-12-15</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD002</td><td>Priya Singh</td><td>₹1,298</td><td>COD</td><td><span class="badge bg-warning">Pending</span></td><td>2024-12-14</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr><tr><td>#ORD003</td><td>Amit Sharma</td><td>₹399</td><td>Razorpay</td><td><span class="badge bg-info">Processing</span></td><td>2024-12-13</td><td><button class="btn btn-sm btn-primary">View</button> <button class="btn btn-sm btn-warning">Update Status</button></td></tr></tbody></table></div></div>
+    <div class="admin-header">
+        <div>
+            <button class="btn btn-sm btn-outline-primary sidebar-toggle me-2" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="mb-0 d-inline-block">Order Management</h4>
+        </div>
+        <div class="d-flex gap-2">
+            <select class="form-select w-auto" id="statusFilter" onchange="filterOrders()">
+                <option value="all">All Orders</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+            <input type="text" class="form-control w-auto" placeholder="Search order..." id="searchOrderInput">
+            <button class="btn btn-primary" onclick="searchOrders()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+    
+    <div class="orders-table">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth-check.js"></script>
+<script>
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+    }
+    
+    let allOrders = [];
+    let filteredOrders = [];
+    
+    function toggleSidebar() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    }
+    
+    function logoutUser() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminEmail');
+            window.location.href = 'index.html';
+        }
+    }
+    
+    function loadOrders() {
+        allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        if (allOrders.length === 0) {
+            allOrders = [
+                { id: 'ORD001', customerName: 'Mohammad Sahil', customerEmail: 'sahilfact549@gmail.com', total: 999, status: 'Delivered', date: new Date().toLocaleDateString(), items: [] },
+                { id: 'ORD002', customerName: 'Rajesh Kumar', customerEmail: 'rajesh@email.com', total: 1499, status: 'Processing', date: new Date().toLocaleDateString(), items: [] },
+                { id: 'ORD003', customerName: 'Priya Singh', customerEmail: 'priya@email.com', total: 799, status: 'Pending', date: new Date().toLocaleDateString(), items: [] }
+            ];
+            localStorage.setItem('orders', JSON.stringify(allOrders));
+        }
+        filteredOrders = [...allOrders];
+        displayOrders();
+    }
+    
+    function displayOrders() {
+        const tbody = document.getElementById('ordersTableBody');
+        if (filteredOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No orders found</td></tr>';
+        } else {
+            tbody.innerHTML = filteredOrders.map(o => {
+                let statusClass = o.status === 'Delivered' ? 'success' : (o.status === 'Processing' ? 'warning' : 'secondary');
+                return `
+                    <tr>
+                        <td><strong>#${o.id}</strong></td>
+                        <td>${o.customerName}<br><small class="text-muted">${o.customerEmail}</small></td>
+                        <td class="fw-bold">₹${(o.total || 0).toLocaleString()}</td>
+                        <td><span class="badge bg-${statusClass}">${o.status}</span></td>
+                        <td>${o.date}</td>
+                        <td>
+                            <select class="form-select form-select-sm" style="width: 130px;" onchange="updateStatus('${o.id}', this.value)">
+                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                                <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    }
+    
+    function filterOrders() {
+        const status = document.getElementById('statusFilter').value;
+        if (status === 'all') {
+            filteredOrders = [...allOrders];
+        } else {
+            filteredOrders = allOrders.filter(o => o.status === status);
+        }
+        displayOrders();
+    }
+    
+    function searchOrders() {
+        const term = document.getElementById('searchOrderInput').value.toLowerCase();
+        filteredOrders = allOrders.filter(o => 
+            o.id.toLowerCase().includes(term) ||
+            o.customerName.toLowerCase().includes(term) ||
+            o.customerEmail.toLowerCase().includes(term)
+        );
+        displayOrders();
+    }
+    
+    function updateStatus(orderId, newStatus) {
+        const order = allOrders.find(o => o.id === orderId);
+        if (order) {
+            const oldStatus = order.status;
+            order.status = newStatus;
+            localStorage.setItem('orders', JSON.stringify(allOrders));
+            
+            // Also update user's order status if needed
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === order.customerEmail);
+            if (user && user.orders) {
+                const userOrder = user.orders.find(o => o.id === orderId);
+                if (userOrder) userOrder.status = newStatus;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            filterOrders();
+            alert(`Order #${orderId} status updated from ${oldStatus} to ${newStatus}`);
+        }
+    }
+    
+    loadOrders();
+</script>
 </body>
 </html>

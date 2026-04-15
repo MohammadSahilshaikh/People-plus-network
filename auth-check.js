@@ -1,84 +1,169 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const path = window.location.pathname;
-    const isLoginPage = path.includes('login.html') || path.includes('register.html');
-    const isAdminPage = path.includes('admin') && !path.includes('login');
-    const isUserPage = path.includes('user-') || path.includes('checkout.html') || path.includes('dashboard.html');
+// ============ AUTHENTICATION CHECK - Working Version ============
 
-    try {
-        const response = await fetch('/api/session');
-        const data = response.ok ? await response.json() : null;
-        const user = data ? data.user : null;
-        const joinBtn = document.querySelector('.btn-join');
-
-
-        // Security Redirection
-        if (isAdminPage && (!user || user.role !== 'admin')) {
-            window.location.href = 'admin-login.html';
-            return;
-        }
-        if (isUserPage && !user) {
+(function() {
+    const currentPath = window.location.pathname;
+    
+    // Admin credentials (fixed)
+    const ADMIN_EMAIL = 'admin@peopleplus.com';
+    const ADMIN_PASSWORD = 'admin123';
+    
+    // Check login status
+    const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    
+    // ============ PAGE REDIRECTION RULES ============
+    
+    // Admin pages - only accessible by admin
+    if (currentPath.includes('admin') && !currentPath.includes('admin-login.html')) {
+        if (!isAdminLoggedIn) {
             window.location.href = 'register.html';
             return;
         }
-        if (isLoginPage && user) {
-            window.location.href = user.role === 'admin' ? 'admin.html' : 'user-dashboard.html';
+    }
+    
+    // User dashboard pages - only accessible by logged in users
+    if (currentPath.includes('user-') || 
+        currentPath.includes('user-dashboard.html') ||
+        currentPath.includes('user-team.html') ||
+        currentPath.includes('user-genealogy.html') ||
+        currentPath.includes('user-commissions.html') ||
+        currentPath.includes('user-withdrawal.html') ||
+        currentPath.includes('user-orders.html') ||
+        currentPath.includes('user-profile.html')) {
+        
+        if (!isUserLoggedIn) {
+            window.location.href = 'register.html';
             return;
         }
-
-        // Global UI Updates
-        if (user) {
-            // Update all elements with display classes
-            document.querySelectorAll('.display-user-name').forEach(el => el.innerText = user.name);
-            document.querySelectorAll('.display-user-email').forEach(el => el.innerText = user.email);
-            document.querySelectorAll('.display-user-id').forEach(el => el.innerText = 'PPN' + (user.id || user._id || '000000').slice(-6).toUpperCase());
-            document.querySelectorAll('.display-user-avatar').forEach(el => {
-                el.src = user.avatar || 'default-avatar.png';
-            });
-
-            // Handle Navbar/Menu
-            if (joinBtn) {
-                const li = joinBtn.closest('li') || joinBtn.parentElement;
-                const dashLink = user.role === 'admin' ? 'admin.html' : 'user-dashboard.html';
-                
-                li.innerHTML = `
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center auth-visible" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 15px;">
-                            <img src="${user.avatar || 'default-avatar.png'}" class="display-user-avatar" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; object-fit: cover; margin-right: 8px;" alt="Avatar">
-                            <span class="fw-bold d-none d-md-inline" style="color:white;">${user.name.split(' ')[0]}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
-                            <li><a class="dropdown-item" href="${dashLink}"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2 text-success"></i> My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser(event)"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        </ul>
+    }
+    
+    // If already logged in and trying to access register page
+    if (currentPath.includes('register.html')) {
+        if (isAdminLoggedIn) {
+            window.location.href = 'admin.html';
+            return;
+        }
+        if (isUserLoggedIn) {
+            window.location.href = 'user-dashboard.html';
+            return;
+        }
+    }
+    
+    // ============ UPDATE NAVBAR FOR LOGGED IN USERS ============
+    function updateNavbarForLoggedInUser() {
+        const userMenu = document.getElementById('userMenu');
+        const userMenuDropdown = document.querySelector('.dropdown-menu');
+        
+        if (!userMenu) return;
+        
+        if (isAdminLoggedIn) {
+            userMenu.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div style="width: 35px; height: 35px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px;">
+                        A
                     </div>
+                    <span class="fw-bold text-white">Admin</span>
+                </div>
+            `;
+            
+            if (userMenuDropdown) {
+                userMenuDropdown.innerHTML = `
+                    <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Admin Dashboard</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                 `;
             }
-        } else {
-            // If NOT logged in, make the Join Now button visible
-            if (joinBtn) {
-                joinBtn.classList.add('auth-visible');
+        } 
+        else if (isUserLoggedIn && currentUser) {
+            const userName = currentUser.name || 'Member';
+            const firstLetter = userName.charAt(0).toUpperCase();
+            
+            userMenu.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div style="width: 35px; height: 35px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px;">
+                        ${firstLetter}
+                    </div>
+                    <span class="fw-bold text-white">${userName.split(' ')[0]}</span>
+                </div>
+            `;
+            
+            if (userMenuDropdown) {
+                userMenuDropdown.innerHTML = `
+                    <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard</a></li>
+                    <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2 text-success"></i> My Profile</a></li>
+                    <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2 text-warning"></i> My Orders</a></li>
+                    <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2 text-info"></i> Withdraw</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                `;
             }
         }
-
-        // Global Logout binding
-        document.querySelectorAll('a[href*="logout"]').forEach(el => {
-            el.onclick = logoutUser;
-        });
-
-    } catch (e) {
-        console.error('Auth Check Error:', e);
+        
+        // Update all display elements
+        if (currentUser) {
+            document.querySelectorAll('.display-user-name').forEach(el => {
+                el.innerText = currentUser.name || 'Member';
+            });
+            document.querySelectorAll('.display-user-id').forEach(el => {
+                el.innerText = currentUser.userId || currentUser.sponsor || 'PPN' + Math.floor(Math.random() * 90000 + 10000);
+            });
+        }
     }
-});
-
-async function logoutUser(e) {
-    if (e) e.preventDefault();
-    if (!confirm('Are you sure you want to logout?')) return;
-    try {
-        await fetch('/api/logout', { method: 'POST' });
-        window.location.href = 'index.html';
-    } catch (err) {
-        window.location.href = 'index.html';
+    
+    // ============ UPDATE CART COUNT ============
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const cartCountSpan = document.getElementById('cartCount');
+        if (cartCountSpan) {
+            cartCountSpan.innerText = count;
+        }
     }
+    
+    // ============ LOGOUT FUNCTION ============
+    window.logoutUser = function() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('adminEmail');
+            window.location.href = 'index.html';
+        }
+    };
+    
+    // ============ GLOBAL FUNCTIONS ============
+    window.updateCartCount = updateCartCount;
+    
+    // ============ RUN ON PAGE LOAD ============
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartCount();
+        updateNavbarForLoggedInUser();
+        
+        // Monitor cart changes
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'cart') {
+                updateCartCount();
+            }
+        };
+    });
+})();
+
+// Helper functions for pages
+function checkAdminAuth() {
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+        return false;
+    }
+    return true;
+}
+
+function checkUserAuth() {
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+        return false;
+    }
+    return true;
 }

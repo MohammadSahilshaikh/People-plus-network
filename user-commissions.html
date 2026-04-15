@@ -11,102 +11,371 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
-        .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 260px;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f9;
         }
-        .sidebar .brand { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8); padding: 12px 25px; margin: 5px 0;
-            border-radius: 10px; transition: all 0.3s;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
-        .sidebar .nav-link i { width: 25px; margin-right: 10px; }
-        .main-content { margin-left: 260px; padding: 20px; }
-        .top-navbar { background: white; padding: 15px 20px; border-radius: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .commission-table { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .chart-container { background: white; border-radius: 15px; padding: 20px; margin-top: 20px; }
         
-            .main-content { margin-left: 0; }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white !important;
+        }
+        .nav-link { color: white !important; }
+        
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .sidebar .nav-link {
+            color: #333 !important;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        .sidebar .nav-link i { width: 25px; }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card i { font-size: 2rem; color: #667eea; }
+        
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .commission-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 20px;
+            }
         }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="sidebar">
-    <div class="brand"><h3 class="d-flex align-items-center justify-content-center"><img src="site-logo.jpg" alt="People Plus" style="height: 40px; border-radius: 5px; margin-right: 10px; background: white; padding: 2px;"> PeoplePlus</h3><small>Member Dashboard</small></div>
-    <nav class="nav flex-column">
-        <a class="nav-link" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a class="nav-link" href="user-genealogy.html"><i class="fas fa-tree"></i> Genealogy Tree</a>
-        <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
-        <a class="nav-link active" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
-        <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdrawal</a>
-        <a class="nav-link" href="user-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a>
-        <a class="nav-link" href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
-        <hr class="bg-light"><a class="nav-link" href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </nav>
-</div>
+<!-- Navbar - Same as Dashboard -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+            <img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> 
+            PEOPLE PLUS NETWORK
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon bg-white rounded"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
+                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div class="main-content">
-    <div class="top-navbar d-flex justify-content-between align-items-center">
-        <button class="btn btn-sm btn-outline-primary sidebar-toggle d-md-none"><i class="fas fa-bars"></i></button>
-        <h4 class="mb-0">Commission Report</h4>
-        <div><span><i class="fas fa-user-circle fa-2x"></i></span></div>
-    </div>
-    
+<div class="container my-4">
     <div class="row">
-        <div class="col-md-3"><div class="stat-card text-center"><i class="fas fa-chart-line fa-2x text-primary"></i><h2 class="mt-2">₹12,500</h2><p class="text-muted">Total Commission</p></div>
-        <div class="col-md-3"><div class="stat-card text-center"><i class="fas fa-calendar-week fa-2x text-success"></i><h2 class="mt-2">₹1,250</h2><p class="text-muted">This Month</p></div>
-        <div class="col-md-3"><div class="stat-card text-center"><i class="fas fa-clock fa-2x text-warning"></i><h2 class="mt-2">₹250</h2><p class="text-muted">Today</p></div>
-        <div class="col-md-3"><div class="stat-card text-center"><i class="fas fa-wallet fa-2x text-info"></i><h2 class="mt-2">₹25,000</h2><p class="text-muted">Wallet Balance</p></div>
-    </div>
-    
-    <div class="commission-table">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5><i class="fas fa-history"></i> Commission History</h5>
-            <select class="form-select w-auto"><option>Last 30 days</option><option>This Month</option><option>Last 3 Months</option></select>
+        <!-- Sidebar - Same as Dashboard -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <div class="text-center mb-3">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="80" alt="User">
+                    <h5 class="mt-2"><span class="display-user-name">Loading...</span></h5>
+                    <p class="text-muted small">Member ID: <span class="display-user-id">---</span></p>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <hr>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
+                   
+                    <a class="nav-link active" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
+                    <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+                    <a class="nav-link" href="user-orders.html"><i class="fas fa-shopping-cart"></i> My Orders</a>
+                    <a class="nav-link" href="user-profile.html"><i class="fas fa-user-edit"></i> Profile</a>
+                    <a class="nav-link text-danger mt-3" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            </div>
         </div>
-        <div class="table-responsive">
-            <div class="table-responsive"><table class="table table-hover">
-                <thead><tr><th>Date</th><th>Source</th><th>Order ID</th><th>Amount</th><th>Status</th></tr></thead>
-                <tbody>
-                    <tr><td>2024-12-15</td><td><span class="badge bg-success">Left Leg</span></td><td>#ORD001</td><td>₹250</td><td><span class="badge bg-success">Credited</span></td></tr>
-                    <tr><td>2024-12-14</td><td><span class="badge bg-danger">Right Leg</span></td><td>#ORD002</td><td>₹180</td><td><span class="badge bg-success">Credited</span></td></tr>
-                    <tr><td>2024-12-13</td><td><span class="badge bg-success">Left Leg</span></td><td>#ORD003</td><td>₹320</td><td><span class="badge bg-success">Credited</span></td></tr>
-                    <tr><td>2024-12-12</td><td><span class="badge bg-danger">Right Leg</span></td><td>#ORD004</td><td>₹150</td><td><span class="badge bg-success">Credited</span></td></tr>
-                    <tr><td>2024-12-11</td><td><span class="badge bg-success">Left Leg</span></td><td>#ORD005</td><td>₹420</td><td><span class="badge bg-success">Credited</span></td></tr>
-                    <tr><td>2024-12-10</td><td><span class="badge bg-warning">Matching Bonus</span></td><td>-</td><td>₹500</td><td><span class="badge bg-success">Credited</span></td></tr>
-                </tbody>
-            </table></div>
-        </div>
-        <nav><ul class="pagination justify-content-center mt-3"><li class="page-item active"><a class="page-link" href="#">1</a></li><li class="page-item"><a class="page-link" href="#">2</a></li><li class="page-item"><a class="page-link" href="#">3</a></li></ul></nav>
-    </div>
-    
-    <div class="chart-container">
-        <h5><i class="fas fa-chart-bar"></i> Commission Trend (Last 7 Days)</h5>
-        <div class="mt-3">
-            <div class="d-flex justify-content-between align-items-end" style="height: 200px;">
-                <div class="text-center"><div style="height: 80px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Mon</small></div>
-                <div class="text-center"><div style="height: 120px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Tue</small></div>
-                <div class="text-center"><div style="height: 60px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Wed</small></div>
-                <div class="text-center"><div style="height: 150px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Thu</small></div>
-                <div class="text-center"><div style="height: 200px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Fri</small></div>
-                <div class="text-center"><div style="height: 100px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Sat</small></div>
-                <div class="text-center"><div style="height: 140px; width: 40px; background: #667eea; border-radius: 5px;"></div><small>Sun</small></div>
+        
+        <!-- Main Content - Commissions -->
+        <div class="col-md-9">
+            <!-- Welcome Row -->
+            <div class="content-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4>Commission Report 💰</h4>
+                        <p class="text-muted">Track your earnings and commission history</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted">Last updated: <span id="lastUpdated"></span></small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-chart-line fa-2x text-primary"></i>
+                        <h3 class="mt-2" id="totalCommission">₹0</h3>
+                        <p class="text-muted">Total Commission</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-calendar-week fa-2x text-success"></i>
+                        <h3 class="mt-2" id="monthlyCommission">₹0</h3>
+                        <p class="text-muted">This Month</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-clock fa-2x text-warning"></i>
+                        <h3 class="mt-2" id="todayCommission">₹0</h3>
+                        <p class="text-muted">Today</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-wallet fa-2x text-info"></i>
+                        <h3 class="mt-2" id="walletBalance">₹0</h3>
+                        <p class="text-muted">Wallet Balance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Commission History Table -->
+            <div class="commission-table">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h5><i class="fas fa-history"></i> Commission History</h5>
+                    <select class="form-select w-auto" id="filterPeriod" onchange="filterCommissions()">
+                        <option value="all">All Time</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="month">This Month</option>
+                        <option value="90">Last 3 Months</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commissionTableBody">
+                            <tr><td colspan="4" class="text-center">Loading commissions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav>
+                    <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
+                </nav>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    document.querySelector('.sidebar-toggle')?.addEventListener('click', function() {
-        document.querySelector('.sidebar').classList.toggle('show');
-    });
-</script>
+<footer class="footer bg-dark text-white py-3 mt-4">
+    <div class="container text-center">
+        <small>&copy; 2024 People Plus Network. All rights reserved.</small>
+    </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth-check.js"></script>
+<script>
+    // ============ AUTHENTICATION CHECK ============
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+    }
+
+    // Get current user
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    if (!currentUser) {
+        window.location.href = 'register.html';
+    }
+    
+    // Update sidebar user info
+    document.querySelectorAll('.display-user-name').forEach(el => {
+        el.innerText = currentUser.name || currentUser.email || 'Member';
+    });
+    document.querySelectorAll('.display-user-id').forEach(el => {
+        el.innerText = currentUser.userId || currentUser.sponsor || 'PPN10001';
+    });
+    
+    // Set last updated
+    document.getElementById('lastUpdated').innerText = new Date().toLocaleString();
+    
+    // ============ COMMISSIONS DATA ============
+    let allCommissions = [];
+    let currentPage = 1;
+    const rowsPerPage = 5;
+    let filteredCommissions = [];
+    
+    // Load or create commission data
+    function loadCommissionData() {
+        let savedCommissions = localStorage.getItem('commissions');
+        if (savedCommissions) {
+            allCommissions = JSON.parse(savedCommissions);
+        } else {
+            // Sample commission data
+            allCommissions = [
+                { date: '2024-12-15', orderId: '#ORD001', amount: 250, status: 'Credited' },
+                { date: '2024-12-14', orderId: '#ORD002', amount: 180, status: 'Credited' },
+                { date: '2024-12-13', orderId: '#ORD003', amount: 320, status: 'Credited' },
+                { date: '2024-12-12', orderId: '#ORD004', amount: 150, status: 'Credited' },
+                { date: '2024-12-11', orderId: '#ORD005', amount: 420, status: 'Credited' },
+                { date: '2024-12-10', orderId: '-', amount: 500, status: 'Credited' },
+                { date: '2024-12-09', orderId: '#ORD006', amount: 200, status: 'Credited' },
+                { date: '2024-12-08', orderId: '#ORD007', amount: 310, status: 'Credited' },
+                { date: '2024-12-07', orderId: '-', amount: 1000, status: 'Credited' },
+                { date: '2024-12-06', orderId: '#ORD008', amount: 175, status: 'Credited' }
+            ];
+            localStorage.setItem('commissions', JSON.stringify(allCommissions));
+        }
+        
+        // Update wallet balance from current user
+        let walletBalance = currentUser.wallet || 25000;
+        document.getElementById('walletBalance').innerHTML = '₹' + walletBalance.toLocaleString();
+        
+        updateStats();
+        filterCommissions();
+    }
+    
+    // Update statistics
+    function updateStats() {
+        const total = allCommissions.reduce((sum, c) => sum + c.amount, 0);
+        
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        const monthly = allCommissions.filter(c => {
+            let date = new Date(c.date);
+            return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        }).reduce((sum, c) => sum + c.amount, 0);
+        
+        const today = new Date().toDateString();
+        const todayTotal = allCommissions.filter(c => {
+            return new Date(c.date).toDateString() === today;
+        }).reduce((sum, c) => sum + c.amount, 0);
+        
+        document.getElementById('totalCommission').innerHTML = '₹' + total.toLocaleString();
+        document.getElementById('monthlyCommission').innerHTML = '₹' + monthly.toLocaleString();
+        document.getElementById('todayCommission').innerHTML = '₹' + todayTotal.toLocaleString();
+    }
+    
+    // Filter commissions based on period
+    function filterCommissions() {
+        const period = document.getElementById('filterPeriod').value;
+        const now = new Date();
+        
+        if (period === 'all') {
+            filteredCommissions = [...allCommissions];
+        } else if (period === '30') {
+            const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+            filteredCommissions = allCommissions.filter(c => new Date(c.date) >= thirtyDaysAgo);
+        } else if (period === 'month') {
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            filteredCommissions = allCommissions.filter(c => {
+                let date = new Date(c.date);
+                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+            });
+        } else if (period === '90') {
+            const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90));
+            filteredCommissions = allCommissions.filter(c => new Date(c.date) >= ninetyDaysAgo);
+        }
+        
+        currentPage = 1;
+        displayCommissionTable();
+    }
+    
+    // Display commission table with pagination
+    function displayCommissionTable() {
+        const totalPages = Math.ceil(filteredCommissions.length / rowsPerPage);
+        const start = (currentPage - 1) * rowsPerPage;
+        const paginatedCommissions = filteredCommissions.slice(start, start + rowsPerPage);
+        
+        const tbody = document.getElementById('commissionTableBody');
+        if (paginatedCommissions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">No commissions found</td></tr>';
+        } else {
+            tbody.innerHTML = paginatedCommissions.map(c => `
+                <tr>
+                    <td>${c.date}</td>
+                    <td>${c.orderId}</td>
+                    <td>₹${c.amount}</td>
+                    <td><span class="badge bg-success">${c.status}</span></td>
+                </tr>
+            `).join('');
+        }
+        
+        // Update pagination
+        const pagination = document.getElementById('pagination');
+        if (totalPages > 1) {
+            let paginationHtml = '';
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a></li>`;
+            }
+            pagination.innerHTML = paginationHtml;
+        } else {
+            pagination.innerHTML = '';
+        }
+    }
+    
+    function changePage(page) {
+        currentPage = page;
+        displayCommissionTable();
+    }
+    
+    // Update cart count
+    function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let cartCountSpan = document.getElementById('cartCount');
+        if (cartCountSpan) cartCountSpan.innerText = count;
+    }
+    
+    // Logout function
+    function logout() {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'register.html';
+    }
+    
+    // Initialize
+    loadCommissionData();
+    updateCartCount();
+</script>
 </body>
 </html>

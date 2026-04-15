@@ -12,69 +12,308 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
-        .admin-sidebar sidebar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 260px;
-        }
-        .admin-sidebar sidebar .brand { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .admin-sidebar sidebar .nav-link {
-            color: rgba(255,255,255,0.7); padding: 12px 25px; margin: 5px 0; border-radius: 10px;
-        }
-        .admin-sidebar sidebar .nav-link:hover, .admin-sidebar sidebar .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
-        .admin-sidebar sidebar .nav-link i { width: 25px; margin-right: 10px; }
-        .admin-content { margin-left: 260px; padding: 20px; }
-        .admin-navbar { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; }
-        .product-table { background: white; border-radius: 15px; padding: 20px; }
-        .btn-add { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
         
-            .admin-content { margin-left: 0; }
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .admin-sidebar .brand {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-sidebar .brand img {
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            padding: 2px;
+        }
+        .admin-sidebar .brand h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 12px 25px;
+            margin: 5px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .admin-sidebar .nav-link i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .admin-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .admin-header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .btn-add {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        .sidebar-toggle {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            .admin-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
         }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="admin-sidebar sidebar sidebar">
-    <div class="brand text-center p-3">
-                <img src="site-logo.jpg" alt="Logo" style="height: 50px; border-radius: 8px; margin-bottom: 10px; background: white; padding: 2px;">
-                <h3 class="text-white mb-0">PeoplePlus</h3>
-                <small class="opacity-75">Admin Panel</small>
-            </div>
+<!-- Admin Sidebar -->
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="brand">
+        <img src="site-logo.jpg" alt="Logo">
+        <h3 class="text-white">PeoplePlus</h3>
+        <small class="opacity-75">Admin Panel</small>
+    </div>
     <nav class="nav flex-column">
         <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a class="nav-link active" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
-        
-        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <a class="nav-link active" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
-        <hr class="bg-light"><a class="nav-link" href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr class="bg-light">
+        <a class="nav-link" href="index.html"><i class="fas fa-globe"></i> View Website</a>
+        <a class="nav-link" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
 </div>
 
+<!-- Main Content -->
 <div class="admin-content">
-    <div class="admin-navbar d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Product Management</h4>
-        <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="fas fa-plus"></i> Add Product</button>
+    <div class="admin-header">
+        <div>
+            <button class="btn btn-sm btn-outline-primary sidebar-toggle me-2" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="mb-0 d-inline-block">Product Management</h4>
+        </div>
+        <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            <i class="fas fa-plus"></i> Add Product
+        </button>
     </div>
     
     <div class="product-table">
         <div class="table-responsive">
-            <div class="table-responsive"><table class="table table-hover">
-                <thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
-                <tbody>
-                    <tr><td>1</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Ayurvedic Protein Powder</td><td>₹999</td><td>250</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
-                    <tr><td>2</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Herbal Immunity Booster</td><td>₹599</td><td>500</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
-                    <tr><td>3</td><td><img src="https://via.placeholder.com/40x40" class="rounded" width="40"></td><td>Organic Green Tea</td><td>₹399</td><td>1000</td><td><span class="badge bg-success">Active</span></td><td><button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>
+            <table class="table table-hover">
+                <thead>
+                    <tr><th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>MRP</th><th>Stock</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
                 </tbody>
-            </table></div>
+            </table>
         </div>
     </div>
 </div>
 
 <!-- Add Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5>Add New Product</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form><div class="row"><div class="col-md-6 mb-3"><label>Product Name</label><input type="text" class="form-control"></div><div class="col-md-6 mb-3"><label>Category</label><select class="form-select"><option>Health Supplements</option><option>Herbal Products</option></select></div><div class="col-md-6 mb-3"><label>Price (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>MRP (₹)</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Stock</label><input type="number" class="form-control"></div><div class="col-md-6 mb-3"><label>Product Image</label><input type="file" class="form-control"></div><div class="col-12 mb-3"><label>Description</label><textarea class="form-control" rows="3"></textarea></div></form></div><div class="modal-footer"><button class="btn btn-primary">Save Product</button><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div></div>
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="mb-3">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Price (₹)</label>
+                        <input type="number" class="form-control" id="productPrice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>MRP (₹)</label>
+                        <input type="number" class="form-control" id="productMrp" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Stock</label>
+                        <input type="number" class="form-control" id="productStock" value="100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Image URL</label>
+                        <input type="text" class="form-control" id="productImage" placeholder="https://via.placeholder.com/300x250">
+                    </div>
+                    <div class="mb-3">
+                        <label>Description</label>
+                        <textarea class="form-control" id="productDesc" rows="2" placeholder="Product description"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth-check.js"></script>
+<script>
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+    }
+    
+    let products = [];
+    
+    function toggleSidebar() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    }
+    
+    function logoutUser() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminEmail');
+            window.location.href = 'index.html';
+        }
+    }
+    
+    // Function to update public products (for website)
+    function updatePublicProducts() {
+        localStorage.setItem('publicProducts', JSON.stringify(products));
+        localStorage.setItem('products', JSON.stringify(products));
+    }
+    
+    function loadProducts() {
+        // First try to load from adminProducts
+        let savedProducts = localStorage.getItem('adminProducts');
+        if (savedProducts) {
+            products = JSON.parse(savedProducts);
+        } else {
+            // Try to load from public products
+            let publicProducts = localStorage.getItem('publicProducts');
+            if (publicProducts) {
+                products = JSON.parse(publicProducts);
+            } else {
+                // Default products
+                products = [
+                    { id: 1, name: 'Ayurvedic Protein Powder', price: 999, mrp: 1499, stock: 250, image: 'https://via.placeholder.com/300x250/667eea/white?text=Protein', desc: 'Pure Ayurvedic protein powder for daily health' },
+                    { id: 2, name: 'Herbal Immunity Tea', price: 599, mrp: 999, stock: 500, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Tea', desc: 'Boost your immunity naturally' },
+                    { id: 3, name: 'Organic Skin Cream', price: 799, mrp: 1299, stock: 300, image: 'https://via.placeholder.com/300x250/667eea/white?text=Cream', desc: 'Natural skin care cream' },
+                    { id: 4, name: 'Nutrition Supplement', price: 1499, mrp: 2499, stock: 200, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Supplement', desc: 'Complete daily nutrition' }
+                ];
+            }
+        }
+        
+        // Save to both locations for sync
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+        localStorage.setItem('publicProducts', JSON.stringify(products));
+        localStorage.setItem('products', JSON.stringify(products));
+        
+        displayProducts();
+    }
+    
+    function displayProducts() {
+        const tbody = document.getElementById('productsTableBody');
+        if (products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No products found</td></tr>';
+        } else {
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td><img src="${p.image}" width="50" class="rounded" style="object-fit: cover;"></td>
+                    <td><strong>${p.name}</strong><br><small class="text-muted">${p.desc || ''}</small></td>
+                    <td>₹${p.price}</td>
+                    <td><span class="text-muted">₹${p.mrp}</span></td>
+                    <td>${p.stock}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})" title="Delete Product">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+    
+    document.getElementById('addProductForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        const newProduct = {
+            id: newId,
+            name: document.getElementById('productName').value,
+            price: parseInt(document.getElementById('productPrice').value),
+            mrp: parseInt(document.getElementById('productMrp').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            image: document.getElementById('productImage').value || 'https://via.placeholder.com/300x250/667eea/white?text=New+Product',
+            desc: document.getElementById('productDesc').value || ''
+        };
+        
+        products.push(newProduct);
+        
+        // Save to ALL locations for sync
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+        localStorage.setItem('publicProducts', JSON.stringify(products));
+        localStorage.setItem('products', JSON.stringify(products));
+        
+        displayProducts();
+        bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+        document.getElementById('addProductForm').reset();
+        
+        alert('✅ Product added successfully! It will now show on the website.');
+    });
+    
+    function deleteProduct(id) {
+        if (confirm('Delete this product permanently?')) {
+            products = products.filter(p => p.id !== id);
+            
+            // Save to ALL locations for sync
+            localStorage.setItem('adminProducts', JSON.stringify(products));
+            localStorage.setItem('publicProducts', JSON.stringify(products));
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            displayProducts();
+            alert('✅ Product deleted successfully! It has been removed from the website.');
+        }
+    }
+    
+    loadProducts();
+</script>
 </body>
 </html>

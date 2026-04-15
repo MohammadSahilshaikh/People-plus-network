@@ -29,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -76,14 +75,6 @@
             border-radius: 2px;
         }
 
-        .btn-join {
-            background: #ffd700;
-            color: #333 !important;
-            border-radius: 50px;
-            padding: 8px 25px !important;
-        }
-
-        /* Main Container */
         .main-container {
             flex: 1;
             display: flex;
@@ -208,27 +199,10 @@
             border-radius: 15px;
         }
 
-        .fade-in {
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @media (max-width: 768px) {
             .auth-body {
                 padding: 25px;
             }
-
             .navbar-brand {
                 font-size: 1rem;
             }
@@ -296,11 +270,11 @@
 
                     <ul class="nav nav-pills" id="authTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="login-tab" data-bs-toggle="pill" data-bs-target="#login"
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login"
                                 type="button" role="tab">Login</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="register-tab" data-bs-toggle="pill"
+                            <button class="nav-link" id="register-tab" data-bs-toggle="pill"
                                 data-bs-target="#register" type="button" role="tab">Join Now</button>
                         </li>
                     </ul>
@@ -310,7 +284,7 @@
                     <div class="tab-content" id="authTabContent">
 
                         <!-- Login Tab -->
-                        <div class="tab-pane fade" id="login" role="tabpanel">
+                        <div class="tab-pane fade show active" id="login" role="tabpanel">
                             <form id="loginForm" autocomplete="off">
                                 <div class="form-group">
                                     <label><i class="fas fa-envelope"></i> Email Address</label>
@@ -324,19 +298,18 @@
                                         placeholder="Enter your password" required>
                                 </div>
 
-                                <div class="form-group text-end">
-                                    <a href="forgot-password.html" class="text-decoration-none small">Forgot
-                                        Password?</a>
-                                </div>
-
                                 <button type="submit" class="btn-auth">
                                     <i class="fas fa-sign-in-alt"></i> Login Securely
                                 </button>
                             </form>
+                            
+                            <div class="text-center mt-3">
+                                <small class="text-muted">Admin: admin@peopleplus.com / admin123</small>
+                            </div>
                         </div>
 
                         <!-- Register Tab -->
-                        <div class="tab-pane fade show active" id="register" role="tabpanel">
+                        <div class="tab-pane fade" id="register" role="tabpanel">
                             <form id="registerForm" autocomplete="off">
                                 <div class="form-group">
                                     <label><i class="fas fa-user"></i> Full Name *</label>
@@ -358,38 +331,12 @@
                                 <div class="form-group">
                                     <label><i class="fas fa-lock"></i> Password *</label>
                                     <input type="password" id="regPassword" autocomplete="new-password"
-                                        placeholder="Create a strong password" required>
-                                </div>
-
-                                <div class="form-group border rounded p-3 text-center mb-3 payment-box">
-                                    <label class="text-danger fw-bold"><i class="fas fa-qrcode"></i> Account Activation
-                                        Fee:
-                                        ₹499</label>
-                                    <p class="small text-muted mb-2">Scan the QR below with PhonePe, GPay, or Paytm to
-                                        pay.
-                                    </p>
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=paytmqr2810050501011sq8k6p1f3k2@paytm"
-                                        alt="Payment QR Code"
-                                        style="width: 160px; border-radius: 5px; border: 4px solid black; padding: 5px; background: white; margin-bottom: 10px;">
-
-                                    <label class="text-start mt-2"><i class="fas fa-receipt"></i> Enter Transaction ID /
-                                        UTR
-                                        No *</label>
-                                    <input type="text" id="regTransactionId" placeholder="12-digit UTR Number" required>
-
-                                    <label class="text-start mt-2"><i class="fas fa-rupee-sign"></i> Amount Paid
-                                        *</label>
-                                    <input type="number" id="regAmount" placeholder="Enter Amount (Must be 499)"
-                                        required>
-
-                                    <p class="small text-success mt-1 fw-bold">Verification is automatic! Fill correctly
-                                        to
-                                        activate.</p>
+                                        placeholder="Create a strong password (min 6 characters)" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label><i class="fas fa-user-friends"></i> Sponsor ID</label>
-                                    <input type="text" id="regSponsor" placeholder="Enter sponsor ID (Optional)">
+                                    <label><i class="fas fa-user-friends"></i> Sponsor ID (Optional)</label>
+                                    <input type="text" id="regSponsor" placeholder="Enter sponsor ID if any">
                                 </div>
 
                                 <button type="submit" class="btn-auth">
@@ -409,11 +356,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="auth-check.js"></script>
     <script>
-        // Login Logic
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // ============ UPDATE CART COUNT ============
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            let cartCountSpan = document.getElementById('cartCount');
+            if (cartCountSpan) cartCountSpan.innerText = count;
+        }
+
+        // ============ LOGIN LOGIC (Using API) ============
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
+            
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
             if (!email || !password) {
@@ -421,49 +378,38 @@
                 return;
             }
 
-            // Demo login - in real app, connect to backend
-            if (email === 'admin@example.com' && password === 'password') {
-                localStorage.setItem('adminLoggedIn', 'true');
-                window.location.href = 'admin-index.html';
-            } else if (email === 'user@example.com' && password === 'user123') {
-                localStorage.setItem('userLoggedIn', 'true');
-                window.location.href = 'user-dashboard.html';
-            } else {
-                // Check registered users
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                let user = users.find(u => u.email === email && u.password === password);
-                if (user) {
-                    localStorage.setItem('userLoggedIn', 'true');
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    window.location.href = 'user-dashboard.html';
+            try {
+                const result = await loginUser(email, password);
+                
+                if (result.success) {
+                    if (result.user.role === 'admin') {
+                        alert('✅ Welcome Admin!');
+                        window.location.href = 'admin.html';
+                    } else {
+                        alert('✅ Login Successful!');
+                        window.location.href = 'user-dashboard.html';
+                    }
                 } else {
-                    alert('Invalid credentials! Use admin@example.com / password');
+                    alert('❌ Login failed: ' + (result.error || 'Invalid credentials'));
                 }
+            } catch (error) {
+                alert('❌ Backend server not running. Please start the server first.');
+                console.error(error);
             }
         });
 
-        // Register Logic
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        // ============ REGISTER LOGIC (Using API) ============
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const phone = document.getElementById('regPhone').value;
+            
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
             const password = document.getElementById('regPassword').value;
-            const transactionId = document.getElementById('regTransactionId').value;
-            const amount = document.getElementById('regAmount').value;
+            const sponsor = document.getElementById('regSponsor').value.trim();
 
             if (!name || !email || !phone || !password) {
                 alert('Please fill all required fields!');
-                return;
-            }
-
-            if (amount != 499) {
-                alert("Registration failed! You must pay exactly ₹499 to create an account.");
-                return;
-            }
-
-            if (!transactionId) {
-                alert("Please enter Transaction ID / UTR Number");
                 return;
             }
 
@@ -472,49 +418,34 @@
                 return;
             }
 
-            // Save user to localStorage
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-
-            // Check if email already exists
-            if (users.find(u => u.email === email)) {
-                alert("Email already registered! Please login.");
-                return;
+            try {
+                const result = await registerUser({
+                    name, email, phone, password, sponsor
+                });
+                
+                if (result.success) {
+                    alert('✅ Registration successful! Welcome to People Plus Network!');
+                    window.location.href = 'user-dashboard.html';
+                } else {
+                    alert('❌ Registration failed: ' + (result.error || 'Please try again'));
+                }
+            } catch (error) {
+                alert('❌ Backend server not running. Please start the server first.');
+                console.error(error);
             }
-
-            let newUser = {
-                name: name,
-                email: email,
-                phone: phone,
-                password: password,
-                sponsor: document.getElementById('regSponsor').value || 'PPN0001',
-                transactionId: transactionId,
-                amount: amount,
-                joined: new Date().toISOString(),
-                status: 'active'
-            };
-
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('user', JSON.stringify({ name: name, email: email, phone: phone }));
-            localStorage.setItem('userPassword', password);
-
-            alert('Payment Verified! Account created successfully. Logging you in...');
-
-            // Auto login
-            localStorage.setItem('userLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            window.location.href = 'user-dashboard.html';
         });
 
-        // Update cart count
-        function updateCartCount() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            let cartCountSpan = document.getElementById('cartCount');
-            if (cartCountSpan) cartCountSpan.innerText = count;
-        }
-
+        // Update cart count on page load
         updateCartCount();
+        
+        // Monitor cart changes
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'cart') {
+                updateCartCount();
+            }
+        };
     </script>
 </body>
 

@@ -16,53 +16,64 @@
             background: #f4f6f9;
         }
         
-        .admin-sidebar sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             color: white;
             position: fixed;
             left: 0;
             top: 0;
             width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
         }
-        
-        .admin-sidebar sidebar .brand {
-            padding: 20px;
+        .admin-sidebar .brand {
+            padding: 25px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .admin-sidebar sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
+        .admin-sidebar .brand img {
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            padding: 2px;
+        }
+        .admin-sidebar .brand h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
             padding: 12px 25px;
             margin: 5px 0;
-            transition: all 0.3s;
             border-radius: 10px;
+            text-decoration: none;
+            display: block;
         }
-        
-        .admin-sidebar sidebar .nav-link:hover,
-        .admin-sidebar sidebar .nav-link.active {
-            background: rgba(255,255,255,0.2);
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
             color: white;
         }
-        
-        .admin-sidebar sidebar .nav-link i { width: 25px; margin-right: 10px; }
+        .admin-sidebar .nav-link i {
+            width: 25px;
+            margin-right: 10px;
+        }
         
         .admin-content {
             margin-left: 260px;
             padding: 20px;
         }
-        
-        .admin-navbar {
+        .admin-header {
             background: white;
             padding: 15px 20px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
         .stat-card {
             background: white;
             border-radius: 15px;
@@ -70,138 +81,214 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             transition: all 0.3s;
         }
-        .stat-card i { font-size: 2rem; color: #667eea; }
-        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: #667eea;
+        }
         .table-card {
             background: white;
             border-radius: 15px;
             padding: 20px;
             margin-top: 20px;
         }
+        .sidebar-toggle {
+            display: none;
+        }
         
-        
-            .admin-content { margin-left: 0; }
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            .admin-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
         }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="admin-sidebar sidebar sidebar">
-    <div class="brand text-center p-3">
-                <img src="site-logo.jpg" alt="Logo" style="height: 50px; border-radius: 8px; margin-bottom: 10px; background: white; padding: 2px;">
-                <h3 class="text-white mb-0">PeoplePlus</h3>
-                <small class="opacity-75">Admin Panel</small>
-            </div>
+<!-- Admin Sidebar -->
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="brand">
+        <img src="site-logo.jpg" alt="Logo">
+        <h3 class="text-white">PeoplePlus</h3>
+        <small class="opacity-75">Admin Panel</small>
+    </div>
     <nav class="nav flex-column">
         <a class="nav-link active" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
-        
-        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
         <a class="nav-link" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
-        <a class="nav-link" href="admin-settings.html"><i class="fas fa-cog"></i> Settings</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
         <hr class="bg-light">
         <a class="nav-link" href="index.html"><i class="fas fa-globe"></i> View Website</a>
-        <a class="nav-link" href="#" onclick="logoutUser(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a class="nav-link" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
 </div>
 
+<!-- Main Content -->
 <div class="admin-content">
-    <div class="admin-navbar">
-        <h4 class="mb-0">Dashboard</h4>
+    <div class="admin-header">
         <div>
-            <span class="me-3"><i class="fas fa-user-circle"></i> Admin User</span>
-            <button class="btn btn-sm btn-outline-primary sidebar-toggle"><i class="fas fa-bars"></i></button>
+            <button class="btn btn-sm btn-outline-primary sidebar-toggle me-2" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="mb-0 d-inline-block">Dashboard</h4>
+        </div>
+        <div>
+            <span class="me-3"><i class="fas fa-user-circle"></i> <span id="adminName">Admin</span></span>
         </div>
     </div>
     
-    <!-- Stats Row -->
     <div class="row g-4">
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card text-center">
                 <i class="fas fa-users"></i>
-                <h3 class="mt-2">1,250</h3>
+                <h3 class="mt-2" id="totalUsers">0</h3>
                 <p class="text-muted">Total Users</p>
-                <small class="text-success"><i class="fas fa-arrow-up"></i> +45 this week</small>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card text-center">
                 <i class="fas fa-rupee-sign"></i>
-                <h3 class="mt-2">₹45,000</h3>
-                <p class="text-muted">Today's Sales</p>
-                <small class="text-success"><i class="fas fa-arrow-up"></i> +12% from yesterday</small>
+                <h3 class="mt-2" id="totalSales">₹0</h3>
+                <p class="text-muted">Total Sales</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card text-center">
                 <i class="fas fa-clock"></i>
-                <h3 class="mt-2">15</h3>
+                <h3 class="mt-2" id="pendingWithdrawals">0</h3>
                 <p class="text-muted">Pending Withdrawals</p>
-                <small class="text-warning">Amount: ₹45,000</small>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
-                <h3 class="mt-2">₹12.5L</h3>
-                <p class="text-muted">Total Revenue</p>
-                <small class="text-success">Lifetime</small>
+            <div class="stat-card text-center">
+                <i class="fas fa-box"></i>
+                <h3 class="mt-2" id="totalProducts">0</h3>
+                <p class="text-muted">Total Products</p>
             </div>
         </div>
     </div>
     
-    <!-- Recent Orders -->
     <div class="table-card">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5><i class="fas fa-shopping-cart"></i> Recent Orders</h5>
             <a href="admin-orders.html" class="btn btn-sm btn-outline-primary">View All</a>
         </div>
         <div class="table-responsive">
-            <div class="table-responsive"><table class="table table-hover">
+            <table class="table table-hover">
                 <thead>
-                    <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr>
+                    <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td>#ORD1001</td><td><span class="display-user-name">Rajesh Kumar</span></td><td>₹999</td><td><span class="badge bg-success">Delivered</span></td><td>Dec 15, 2024</td><td><button class="btn btn-sm btn-primary">View</button></td></tr>
-                    <tr><td>#ORD1002</td><td>Priya Singh</td><td>₹1,499</td><td><span class="badge bg-warning">Processing</span></td><td>Dec 15, 2024</td><td><button class="btn btn-sm btn-primary">View</button></td></tr>
-                    <tr><td>#ORD1003</td><td>Amit Sharma</td><td>₹799</td><td><span class="badge bg-success">Delivered</span></td><td>Dec 14, 2024</td><td><button class="btn btn-sm btn-primary">View</button></td></tr>
-                    <tr><td>#ORD1004</td><td>Neha Gupta</td><td>₹2,499</td><td><span class="badge bg-danger">Pending</span></td><td>Dec 14, 2024</td><td><button class="btn btn-sm btn-primary">View</button></td></tr>
+                <tbody id="recentOrdersBody">
+                    <tr><td colspan="5" class="text-center">Loading...</td></tr>
                 </tbody>
-            </table></div>
+            </table>
         </div>
     </div>
     
-    <!-- Recent Users -->
     <div class="table-card">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5><i class="fas fa-user-plus"></i> New Users (Last 7 Days)</h5>
+            <h5><i class="fas fa-user-plus"></i> Recent Users</h5>
             <a href="admin-users.html" class="btn btn-sm btn-outline-primary">Manage Users</a>
         </div>
         <div class="table-responsive">
-            <div class="table-responsive"><table class="table table-hover">
+            <table class="table table-hover">
                 <thead>
-                    <tr><th>Name</th><th>Email</th><th>Phone</th><th>Sponsor ID</th><th>Joined</th><th>Status</th></tr>
+                    <tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td><span class="display-user-name">Rajesh Kumar</span></td><td>rajesh@email.com</td><td>9876543210</td><td><span class="display-user-id">PPN10001</span></td><td>Dec 15, 2024</td><td><span class="badge bg-success">Active</span></td></tr>
-                    <tr><td>Priya Singh</td><td>priya@email.com</td><td>9876543211</td><td>PPN10002</td><td>Dec 14, 2024</td><td><span class="badge bg-success">Active</span></td></tr>
-                    <tr><td>Amit Sharma</td><td>amit@email.com</td><td>9876543212</td><td><span class="display-user-id">PPN10001</span></td><td>Dec 14, 2024</td><td><span class="badge bg-warning">Pending</span></td></tr>
+                <tbody id="recentUsersBody">
+                    <tr><td colspan="5" class="text-center">Loading...</td></tr>
                 </tbody>
-            </table></div>
+            </table>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.querySelector('.sidebar-toggle')?.addEventListener('click', function() {
-        document.querySelector('.admin-sidebar sidebar').style.transform = 
-            document.querySelector('.admin-sidebar sidebar').style.transform === 'translateX(0px)' ? 
-            'translateX(-100%)' : 'translateX(0px)';
-    });
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'register.html';
+    }
+    
+    function toggleSidebar() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    }
+    
+    function logoutUser() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminEmail');
+            window.location.href = 'index.html';
+        }
+    }
+    
+    function loadDashboard() {
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let withdrawals = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
+        let products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+        
+        document.getElementById('totalUsers').innerText = users.length;
+        document.getElementById('totalProducts').innerText = products.length;
+        
+        let totalSales = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+        document.getElementById('totalSales').innerHTML = '₹' + totalSales.toLocaleString();
+        
+        let pendingWithdrawals = withdrawals.filter(w => w.status === 'Pending');
+        document.getElementById('pendingWithdrawals').innerText = pendingWithdrawals.length;
+        
+        let recentOrders = orders.slice(-5).reverse();
+        let ordersHtml = '';
+        if (recentOrders.length === 0) {
+            ordersHtml = '<tr><td colspan="5" class="text-center">No orders found</td></tr>';
+        } else {
+            recentOrders.forEach(o => {
+                let statusClass = o.status === 'Delivered' ? 'success' : (o.status === 'Processing' ? 'warning' : 'secondary');
+                ordersHtml += `
+                    <tr>
+                        <td><strong>#${o.id}</strong></td>
+                        <td>${o.customerName || 'User'}</td>
+                        <td>₹${(o.total || 0).toLocaleString()}</td>
+                        <td><span class="badge bg-${statusClass}">${o.status || 'Pending'}</span></td>
+                        <td>${o.date}</td>
+                    </tr>
+                `;
+            });
+        }
+        document.getElementById('recentOrdersBody').innerHTML = ordersHtml;
+        
+        let recentUsers = users.slice(-5).reverse();
+        let usersHtml = '';
+        if (recentUsers.length === 0) {
+            usersHtml = '<tr><td colspan="5" class="text-center">No users found</td></tr>';
+        } else {
+            recentUsers.forEach(u => {
+                usersHtml += `
+                    <tr>
+                        <td><i class="fas fa-user-circle text-primary"></i> ${u.name || 'N/A'}</td>
+                        <td>${u.email}</td>
+                        <td>${u.phone || 'N/A'}</td>
+                        <td>${u.joined ? new Date(u.joined).toLocaleDateString() : 'N/A'}</td>
+                        <td><span class="badge bg-${u.status === 'active' ? 'success' : 'danger'}">${u.status === 'active' ? 'Active' : 'Blocked'}</span></td>
+                    </tr>
+                `;
+            });
+        }
+        document.getElementById('recentUsersBody').innerHTML = usersHtml;
+    }
+    
+    loadDashboard();
 </script>
-
 </body>
 </html>
