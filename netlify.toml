@@ -1,17 +1,20 @@
 [build]
-  command = "npm install"
+  # Backend folder ko ignore karo, sirf frontend build karo
+  command = "echo 'No build command needed for static site'"
   publish = "."
 
-[functions]
-  node_bundler = "esbuild"
+[build.environment]
+  NODE_VERSION = "20.18.0"
 
+# Redirect API calls to Render backend
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/server/:splat"
+  to = "https://people-plus-network.onrender.com/api/:splat"
   status = 200
+  force = true
 
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = false
