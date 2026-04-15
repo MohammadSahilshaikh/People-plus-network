@@ -1,5 +1,4 @@
 // ============ AUTHENTICATION WITH BACKEND API ============
-// Change this to your backend URL after deploying to Render
 const API_URL = 'https://people-plus-network.onrender.com/api';
 
 // Store token
