@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Cloudinary Widget Script -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
@@ -86,6 +89,15 @@
         .sidebar-toggle {
             display: none;
         }
+        #imagePreview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
         
         @media (max-width: 768px) {
             .admin-sidebar {
@@ -154,7 +166,7 @@
 
 <!-- Add Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5>Add New Product</h5>
@@ -162,29 +174,37 @@
             </div>
             <div class="modal-body">
                 <form id="addProductForm">
-                    <div class="mb-3">
-                        <label>Product Name</label>
-                        <input type="text" class="form-control" id="productName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Price (₹)</label>
-                        <input type="number" class="form-control" id="productPrice" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>MRP (₹)</label>
-                        <input type="number" class="form-control" id="productMrp" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Stock</label>
-                        <input type="number" class="form-control" id="productStock" value="100" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Image URL</label>
-                        <input type="text" class="form-control" id="productImage" placeholder="https://via.placeholder.com/300x250">
-                    </div>
-                    <div class="mb-3">
-                        <label>Description</label>
-                        <textarea class="form-control" id="productDesc" rows="2" placeholder="Product description"></textarea>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Product Name *</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Stock *</label>
+                            <input type="number" class="form-control" id="productStock" value="100" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Price (₹) *</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>MRP (₹) *</label>
+                            <input type="number" class="form-control" id="productMrp" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label>Product Image</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="productImage" placeholder="Image URL will appear here" readonly>
+                                <button class="btn btn-primary" type="button" onclick="openCloudinaryWidget()">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                                </button>
+                            </div>
+                            <img id="imagePreview" src="" style="display: none; margin-top: 10px; border-radius: 10px;">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label>Description</label>
+                            <textarea class="form-control" id="productDesc" rows="3" placeholder="Product description"></textarea>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Save Product</button>
                 </form>
@@ -195,11 +215,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
-    import { 
-        getAllProducts, 
-        addProduct, 
-        deleteProduct 
-    } from './js/firebase-config.js';
+    import { getAllProducts, addProduct, deleteProduct } from './js/firebase-config.js';
+    
+    // Cloudinary configuration
+    const cloudName = 'YRXpy5sp3Xp2KDhtscYA6Bpu5Lo';
+    const uploadPreset = 'peopleplus_products';
     
     // Admin authentication check
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -208,6 +228,7 @@
     }
     
     let products = [];
+    let uploadedImageUrl = '';
     
     function toggleSidebar() {
         document.getElementById('adminSidebar').classList.toggle('show');
@@ -238,8 +259,8 @@
             tbody.innerHTML = products.map(p => `
                 <tr>
                     <td>${p.id ? p.id.substring(0, 8) : 'N/A'}</td>
-                    <td><img src="${p.image}" width="50" class="rounded" style="object-fit: cover;" onerror="this.src='https://via.placeholder.com/50'"></td>
-                    <td><strong>${p.name}</strong><br><small class="text-muted">${p.desc || ''}</small></td>
+                    <td><img src="${p.image}" width="50" height="50" class="rounded" style="object-fit: cover;" onerror="this.src='https://picsum.photos/50/50'"></td>
+                    <td><strong>${p.name}</strong><br><small class="text-muted">${p.desc ? p.desc.substring(0, 50) : ''}</small></td>
                     <td>₹${p.price}</td>
                     <td><span class="text-muted">₹${p.mrp}</span></td>
                     <td>${p.stock || 0}</td>
@@ -253,15 +274,69 @@
         }
     }
     
+    // Open Cloudinary Upload Widget
+    window.openCloudinaryWidget = function() {
+        const widget = cloudinary.createUploadWidget(
+            {
+                cloudName: cloudName,
+                uploadPreset: uploadPreset,
+                sources: ['local', 'camera', 'url'],
+                multiple: false,
+                cropping: true,
+                croppingAspectRatio: 1,
+                folder: 'peopleplus/products',
+                clientAllowedFormats: ['images', 'jpg', 'jpeg', 'png', 'webp'],
+                maxFileSize: 5000000, // 5MB
+                showUploadMoreButton: false,
+                showPoweredBy: false,
+                styles: {
+                    palette: {
+                        window: '#FFFFFF',
+                        sourceBorder: '#dddddd',
+                        menuIcons: '#667eea',
+                        textDark: '#000000',
+                        textLight: '#FFFFFF',
+                        link: '#667eea',
+                        action: '#667eea',
+                        inactiveTab: '#e0e0e0',
+                        error: '#f44336',
+                        complete: '#4caf50'
+                    }
+                }
+            },
+            (error, result) => {
+                if (!error && result && result.event === 'success') {
+                    uploadedImageUrl = result.info.secure_url;
+                    document.getElementById('productImage').value = uploadedImageUrl;
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = uploadedImageUrl;
+                    preview.style.display = 'block';
+                    alert('✅ Image uploaded successfully to Cloudinary!');
+                } else if (error) {
+                    console.error('Cloudinary error:', error);
+                    alert('❌ Image upload failed. Please try again.');
+                }
+            }
+        );
+        widget.open();
+    };
+    
+    // Add Product Form Submit
     document.getElementById('addProductForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        const productName = document.getElementById('productName').value.trim();
+        if (!productName) {
+            alert('Please enter product name');
+            return;
+        }
+        
         const newProduct = {
-            name: document.getElementById('productName').value,
+            name: productName,
             price: parseInt(document.getElementById('productPrice').value),
             mrp: parseInt(document.getElementById('productMrp').value),
             stock: parseInt(document.getElementById('productStock').value),
-            image: document.getElementById('productImage').value || 'https://via.placeholder.com/300x250/667eea/white?text=New+Product',
+            image: document.getElementById('productImage').value || 'https://picsum.photos/300/250',
             desc: document.getElementById('productDesc').value || ''
         };
         
@@ -271,6 +346,8 @@
             alert('✅ Product added successfully!');
             bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
             document.getElementById('addProductForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            uploadedImageUrl = '';
             loadProducts();
         } else {
             alert('❌ Failed to add product: ' + result.error);
