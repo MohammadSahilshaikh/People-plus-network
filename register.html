@@ -339,26 +339,15 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script>
-        // Wait for Firebase to load
-        function waitForFirebase() {
-            return new Promise((resolve) => {
-                if (window.firebaseAPI) {
-                    resolve();
-                } else {
-                    setTimeout(() => {
-                        if (window.firebaseAPI) {
-                            resolve();
-                        } else {
-                            waitForFirebase().then(resolve);
-                        }
-                    }, 100);
-                }
-            });
-        }
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module">
+        // Import Firebase functions
+        import { loginUserFirebase, registerUserFirebase } from './js/firebase-config.js';
+        
+        // Make available globally
+        window.firebaseAPI = { loginUserFirebase, registerUserFirebase };
+        
+        console.log("Firebase loaded:", window.firebaseAPI);
 
         function updateCartCount() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -367,20 +356,33 @@
             if (cartCountSpan) cartCountSpan.innerText = count;
         }
 
+        // Wait for Firebase to be ready
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                const check = () => {
+                    if (window.firebaseAPI && window.firebaseAPI.loginUserFirebase) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+        }
+
         // Login
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
+            
             if (!email || !password) {
                 alert('Please enter email and password');
                 return;
             }
+            
             await waitForFirebase();
-            if (!window.firebaseAPI) {
-                alert('Firebase is still loading. Please refresh and try again.');
-                return;
-            }
+            
             try {
                 const result = await window.firebaseAPI.loginUserFirebase(email, password);
                 if (result.success) {
@@ -398,6 +400,7 @@
                 }
             } catch (error) {
                 alert('❌ Error: ' + error.message);
+                console.error(error);
             }
         });
 
@@ -409,6 +412,7 @@
             const phone = document.getElementById('regPhone').value.trim();
             const password = document.getElementById('regPassword').value;
             const sponsor = document.getElementById('regSponsor').value.trim();
+            
             if (!name || !email || !phone || !password) {
                 alert('Please fill all required fields!');
                 return;
@@ -417,11 +421,9 @@
                 alert("Password must be at least 6 characters long!");
                 return;
             }
+            
             await waitForFirebase();
-            if (!window.firebaseAPI) {
-                alert('Firebase is still loading. Please refresh and try again.');
-                return;
-            }
+            
             try {
                 const result = await window.firebaseAPI.registerUserFirebase({ name, email, phone, password, sponsor });
                 if (result.success) {
@@ -434,6 +436,7 @@
                 }
             } catch (error) {
                 alert('❌ Error: ' + error.message);
+                console.error(error);
             }
         });
 
