@@ -1,4 +1,4 @@
-// Firebase Configuration
+// Firebase Configuration - CDN Version
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
   getFirestore, 
@@ -13,6 +13,7 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDbjm0SEvm08Sl6adjeF_v3pSscbPtmTdo",
   authDomain: "people-plus-network.firebaseapp.com",
@@ -27,6 +28,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Collection References
 const usersCollection = collection(db, "users");
 const productsCollection = collection(db, "products");
 const ordersCollection = collection(db, "orders");
@@ -34,6 +36,7 @@ const withdrawalsCollection = collection(db, "withdrawals");
 
 // ============ USER FUNCTIONS ============
 
+// Register User
 async function registerUserFirebase(userData) {
   try {
     const q = query(usersCollection, where("email", "==", userData.email));
@@ -66,6 +69,7 @@ async function registerUserFirebase(userData) {
   }
 }
 
+// Login User
 async function loginUserFirebase(email, password) {
   try {
     const q = query(usersCollection, where("email", "==", email), where("password", "==", password));
@@ -86,6 +90,7 @@ async function loginUserFirebase(email, password) {
   }
 }
 
+// Get All Users (Admin)
 async function getAllUsers() {
   try {
     const querySnapshot = await getDocs(usersCollection);
@@ -95,10 +100,12 @@ async function getAllUsers() {
     });
     return users;
   } catch (error) {
+    console.error("Error getting users:", error);
     return [];
   }
 }
 
+// Update User Status (Admin)
 async function updateUserStatus(userId, status) {
   try {
     const userRef = doc(db, "users", userId);
@@ -109,6 +116,7 @@ async function updateUserStatus(userId, status) {
   }
 }
 
+// Delete User (Admin)
 async function deleteUser(userId) {
   try {
     await deleteDoc(doc(db, "users", userId));
@@ -118,6 +126,7 @@ async function deleteUser(userId) {
   }
 }
 
+// Update User Wallet
 async function updateUserWallet(userId, amount) {
   try {
     const userRef = doc(db, "users", userId);
@@ -130,6 +139,9 @@ async function updateUserWallet(userId, amount) {
   }
 }
 
+// ============ PRODUCT FUNCTIONS ============
+
+// Get All Products
 async function getAllProducts() {
   try {
     const querySnapshot = await getDocs(productsCollection);
@@ -139,10 +151,12 @@ async function getAllProducts() {
     });
     return products;
   } catch (error) {
+    console.error("Error getting products:", error);
     return [];
   }
 }
 
+// Add Product (Admin)
 async function addProduct(productData) {
   try {
     const docRef = await addDoc(productsCollection, {
@@ -160,6 +174,7 @@ async function addProduct(productData) {
   }
 }
 
+// Delete Product (Admin)
 async function deleteProduct(productId) {
   try {
     await deleteDoc(doc(db, "products", productId));
@@ -169,6 +184,9 @@ async function deleteProduct(productId) {
   }
 }
 
+// ============ ORDER FUNCTIONS ============
+
+// Create Order
 async function createOrder(orderData) {
   try {
     const orderId = "ORD" + Date.now();
@@ -181,7 +199,12 @@ async function createOrder(orderData) {
       total: orderData.total,
       status: "Pending",
       date: new Date().toISOString(),
-      tracking: { ordered: true, confirmed: false, shipped: false, delivered: false }
+      tracking: {
+        ordered: true,
+        confirmed: false,
+        shipped: false,
+        delivered: false
+      }
     });
     return { success: true, orderId: orderId };
   } catch (error) {
@@ -189,6 +212,7 @@ async function createOrder(orderData) {
   }
 }
 
+// Get User Orders
 async function getUserOrders(userEmail) {
   try {
     const q = query(ordersCollection, where("userEmail", "==", userEmail));
@@ -199,10 +223,12 @@ async function getUserOrders(userEmail) {
     });
     return orders;
   } catch (error) {
+    console.error("Error getting orders:", error);
     return [];
   }
 }
 
+// Get All Orders (Admin)
 async function getAllOrders() {
   try {
     const querySnapshot = await getDocs(ordersCollection);
@@ -212,10 +238,12 @@ async function getAllOrders() {
     });
     return orders;
   } catch (error) {
+    console.error("Error getting orders:", error);
     return [];
   }
 }
 
+// Update Order Status (Admin)
 async function updateOrderStatus(orderId, status, tracking) {
   try {
     const orderRef = doc(db, "orders", orderId);
@@ -226,6 +254,7 @@ async function updateOrderStatus(orderId, status, tracking) {
   }
 }
 
+// Cancel Order
 async function cancelOrder(orderId, userId, total) {
   try {
     const orderRef = doc(db, "orders", orderId);
@@ -237,6 +266,9 @@ async function cancelOrder(orderId, userId, total) {
   }
 }
 
+// ============ WITHDRAWAL FUNCTIONS ============
+
+// Request Withdrawal
 async function requestWithdrawal(withdrawalData) {
   try {
     const docRef = await addDoc(withdrawalsCollection, {
@@ -249,6 +281,7 @@ async function requestWithdrawal(withdrawalData) {
       status: "Pending",
       date: new Date().toISOString()
     });
+    
     await updateUserWallet(withdrawalData.userId, -withdrawalData.amount);
     return { success: true, withdrawalId: docRef.id };
   } catch (error) {
@@ -256,6 +289,7 @@ async function requestWithdrawal(withdrawalData) {
   }
 }
 
+// Get User Withdrawals
 async function getUserWithdrawals(userEmail) {
   try {
     const q = query(withdrawalsCollection, where("userEmail", "==", userEmail));
@@ -266,10 +300,12 @@ async function getUserWithdrawals(userEmail) {
     });
     return withdrawals;
   } catch (error) {
+    console.error("Error getting withdrawals:", error);
     return [];
   }
 }
 
+// Get All Withdrawals (Admin)
 async function getAllWithdrawals() {
   try {
     const querySnapshot = await getDocs(withdrawalsCollection);
@@ -279,14 +315,17 @@ async function getAllWithdrawals() {
     });
     return withdrawals;
   } catch (error) {
+    console.error("Error getting withdrawals:", error);
     return [];
   }
 }
 
+// Update Withdrawal Status (Admin)
 async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   try {
     const withdrawalRef = doc(db, "withdrawals", withdrawalId);
     await updateDoc(withdrawalRef, { status: status });
+    
     if (status === "Rejected") {
       await updateUserWallet(userId, amount);
     }
@@ -296,6 +335,7 @@ async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   }
 }
 
+// ============ CREATE DEFAULT ADMIN ============
 async function createDefaultAdmin() {
   const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
   const querySnapshot = await getDocs(q);
@@ -316,6 +356,7 @@ async function createDefaultAdmin() {
   }
 }
 
+// Create default products
 async function createDefaultProducts() {
   const querySnapshot = await getDocs(productsCollection);
   
@@ -334,6 +375,7 @@ async function createDefaultProducts() {
   }
 }
 
+// Initialize Firebase Data
 async function initFirebase() {
   await createDefaultAdmin();
   await createDefaultProducts();
@@ -341,6 +383,7 @@ async function initFirebase() {
 
 initFirebase();
 
+// Export functions to window
 window.firebaseAPI = {
   registerUserFirebase,
   loginUserFirebase,
