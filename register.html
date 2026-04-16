@@ -185,7 +185,6 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        /* Login Button */
         .btn-auth {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -206,7 +205,6 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        /* Back to Home Button */
         .home-link {
             text-align: center;
             margin-top: 25px;
@@ -416,6 +414,12 @@
             }
 
             try {
+                // Wait for firebaseAPI to be available
+                if (!window.firebaseAPI) {
+                    alert('Loading... Please wait a moment and try again.');
+                    return;
+                }
+                
                 const result = await window.firebaseAPI.loginUserFirebase(email, password);
                 
                 if (result.success) {
@@ -459,6 +463,11 @@
             }
 
             try {
+                if (!window.firebaseAPI) {
+                    alert('Loading... Please wait a moment and try again.');
+                    return;
+                }
+                
                 const result = await window.firebaseAPI.registerUserFirebase({
                     name, email, phone, password, sponsor
                 });
