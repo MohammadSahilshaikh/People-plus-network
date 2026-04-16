@@ -109,7 +109,7 @@
 <!-- Admin Sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
     <div class="brand">
-        <img src="site-logo.jpg" alt="Logo">
+        <img src="img/site-logo.jpg" alt="Logo">
         <h3 class="text-white">PeoplePlus</h3>
         <small class="opacity-75">Admin Panel</small>
     </div>
@@ -179,9 +179,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 <script>
     // Admin authentication check
-    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    
+    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
         window.location.href = 'register.html';
     }
     
@@ -195,38 +201,41 @@
         if (confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('adminEmail');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
     }
     
-    function loadWithdrawals() {
-        withdrawals = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
+    async function loadWithdrawals() {
+        // Load withdrawals from Firebase
+        withdrawals = await window.firebaseAPI.getAllWithdrawals();
         
-        // Add sample data if empty
         if (withdrawals.length === 0) {
+            // Sample data if empty
             withdrawals = [
                 {
                     id: 1001,
                     userName: 'Mohammad Sahil',
                     userEmail: 'sahilfact549@gmail.com',
+                    userId: 'user123',
                     amount: 5000,
                     bankDetails: 'State Bank of India, ****1234',
                     fullBankDetails: { bankName: 'SBI', accountName: 'Mohammad Sahil', accountNumber: '1234567890', ifsc: 'SBIN0012345' },
-                    date: new Date().toLocaleDateString(),
+                    date: new Date().toISOString(),
                     status: 'Pending'
                 },
                 {
                     id: 1002,
                     userName: 'Rajesh Kumar',
                     userEmail: 'rajesh@email.com',
+                    userId: 'user456',
                     amount: 3000,
                     bankDetails: 'HDFC Bank, ****5678',
                     fullBankDetails: { bankName: 'HDFC', accountName: 'Rajesh Kumar', accountNumber: '9876543210', ifsc: 'HDFC0012345' },
-                    date: new Date().toLocaleDateString(),
+                    date: new Date().toISOString(),
                     status: 'Pending'
                 }
             ];
-            localStorage.setItem('withdrawalHistory', JSON.stringify(withdrawals));
         }
         
         updateStats();
@@ -256,14 +265,14 @@
                     <td><strong>${w.userName}</strong><br><small class="text-muted">${w.userEmail}</small></td>
                     <td class="fw-bold text-${w.status === 'Pending' ? 'warning' : 'success'}">₹${w.amount.toLocaleString()}</td>
                     <td>${w.bankDetails}<br><small>${w.fullBankDetails?.accountName || ''}</small></td>
-                    <td>${w.date}</td>
+                    <td>${w.date ? new Date(w.date).toLocaleDateString() : 'N/A'}</td>
                     <td><span class="badge bg-${w.status === 'Pending' ? 'warning' : 'success'}">${w.status}</span></td>
                     <td>
                         ${w.status === 'Pending' ? `
-                            <button class="btn btn-sm btn-success me-1" onclick="approveWithdrawal(${w.id})">
+                            <button class="btn btn-sm btn-success me-1" onclick="approveWithdrawal('${w.id}', '${w.userId}', ${w.amount})">
                                 <i class="fas fa-check"></i> Approve
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="rejectWithdrawal(${w.id})">
+                            <button class="btn btn-sm btn-danger" onclick="rejectWithdrawal('${w.id}', '${w.userId}', ${w.amount})">
                                 <i class="fas fa-times"></i> Reject
                             </button>
                         ` : '<span class="text-success"><i class="fas fa-check-circle"></i> Completed</span>'}
@@ -274,71 +283,33 @@
     }
     
     // Approve withdrawal
-    function approveWithdrawal(id) {
+    async function approveWithdrawal(withdrawalId, userId, amount) {
         if (confirm('Approve this withdrawal request? Amount will be sent to user\'s bank account.')) {
-            const withdrawal = withdrawals.find(w => w.id === id);
-            if (withdrawal && withdrawal.status === 'Pending') {
-                // Update status
-                withdrawal.status = 'Approved';
-                localStorage.setItem('withdrawalHistory', JSON.stringify(withdrawals));
-                
-                // Update user's personal withdrawal history
-                let userWithdrawals = JSON.parse(localStorage.getItem('userWithdrawals_' + withdrawal.userEmail)) || [];
-                const userIndex = userWithdrawals.findIndex(w => w.id === id);
-                if (userIndex !== -1) {
-                    userWithdrawals[userIndex].status = 'Approved';
-                    localStorage.setItem('userWithdrawals_' + withdrawal.userEmail, JSON.stringify(userWithdrawals));
-                }
-                
-                updateStats();
-                displayWithdrawals();
-                
-                alert(`✅ Withdrawal APPROVED!\n\nUser: ${withdrawal.userName}\nAmount: ₹${withdrawal.amount}\n\nAmount has been credited to user's bank account.`);
+            const result = await window.firebaseAPI.updateWithdrawalStatus(withdrawalId, 'Approved', userId, amount);
+            
+            if (result.success) {
+                alert(`✅ Withdrawal APPROVED! Amount has been credited to user's bank account.`);
+                loadWithdrawals();
+            } else {
+                alert('❌ Failed to approve withdrawal: ' + result.error);
             }
         }
     }
     
     // Reject withdrawal
-    function rejectWithdrawal(id) {
+    async function rejectWithdrawal(withdrawalId, userId, amount) {
         if (confirm('Reject this withdrawal request? Amount will be returned to user\'s wallet.')) {
-            const withdrawal = withdrawals.find(w => w.id === id);
-            if (withdrawal && withdrawal.status === 'Pending') {
-                // Update status
-                withdrawal.status = 'Rejected';
-                localStorage.setItem('withdrawalHistory', JSON.stringify(withdrawals));
-                
-                // Return amount to user's wallet
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.email === withdrawal.userEmail);
-                if (user) {
-                    user.wallet = (user.wallet || 0) + withdrawal.amount;
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // Update current session if user is logged in
-                    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    if (currentUser && currentUser.email === withdrawal.userEmail) {
-                        currentUser.wallet = user.wallet;
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    }
-                }
-                
-                // Update user's personal withdrawal history
-                let userWithdrawals = JSON.parse(localStorage.getItem('userWithdrawals_' + withdrawal.userEmail)) || [];
-                const userIndex = userWithdrawals.findIndex(w => w.id === id);
-                if (userIndex !== -1) {
-                    userWithdrawals[userIndex].status = 'Rejected';
-                    localStorage.setItem('userWithdrawals_' + withdrawal.userEmail, JSON.stringify(userWithdrawals));
-                }
-                
-                updateStats();
-                displayWithdrawals();
-                
-                alert(`❌ Withdrawal REJECTED!\n\nUser: ${withdrawal.userName}\nAmount: ₹${withdrawal.amount}\n\nAmount ₹${withdrawal.amount} has been returned to user's wallet.`);
+            const result = await window.firebaseAPI.updateWithdrawalStatus(withdrawalId, 'Rejected', userId, amount);
+            
+            if (result.success) {
+                alert(`❌ Withdrawal REJECTED! Amount has been returned to user's wallet.`);
+                loadWithdrawals();
+            } else {
+                alert('❌ Failed to reject withdrawal: ' + result.error);
             }
         }
     }
     
-    // Load withdrawals on page load
     loadWithdrawals();
 </script>
 </body>

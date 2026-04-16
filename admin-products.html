@@ -108,7 +108,7 @@
 <!-- Admin Sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
     <div class="brand">
-        <img src="site-logo.jpg" alt="Logo">
+        <img src="img/site-logo.jpg" alt="Logo">
         <h3 class="text-white">PeoplePlus</h3>
         <small class="opacity-75">Admin Panel</small>
     </div>
@@ -145,7 +145,7 @@
                     <tr><th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>MRP</th><th>Stock</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                    <tr><td colspan="7" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -194,8 +194,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 <script>
-    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+    // Admin authentication check
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    
+    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
         window.location.href = 'register.html';
     }
     
@@ -209,60 +216,36 @@
         if (confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('adminEmail');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
     }
     
-    // Function to update public products (for website)
-    function updatePublicProducts() {
-        localStorage.setItem('publicProducts', JSON.stringify(products));
-        localStorage.setItem('products', JSON.stringify(products));
-    }
-    
-    function loadProducts() {
-        // First try to load from adminProducts
-        let savedProducts = localStorage.getItem('adminProducts');
-        if (savedProducts) {
-            products = JSON.parse(savedProducts);
-        } else {
-            // Try to load from public products
-            let publicProducts = localStorage.getItem('publicProducts');
-            if (publicProducts) {
-                products = JSON.parse(publicProducts);
-            } else {
-                // Default products
-                products = [
-                    { id: 1, name: 'Ayurvedic Protein Powder', price: 999, mrp: 1499, stock: 250, image: 'https://via.placeholder.com/300x250/667eea/white?text=Protein', desc: 'Pure Ayurvedic protein powder for daily health' },
-                    { id: 2, name: 'Herbal Immunity Tea', price: 599, mrp: 999, stock: 500, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Tea', desc: 'Boost your immunity naturally' },
-                    { id: 3, name: 'Organic Skin Cream', price: 799, mrp: 1299, stock: 300, image: 'https://via.placeholder.com/300x250/667eea/white?text=Cream', desc: 'Natural skin care cream' },
-                    { id: 4, name: 'Nutrition Supplement', price: 1499, mrp: 2499, stock: 200, image: 'https://via.placeholder.com/300x250/764ba2/white?text=Supplement', desc: 'Complete daily nutrition' }
-                ];
-            }
+    async function loadProducts() {
+        try {
+            products = await window.firebaseAPI.getAllProducts();
+            displayProducts();
+        } catch (error) {
+            console.error('Error loading products:', error);
+            document.getElementById('productsTableBody').innerHTML = '<tr><td colspan="7" class="text-center">Error loading products<\/td><\/tr>';
         }
-        
-        // Save to both locations for sync
-        localStorage.setItem('adminProducts', JSON.stringify(products));
-        localStorage.setItem('publicProducts', JSON.stringify(products));
-        localStorage.setItem('products', JSON.stringify(products));
-        
-        displayProducts();
     }
     
     function displayProducts() {
         const tbody = document.getElementById('productsTableBody');
         if (products.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No products found</td></tr>';
+            tbody.innerHTML = '<td><td colspan="7" class="text-center">No products found<\/td><\/tr>';
         } else {
             tbody.innerHTML = products.map(p => `
                 <tr>
-                    <td>${p.id}</td>
-                    <td><img src="${p.image}" width="50" class="rounded" style="object-fit: cover;"></td>
+                    <td>${p.id ? p.id.substring(0, 8) : 'N/A'}</td>
+                    <td><img src="${p.image}" width="50" class="rounded" style="object-fit: cover;" onerror="this.src='https://via.placeholder.com/50'"></td>
                     <td><strong>${p.name}</strong><br><small class="text-muted">${p.desc || ''}</small></td>
                     <td>₹${p.price}</td>
                     <td><span class="text-muted">₹${p.mrp}</span></td>
-                    <td>${p.stock}</td>
+                    <td>${p.stock || 0}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})" title="Delete Product">
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')" title="Delete Product">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </td>
@@ -271,12 +254,10 @@
         }
     }
     
-    document.getElementById('addProductForm').addEventListener('submit', function(e) {
+    document.getElementById('addProductForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
         const newProduct = {
-            id: newId,
             name: document.getElementById('productName').value,
             price: parseInt(document.getElementById('productPrice').value),
             mrp: parseInt(document.getElementById('productMrp').value),
@@ -285,31 +266,27 @@
             desc: document.getElementById('productDesc').value || ''
         };
         
-        products.push(newProduct);
+        const result = await window.firebaseAPI.addProduct(newProduct);
         
-        // Save to ALL locations for sync
-        localStorage.setItem('adminProducts', JSON.stringify(products));
-        localStorage.setItem('publicProducts', JSON.stringify(products));
-        localStorage.setItem('products', JSON.stringify(products));
-        
-        displayProducts();
-        bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-        document.getElementById('addProductForm').reset();
-        
-        alert('✅ Product added successfully! It will now show on the website.');
+        if (result.success) {
+            alert('✅ Product added successfully!');
+            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+            document.getElementById('addProductForm').reset();
+            loadProducts();
+        } else {
+            alert('❌ Failed to add product: ' + result.error);
+        }
     });
     
-    function deleteProduct(id) {
+    async function deleteProduct(productId) {
         if (confirm('Delete this product permanently?')) {
-            products = products.filter(p => p.id !== id);
-            
-            // Save to ALL locations for sync
-            localStorage.setItem('adminProducts', JSON.stringify(products));
-            localStorage.setItem('publicProducts', JSON.stringify(products));
-            localStorage.setItem('products', JSON.stringify(products));
-            
-            displayProducts();
-            alert('✅ Product deleted successfully! It has been removed from the website.');
+            const result = await window.firebaseAPI.deleteProduct(productId);
+            if (result.success) {
+                alert('✅ Product deleted successfully!');
+                loadProducts();
+            } else {
+                alert('❌ Failed to delete product: ' + result.error);
+            }
         }
     }
     

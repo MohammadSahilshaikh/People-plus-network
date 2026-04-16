@@ -119,7 +119,7 @@
 <!-- Admin Sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
     <div class="brand">
-        <img src="site-logo.jpg" alt="Logo">
+        <img src="img/site-logo.jpg" alt="Logo">
         <h3 class="text-white">PeoplePlus</h3>
         <small class="opacity-75">Admin Panel</small>
     </div>
@@ -216,9 +216,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 <script>
-    const _cu = JSON.parse(localStorage.getItem('currentUser'));
-    if (!_cu || _cu.role !== 'admin') {
+    // Check if admin is logged in
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    
+    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
         window.location.href = 'register.html';
     }
     
@@ -230,15 +236,17 @@
         if (confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('adminEmail');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
     }
     
-    function loadDashboard() {
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let withdrawals = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
-        let products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+    async function loadDashboard() {
+        // Load data from Firebase
+        const users = await window.firebaseAPI.getAllUsers();
+        const orders = await window.firebaseAPI.getAllOrders();
+        const withdrawals = await window.firebaseAPI.getAllWithdrawals();
+        const products = await window.firebaseAPI.getAllProducts();
         
         document.getElementById('totalUsers').innerText = users.length;
         document.getElementById('totalProducts').innerText = products.length;
@@ -249,6 +257,7 @@
         let pendingWithdrawals = withdrawals.filter(w => w.status === 'Pending');
         document.getElementById('pendingWithdrawals').innerText = pendingWithdrawals.length;
         
+        // Recent Orders
         let recentOrders = orders.slice(-5).reverse();
         let ordersHtml = '';
         if (recentOrders.length === 0) {
@@ -258,17 +267,18 @@
                 let statusClass = o.status === 'Delivered' ? 'success' : (o.status === 'Processing' ? 'warning' : 'secondary');
                 ordersHtml += `
                     <tr>
-                        <td><strong>#${o.id}</strong></td>
-                        <td>${o.customerName || 'User'}</td>
+                        <td><strong>#${o.orderId || o.id}</strong></td>
+                        <td>${o.userName || 'User'}</td>
                         <td>₹${(o.total || 0).toLocaleString()}</td>
                         <td><span class="badge bg-${statusClass}">${o.status || 'Pending'}</span></td>
-                        <td>${o.date}</td>
+                        <td>${o.date ? new Date(o.date).toLocaleDateString() : 'N/A'}</td>
                     </tr>
                 `;
             });
         }
         document.getElementById('recentOrdersBody').innerHTML = ordersHtml;
         
+        // Recent Users
         let recentUsers = users.slice(-5).reverse();
         let usersHtml = '';
         if (recentUsers.length === 0) {

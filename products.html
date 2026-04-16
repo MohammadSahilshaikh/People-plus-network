@@ -12,6 +12,18 @@
         rel="stylesheet">
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -19,11 +31,15 @@
         }
 
         .navbar-brand {
-            font-size: 1.5rem;
+            white-space: normal;
+        }
+
+        .brand-text {
+            display: inline-block;
             font-weight: 800;
-            color: white !important;
-            text-transform: uppercase;
             letter-spacing: 1px;
+            color: white;
+            font-size: 1.3rem;
         }
 
         .nav-link {
@@ -54,15 +70,35 @@
             border-radius: 2px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Responsive Navbar Fix */
+        @media (max-width: 992px) {
+            .brand-text {
+                font-size: 1rem;
+                white-space: normal;
+                word-break: break-word;
+                max-width: 180px;
+                line-height: 1.2;
+            }
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
+        @media (max-width: 768px) {
+            .brand-text {
+                font-size: 0.85rem;
+                max-width: 150px;
+            }
+            .navbar-brand img {
+                height: 35px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .brand-text {
+                font-size: 0.7rem;
+                max-width: 120px;
+            }
+            .navbar-brand img {
+                height: 30px !important;
+            }
         }
 
         .page-header {
@@ -169,13 +205,13 @@
 
 <body>
 
-    <!-- Navbar -->
+    <!-- Navbar - Responsive -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-                <img src="site-logo.jpg" alt="Logo"
-                    style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                PEOPLE PLUS NETWORK
+                <img src="img/site-logo.jpg" alt="Logo"
+                    style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <span class="brand-text">PEOPLE PLUS NETWORK</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon bg-white rounded"></span>
@@ -199,10 +235,10 @@
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                                 id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="padding: 5px 15px;">
-                                <img src="default-avatar.png"
-                                    style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;"
-                                    alt="Guest Avatar">
+                                style="padding: 5px 10px;">
+                                <img src="img/default-avatar.png"
+                                    style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;"
+                                    alt="Guest Avatar" onerror="this.src='https://via.placeholder.com/30'">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3"
                                 aria-labelledby="userMenu">
@@ -275,14 +311,38 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth-check.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+    <script src="js/firebase-config.js"></script>
     <script>
-        // Display products from API
+        // Update cart count
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            let cartCountSpan = document.getElementById('cartCount');
+            if (cartCountSpan) cartCountSpan.innerText = count;
+        }
+
+        // Add to cart function
+        window.addToCart = function(product) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert(product.name + " added to cart!");
+        };
+
+        // Display products from Firebase
         async function displayProducts() {
             const container = document.getElementById('productsContainer');
             
             try {
-                const products = await loadProducts();
+                const products = await window.firebaseAPI.getAllProducts();
                 
                 if (!products || products.length === 0) {
                     container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No products available.</p></div>';
@@ -296,7 +356,7 @@
                             <div class="p-3">
                                 <h5>${product.name}</h5>
                                 <p class="price">₹${product.price} <span class="mrp">₹${product.mrp}</span></p>
-                                <button class="btn-add-cart" onclick='addToCartLocal(${JSON.stringify(product).replace(/'/g, "\\'")})'>
+                                <button class="btn-add-cart" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "\\'")})'>
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             </div>
@@ -305,16 +365,65 @@
                 `).join('');
             } catch (error) {
                 console.error('Error loading products:', error);
-                container.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Failed to load products. Please make sure backend server is running.</p></div>';
+                container.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Failed to load products. Please check your connection.</p></div>';
             }
         }
-        
+
+        // Update navbar for logged in user
+        function updateNavbarForUser() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userMenu = document.getElementById('userMenu');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            if (currentUser && userMenu) {
+                const firstLetter = (currentUser.name || 'U').charAt(0).toUpperCase();
+                userMenu.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <div style="width: 30px; height: 30px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 8px;">
+                            ${firstLetter}
+                        </div>
+                        <span class="fw-bold text-white">${(currentUser.name || 'User').split(' ')[0]}</span>
+                    </div>
+                `;
+                
+                if (dropdownMenu) {
+                    if (currentUser.role === 'admin') {
+                        dropdownMenu.innerHTML = `
+                            <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Admin Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        `;
+                    } else {
+                        dropdownMenu.innerHTML = `
+                            <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2 text-success"></i> My Profile</a></li>
+                            <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2 text-warning"></i> My Orders</a></li>
+                            <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2 text-info"></i> Withdraw</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        `;
+                    }
+                }
+            }
+        }
+
+        // Logout function
+        window.logoutUser = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'index.html';
+            }
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             displayProducts();
             updateCartCount();
+            updateNavbarForUser();
         });
     </script>
 </body>
 
-</html> 
+</html>

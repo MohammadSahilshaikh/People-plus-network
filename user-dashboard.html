@@ -4,99 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard - People Plus Network</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f6f9;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 1rem 0;
-        }
-        .navbar-brand fw-bold {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: white !important;
-        }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; }
+        .brand-text { display: inline-block; font-weight: 800; letter-spacing: 1px; color: white; font-size: 1.3rem; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
         .nav-link { color: white !important; }
-        
-        .sidebar {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .sidebar .nav-link {
-            color: #333 !important;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 5px;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
-        }
-        .sidebar .nav-link i { width: 25px; }
-        
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-        }
+        .sidebar { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .sidebar .nav-link { color: #333 !important; padding: 12px 15px; border-radius: 10px; margin-bottom: 5px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; }
+        .stat-card { background: white; border-radius: 15px; padding: 20px; text-align: center; transition: all 0.3s; }
         .stat-card:hover { transform: translateY(-5px); }
         .stat-card i { font-size: 2rem; color: #667eea; }
-        
-        .content-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        
-        .genealogy-tree {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
-        .tree-node {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            margin: 10px;
-        }
+        .content-card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
     </style>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html"><img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> PEOPLE PLUS NETWORK</a>
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded bg-white rounded"></span>
+            <span class="navbar-toggler-icon bg-white rounded"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                
                 <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
-                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li class="nav-item"><a class="nav-link active" href="cart.html">Cart</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -105,184 +50,79 @@
 <div class="container my-4">
     <div class="row">
         <div class="col-md-3">
-                        <div class="sidebar">
+            <div class="sidebar">
                 <div class="text-center mb-3">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="80" alt="User">
-                    <h5 class="mt-2"><span class="display-user-name">Rajesh Kumar</span></h5>
-                    <p class="text-muted small">Member ID: <span class="display-user-id">PPN10001</span></p>
-                    <span class="badge bg-success">Active</span>
+                    <img src="img/default-avatar.png" class="rounded-circle" width="80" id="profileImg">
+                    <h5 class="mt-2" id="userName">Loading...</h5>
+                    <p class="text-muted small">Member ID: <span id="userId">---</span></p>
+                    <span class="badge bg-success" id="userLevel">Starter</span>
                 </div>
                 <hr>
                 <nav class="nav flex-column">
                     <a class="nav-link active" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a class="nav-link " href="user-team.html"><i class="fas fa-users"></i> My Team</a>
-                    
-                    <a class="nav-link " href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
-                    <a class="nav-link " href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
-                    <a class="nav-link " href="user-orders.html"><i class="fas fa-shopping-cart"></i> My Orders</a>
-                    <a class="nav-link " href="user-profile.html"><i class="fas fa-user-edit"></i> Profile</a>
+                    <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
+                    <a class="nav-link" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
+                    <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+                    <a class="nav-link" href="user-orders.html"><i class="fas fa-shopping-cart"></i> My Orders</a>
+                    <a class="nav-link" href="user-profile.html"><i class="fas fa-user-edit"></i> Profile</a>
                     <a class="nav-link text-danger mt-3" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </nav>
             </div>
         </div>
         <div class="col-md-9">
-            <!-- Welcome Row -->
             <div class="content-card">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4>Welcome back, <span class="display-user-name">Rajesh</span>! 👋</h4>
-                        <p class="text-muted">Here's what's happening with your network today.</p>
-                    </div>
-                    <div class="text-end">
-                        <small class="text-muted">Last login: Today, 10:30 AM</small>
-                    </div>
+                    <div><h4>Welcome back, <span id="welcomeName">User</span>! 👋</h4><p>Here's what's happening with your network today.</p></div>
+                    <div><small class="text-muted">Last login: <span id="lastLogin"></span></small></div>
                 </div>
             </div>
-            
-            <!-- Stats Row -->
             <div class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="stat-card text-center">
-                        <i class="fas fa-users"></i>
-                        <h3 class="mt-2">125</h3>
-                        <p class="text-muted">Total Team Members</p>
-                        <small class="text-success"><i class="fas fa-arrow-up"></i> +12 this week</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card text-center">
-                        <i class="fas fa-rupee-sign"></i>
-                        <h3 class="mt-2">₹1,250</h3>
-                        <p class="text-muted">Today's Earning</p>
-                        <small class="text-success"><i class="fas fa-arrow-up"></i> +₹250 from yesterday</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card text-center">
-                        <i class="fas fa-wallet"></i>
-                        <h3 class="mt-2">₹25,000</h3>
-                        <p class="text-muted">Wallet Balance</p>
-                        <button class="btn btn-sm btn-primary mt-2">Withdraw</button>
-                    </div>
-                </div>
+                <div class="col-md-4"><div class="stat-card"><i class="fas fa-users"></i><h3 class="mt-2" id="totalTeam">0</h3><p class="text-muted">Total Team</p></div></div>
+                <div class="col-md-4"><div class="stat-card"><i class="fas fa-rupee-sign"></i><h3 class="mt-2" id="todayEarning">₹0</h3><p class="text-muted">Today's Earning</p></div></div>
+                <div class="col-md-4"><div class="stat-card"><i class="fas fa-wallet"></i><h3 class="mt-2" id="walletBalance">₹0</h3><p class="text-muted">Wallet Balance</p></div></div>
             </div>
-            
-            <!-- Binary Tree View -->
             <div class="content-card">
-                <h5><i class="fas fa-code-branch"></i> Your Binary Genealogy Tree</h5>
+                <h5><i class="fas fa-code-branch"></i> Your Referral Tree</h5>
                 <hr>
-                <div class="genealogy-tree">
-                    <div class="tree-node">YOU (Rajesh)</div>
-                    <div class="mt-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="tree-node bg-success">Left Leg<br><small>60 Members</small></div>
-                                <div class="mt-2">
-                                    <span class="badge bg-secondary">Amit</span>
-                                    <span class="badge bg-secondary">Neha</span>
-                                    <span class="badge bg-secondary">Priya</span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="tree-node bg-info">Right Leg<br><small>65 Members</small></div>
-                                <div class="mt-2">
-                                    <span class="badge bg-secondary">Sohan</span>
-                                    <span class="badge bg-secondary">Meera</span>
-                                    <span class="badge bg-secondary">Rahul</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Recent Commissions -->
-            <div class="content-card">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5><i class="fas fa-coins"></i> Recent Commissions</h5>
-                    <a href="user-commissions.html" class="btn btn-sm btn-outline-primary">View All</a>
-                </div>
-                <div class="table-responsive">
-                    <div class="table-responsive"><table class="table table-hover">
-                        <thead>
-                            <tr><th>Date</th><th>Source</th><th>Amount</th><th>Status</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Dec 15, 2024</td><td>Left Leg</td><td>₹250</td><td><span class="badge bg-success">Credited</span></td></tr>
-                            <tr><td>Dec 14, 2024</td><td>Right Leg</td><td>₹180</td><td><span class="badge bg-success">Credited</span></td></tr>
-                            <tr><td>Dec 13, 2024</td><td>Left Leg</td><td>₹320</td><td><span class="badge bg-success">Credited</span></td></tr>
-                            <tr><td>Dec 12, 2024</td><td>Right Leg</td><td>₹150</td><td><span class="badge bg-success">Credited</span></td></tr>
-                        </tbody>
-                    </table></div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <a href="products.html" class="text-decoration-none">
-                        <div class="content-card text-center">
-                            <i class="fas fa-shopping-cart fa-2x text-primary"></i>
-                            <h6 class="mt-2">Buy Products</h6>
-                            <small>Earn commissions</small>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="register.html" class="text-decoration-none">
-                        <div class="content-card text-center">
-                            <i class="fas fa-user-plus fa-2x text-success"></i>
-                            <h6 class="mt-2">Invite Friends</h6>
-                            <small>Build your team</small>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="user-withdrawal.html" class="text-decoration-none">
-                        <div class="content-card text-center">
-                            <i class="fas fa-money-bill-wave fa-2x text-warning"></i>
-                            <h6 class="mt-2">Request Payout</h6>
-                            <small>Minimum ₹500</small>
-                        </div>
-                    </a>
+                <div class="row text-center">
+                    <div class="col-4"><div class="border rounded p-2"><strong>Direct</strong><br><span id="directCount" class="fs-3 fw-bold">0</span></div></div>
+                    <div class="col-4"><div class="border rounded p-2"><strong>Team Total</strong><br><span id="teamTotalCount" class="fs-3 fw-bold">0</span></div></div>
+                    <div class="col-4"><div class="border rounded p-2"><strong>Level</strong><br><span id="levelBadge" class="fs-4">🥉 Bronze</span></div></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<footer class="footer bg-dark text-white py-3 mt-4">
-    <div class="container text-center">
-        <small>&copy; 2024 People Plus Network. All rights reserved.</small>
-    </div>
-</footer>
+<footer class="footer"><div class="container text-center"><p>&copy; 2024 People Plus Network. All rights reserved.</p></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 <script>
-    // Authentication Check
-    if (localStorage.getItem('userLoggedIn') !== 'true') {
-        window.location.href = 'register.html';
-    }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) window.location.href = 'register.html';
 
-    // Load User Data
-    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Demo User', sponsor: 'PPN10001' };
+    document.getElementById('userName').innerText = currentUser.name;
+    document.getElementById('welcomeName').innerText = currentUser.name.split(' ')[0];
+    document.getElementById('userId').innerText = currentUser.userId;
+    document.getElementById('walletBalance').innerHTML = '₹' + (currentUser.wallet || 0);
+    document.getElementById('lastLogin').innerText = new Date().toLocaleString();
+    document.getElementById('directCount').innerText = currentUser.directReferrals || 0;
+    document.getElementById('teamTotalCount').innerText = currentUser.totalReferrals || 0;
     
-    // Update all name placeholders
-    document.querySelectorAll('.display-user-name').forEach(el => {
-        el.innerText = currentUser.name;
-    });
-    
-    // Update all ID placeholders
-    document.querySelectorAll('.display-user-id').forEach(el => {
-        el.innerText = currentUser.sponsor || 'PPN10001';
-    });
+    let level = currentUser.level || 'Starter';
+    let levelIcon = '🌟';
+    if (level.includes('Bronze')) levelIcon = '🥉';
+    else if (level.includes('Silver')) levelIcon = '🥈';
+    else if (level.includes('Gold')) levelIcon = '🥇';
+    document.getElementById('levelBadge').innerHTML = `${levelIcon} ${level}`;
+    document.getElementById('userLevel').innerHTML = level;
+    document.getElementById('totalTeam').innerText = currentUser.totalReferrals || 0;
+    document.getElementById('todayEarning').innerHTML = '₹' + (Math.random() * 500 + 100).toFixed(0);
 
-    // Logout Function
-    function logout() {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'register.html';
-    }
+    function logout() { localStorage.clear(); window.location.href = 'index.html'; }
 </script>
 </body>
 </html>

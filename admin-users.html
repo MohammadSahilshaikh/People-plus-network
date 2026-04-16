@@ -104,7 +104,7 @@
 <!-- Admin Sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
     <div class="brand">
-        <img src="site-logo.jpg" alt="Logo">
+        <img src="img/site-logo.jpg" alt="Logo">
         <h3 class="text-white">PeoplePlus</h3>
         <small class="opacity-75">Admin Panel</small>
     </div>
@@ -142,7 +142,7 @@
                     <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Sponsor ID</th><th>Join Date</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="usersTableBody">
-                    <tr><td colspan="8" class="text-center">Loading...</td></tr>
+                    <tr><td colspan="8" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -151,9 +151,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
 <script>
     // Admin authentication check
-    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    
+    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
         window.location.href = 'register.html';
     }
     
@@ -170,18 +176,21 @@
         if (confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('adminEmail');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
     }
     
-    function loadUsers() {
-        allUsers = JSON.parse(localStorage.getItem('users')) || [];
+    async function loadUsers() {
+        // Load users from Firebase
+        allUsers = await window.firebaseAPI.getAllUsers();
+        
         if (allUsers.length === 0) {
+            // Sample users if empty
             allUsers = [
                 { userId: 'PPN10001', name: 'Mohammad Sahil', email: 'sahilfact549@gmail.com', phone: '09263602455', sponsor: 'PPN0001', joined: new Date().toISOString(), status: 'active' },
                 { userId: 'PPN10002', name: 'Rajesh Kumar', email: 'rajesh@email.com', phone: '9876543210', sponsor: 'PPN10001', joined: new Date().toISOString(), status: 'active' }
             ];
-            localStorage.setItem('users', JSON.stringify(allUsers));
         }
         filteredUsers = [...allUsers];
         displayUsers();
@@ -193,7 +202,7 @@
         
         const tbody = document.getElementById('usersTableBody');
         if (paginatedUsers.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="text-center">No users found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center">No users found<\/td><\/tr>';
         } else {
             tbody.innerHTML = paginatedUsers.map((u, index) => `
                 <tr>
@@ -205,10 +214,10 @@
                     <td>${u.joined ? new Date(u.joined).toLocaleDateString() : 'N/A'}</td>
                     <td><span class="badge bg-${u.status === 'active' ? 'success' : 'danger'}">${u.status === 'active' ? 'Active' : 'Blocked'}</span></td>
                     <td>
-                        <button class="btn btn-sm btn-${u.status === 'active' ? 'warning' : 'success'}" onclick="toggleUserStatus('${u.email}')" title="${u.status === 'active' ? 'Block User' : 'Unblock User'}">
+                        <button class="btn btn-sm btn-${u.status === 'active' ? 'warning' : 'success'}" onclick="toggleUserStatus('${u.id}', '${u.status}')" title="${u.status === 'active' ? 'Block User' : 'Unblock User'}">
                             <i class="fas fa-${u.status === 'active' ? 'ban' : 'check'}"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.email}')" title="Delete User">
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}', '${u.email}')" title="Delete User">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -246,42 +255,40 @@
     }
     
     // Toggle user status (Active/Block)
-    function toggleUserStatus(email) {
-        const userIndex = allUsers.findIndex(u => u.email === email);
-        if (userIndex !== -1) {
-            const newStatus = allUsers[userIndex].status === 'active' ? 'blocked' : 'active';
-            allUsers[userIndex].status = newStatus;
-            localStorage.setItem('users', JSON.stringify(allUsers));
-            
-            // Also update currentUser if it's the same user
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser && currentUser.email === email) {
-                currentUser.status = newStatus;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
-            
-            alert(`User ${allUsers[userIndex].name} is now ${newStatus === 'active' ? 'ACTIVE' : 'BLOCKED'}`);
+    async function toggleUserStatus(userId, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
+        const result = await window.firebaseAPI.updateUserStatus(userId, newStatus);
+        
+        if (result.success) {
+            alert(`User status updated to ${newStatus === 'active' ? 'ACTIVE' : 'BLOCKED'}`);
             loadUsers();
+            
+            // Update currentUser if it's the same user
+            const currentUserData = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUserData && currentUserData.id === userId) {
+                currentUserData.status = newStatus;
+                localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+            }
+        } else {
+            alert('Failed to update user status: ' + result.error);
         }
     }
     
     // Delete user permanently
-    function deleteUser(email) {
+    async function deleteUser(userId, email) {
         if (confirm('Are you sure you want to DELETE this user permanently? This action cannot be undone!')) {
-            const user = allUsers.find(u => u.email === email);
-            if (user && user.email === 'admin@peopleplus.com') {
+            if (email === 'admin@peopleplus.com') {
                 alert('Cannot delete the main admin account!');
                 return;
             }
             
-            allUsers = allUsers.filter(u => u.email !== email);
-            localStorage.setItem('users', JSON.stringify(allUsers));
-            
-            // Also remove from filtered
-            filteredUsers = filteredUsers.filter(u => u.email !== email);
-            
-            alert(`User ${user ? user.name : ''} has been deleted permanently.`);
-            loadUsers();
+            const result = await window.firebaseAPI.deleteUser(userId);
+            if (result.success) {
+                alert('User deleted successfully!');
+                loadUsers();
+            } else {
+                alert('Failed to delete user: ' + result.error);
+            }
         }
     }
     
