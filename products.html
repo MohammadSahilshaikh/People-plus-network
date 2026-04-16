@@ -23,7 +23,6 @@
             background: #f5f7fa;
         }
 
-        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -70,14 +69,10 @@
             border-radius: 2px;
         }
 
-        /* Responsive Navbar Fix */
         @media (max-width: 992px) {
             .brand-text {
                 font-size: 1rem;
-                white-space: normal;
-                word-break: break-word;
                 max-width: 180px;
-                line-height: 1.2;
             }
         }
 
@@ -88,16 +83,6 @@
             }
             .navbar-brand img {
                 height: 35px !important;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .brand-text {
-                font-size: 0.7rem;
-                max-width: 120px;
-            }
-            .navbar-brand img {
-                height: 30px !important;
             }
         }
 
@@ -176,10 +161,6 @@
             font-size: 1.1rem;
         }
 
-        .product-card .price {
-            margin-bottom: 8px;
-        }
-
         .row>[class*="col-"] {
             margin-bottom: 25px;
         }
@@ -205,7 +186,6 @@
 
 <body>
 
-    <!-- Navbar - Responsive -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
@@ -218,32 +198,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="products.html">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span
-                                id="cartCount" class="badge bg-danger">0</span></a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
                     <li class="nav-item">
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                                id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="padding: 5px 10px;">
-                                <img src="img/default-avatar.png"
-                                    style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;"
-                                    alt="Guest Avatar" onerror="this.src='https://via.placeholder.com/30'">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 10px;">
+                                <img src="img/default-avatar.png" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3"
-                                aria-labelledby="userMenu">
-                                <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i
-                                            class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                                <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
                             </ul>
                         </div>
                     </li>
@@ -252,7 +217,6 @@
         </div>
     </nav>
 
-    <!-- Page Header -->
     <section class="page-header">
         <div class="container">
             <h1 class="fw-bold">OUR PRODUCTS</h1>
@@ -260,7 +224,6 @@
         </div>
     </section>
 
-    <!-- Products Section -->
     <section class="container my-5">
         <div class="row" id="productsContainer">
             <div class="col-12 text-center">
@@ -272,58 +235,25 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h4><i class="fas fa-users"></i> People Plus Network</h4>
-                    <p>Build your future, empower lives. Join us and be a part of our growing network.</p>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="products.html">Products</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Support</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-phone"></i> +91 82357 72175</li>
-                        <li><i class="fas fa-envelope"></i> support@peopleplus.com</li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <div class="text-center">
-                <p>&copy; 2024 People Plus Network. All rights reserved.</p>
-            </div>
+        <div class="container text-center">
+            <p>&copy; 2024 People Plus Network. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script>
-        // Update cart count
+    <script type="module">
+        import { getAllProducts } from './js/firebase-config.js';
+        
+        console.log("Firebase module loaded");
+        
         function updateCartCount() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
             let cartCountSpan = document.getElementById('cartCount');
             if (cartCountSpan) cartCountSpan.innerText = count;
         }
-
-        // Add to cart function
+        
         window.addToCart = function(product) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const existing = cart.find(item => item.id === product.id);
@@ -336,13 +266,12 @@
             updateCartCount();
             alert(product.name + " added to cart!");
         };
-
-        // Display products from Firebase
+        
         async function displayProducts() {
             const container = document.getElementById('productsContainer');
             
             try {
-                const products = await window.firebaseAPI.getAllProducts();
+                const products = await getAllProducts();
                 
                 if (!products || products.length === 0) {
                     container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No products available.</p></div>';
@@ -368,61 +297,26 @@
                 container.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Failed to load products. Please check your connection.</p></div>';
             }
         }
-
-        // Update navbar for logged in user
+        
         function updateNavbarForUser() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userMenu = document.getElementById('userMenu');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            
             if (currentUser && userMenu) {
                 const firstLetter = (currentUser.name || 'U').charAt(0).toUpperCase();
-                userMenu.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <div style="width: 30px; height: 30px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 8px;">
-                            ${firstLetter}
-                        </div>
-                        <span class="fw-bold text-white">${(currentUser.name || 'User').split(' ')[0]}</span>
-                    </div>
-                `;
-                
-                if (dropdownMenu) {
-                    if (currentUser.role === 'admin') {
-                        dropdownMenu.innerHTML = `
-                            <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Admin Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        `;
-                    } else {
-                        dropdownMenu.innerHTML = `
-                            <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2 text-success"></i> My Profile</a></li>
-                            <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2 text-warning"></i> My Orders</a></li>
-                            <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2 text-info"></i> Withdraw</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        `;
-                    }
-                }
+                userMenu.innerHTML = `<div class="d-flex align-items-center"><div style="width:30px;height:30px;background:#ffd700;color:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:8px;">${firstLetter}</div><span class="fw-bold text-white">${(currentUser.name || 'User').split(' ')[0]}</span></div>`;
             }
         }
-
-        // Logout function
+        
         window.logoutUser = function() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userLoggedIn');
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('adminLoggedIn');
+                localStorage.clear();
                 window.location.href = 'index.html';
             }
         };
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            displayProducts();
-            updateCartCount();
-            updateNavbarForUser();
-        });
+        
+        displayProducts();
+        updateCartCount();
+        updateNavbarForUser();
     </script>
 </body>
 
