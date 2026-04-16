@@ -29,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -97,7 +96,6 @@
             }
         }
 
-        /* Main Container */
         .main-container {
             flex: 1;
             display: flex;
@@ -170,8 +168,7 @@
             color: #333;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
@@ -244,7 +241,6 @@
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
@@ -257,32 +253,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="products.html">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span
-                                id="cartCount" class="badge bg-danger">0</span></a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
                     <li class="nav-item">
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                                id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="padding: 5px 10px;">
-                                <img src="img/default-avatar.png"
-                                    style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;"
-                                    alt="Guest Avatar" onerror="this.src='https://via.placeholder.com/30'">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 10px;">
+                                <img src="img/default-avatar.png" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3"
-                                aria-labelledby="userMenu">
-                                <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i
-                                            class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                                <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
                             </ul>
                         </div>
                     </li>
@@ -291,97 +272,66 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
     <div class="main-container">
         <div class="auth-container">
             <div class="auth-card">
                 <div class="auth-header">
                     <i class="fas fa-users-cog fa-3x mb-3"></i>
                     <h2>Welcome to People Plus</h2>
-
                     <ul class="nav nav-pills" id="authTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login"
-                                type="button" role="tab">Login</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="register-tab" data-bs-toggle="pill"
-                                data-bs-target="#register" type="button" role="tab">Join Now</button>
-                        </li>
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login">Login</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#register">Join Now</button></li>
                     </ul>
                 </div>
-
                 <div class="auth-body">
-                    <div class="tab-content" id="authTabContent">
-
+                    <div class="tab-content">
                         <!-- Login Tab -->
-                        <div class="tab-pane fade show active" id="login" role="tabpanel">
-                            <form id="loginForm" autocomplete="off">
+                        <div class="tab-pane fade show active" id="login">
+                            <form id="loginForm">
                                 <div class="form-group">
-                                    <label><i class="fas fa-envelope"></i> Email Address</label>
-                                    <input type="email" id="loginEmail" autocomplete="off"
-                                        placeholder="Enter your email" required>
+                                    <label>Email Address</label>
+                                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label><i class="fas fa-lock"></i> Password</label>
-                                    <input type="password" id="loginPassword" autocomplete="new-password"
-                                        placeholder="Enter your password" required>
+                                    <label>Password</label>
+                                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
                                 </div>
-
-                                <button type="submit" class="btn-auth">
-                                    <i class="fas fa-sign-in-alt"></i> Login Securely
-                                </button>
+                                <button type="submit" class="btn-auth">Login Securely</button>
                             </form>
-
                             <div class="text-center mt-3">
                                 <small class="text-muted">Admin: admin@peopleplus.com / admin123</small>
                             </div>
                         </div>
 
                         <!-- Register Tab -->
-                        <div class="tab-pane fade" id="register" role="tabpanel">
-                            <form id="registerForm" autocomplete="off">
+                        <div class="tab-pane fade" id="register">
+                            <form id="registerForm">
                                 <div class="form-group">
-                                    <label><i class="fas fa-user"></i> Full Name *</label>
-                                    <input type="text" id="regName" autocomplete="off"
-                                        placeholder="Enter your full name" required>
+                                    <label>Full Name</label>
+                                    <input type="text" id="regName" placeholder="Enter your full name" required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label><i class="fas fa-envelope"></i> Email Address *</label>
-                                    <input type="email" id="regEmail" autocomplete="off" placeholder="Enter your email"
-                                        required>
+                                    <label>Email Address</label>
+                                    <input type="email" id="regEmail" placeholder="Enter your email" required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label><i class="fas fa-phone"></i> Phone Number *</label>
+                                    <label>Phone Number</label>
                                     <input type="tel" id="regPhone" placeholder="10-digit mobile number" required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label><i class="fas fa-lock"></i> Password *</label>
-                                    <input type="password" id="regPassword" autocomplete="new-password"
-                                        placeholder="Create a strong password (min 6 characters)" required>
+                                    <label>Password</label>
+                                    <input type="password" id="regPassword" placeholder="Create a strong password (min 6 characters)" required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label><i class="fas fa-user-friends"></i> Sponsor ID (Optional)</label>
+                                    <label>Sponsor ID (Optional)</label>
                                     <input type="text" id="regSponsor" placeholder="Enter sponsor ID if any">
                                 </div>
-
-                                <button type="submit" class="btn-auth">
-                                    <i class="fas fa-rocket"></i> Create Account
-                                </button>
+                                <button type="submit" class="btn-auth">Create Account</button>
                             </form>
                         </div>
-
                     </div>
-
                     <div class="home-link">
-                        <a href="index.html" class="btn-back-home">
-                            <i class="fas fa-arrow-left"></i> Back to Home
-                        </a>
+                        <a href="index.html" class="btn-back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
                     </div>
                 </div>
             </div>
@@ -393,7 +343,23 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
     <script src="js/firebase-config.js"></script>
     <script>
-        // ============ UPDATE CART COUNT ============
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                if (window.firebaseAPI) {
+                    resolve();
+                } else {
+                    setTimeout(() => {
+                        if (window.firebaseAPI) {
+                            resolve();
+                        } else {
+                            waitForFirebase().then(resolve);
+                        }
+                    }, 100);
+                }
+            });
+        }
+
         function updateCartCount() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -401,31 +367,25 @@
             if (cartCountSpan) cartCountSpan.innerText = count;
         }
 
-        // ============ LOGIN LOGIC (Firebase) ============
+        // Login
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-
             if (!email || !password) {
                 alert('Please enter email and password');
                 return;
             }
-
+            await waitForFirebase();
+            if (!window.firebaseAPI) {
+                alert('Firebase is still loading. Please refresh and try again.');
+                return;
+            }
             try {
-                // Wait for firebaseAPI to be available
-                if (!window.firebaseAPI) {
-                    alert('Loading... Please wait a moment and try again.');
-                    return;
-                }
-                
                 const result = await window.firebaseAPI.loginUserFirebase(email, password);
-                
                 if (result.success) {
                     localStorage.setItem('userLoggedIn', 'true');
                     localStorage.setItem('currentUser', JSON.stringify(result.user));
-                    
                     if (result.user.role === 'admin') {
                         alert('✅ Welcome Admin!');
                         window.location.href = 'admin.html';
@@ -438,40 +398,32 @@
                 }
             } catch (error) {
                 alert('❌ Error: ' + error.message);
-                console.error(error);
             }
         });
 
-        // ============ REGISTER LOGIC (Firebase) ============
+        // Register
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const password = document.getElementById('regPassword').value;
             const sponsor = document.getElementById('regSponsor').value.trim();
-
             if (!name || !email || !phone || !password) {
                 alert('Please fill all required fields!');
                 return;
             }
-
             if (password.length < 6) {
                 alert("Password must be at least 6 characters long!");
                 return;
             }
-
+            await waitForFirebase();
+            if (!window.firebaseAPI) {
+                alert('Firebase is still loading. Please refresh and try again.');
+                return;
+            }
             try {
-                if (!window.firebaseAPI) {
-                    alert('Loading... Please wait a moment and try again.');
-                    return;
-                }
-                
-                const result = await window.firebaseAPI.registerUserFirebase({
-                    name, email, phone, password, sponsor
-                });
-                
+                const result = await window.firebaseAPI.registerUserFirebase({ name, email, phone, password, sponsor });
                 if (result.success) {
                     alert('✅ Registration successful! Welcome to People Plus Network!');
                     localStorage.setItem('userLoggedIn', 'true');
@@ -482,70 +434,27 @@
                 }
             } catch (error) {
                 alert('❌ Error: ' + error.message);
-                console.error(error);
             }
         });
 
-        // Update navbar for logged in user
         function updateNavbarForUser() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const userMenu = document.getElementById('userMenu');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            
             if (currentUser && userMenu) {
                 const firstLetter = (currentUser.name || 'U').charAt(0).toUpperCase();
-                userMenu.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <div style="width: 30px; height: 30px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 8px;">
-                            ${firstLetter}
-                        </div>
-                        <span class="fw-bold text-white">${(currentUser.name || 'User').split(' ')[0]}</span>
-                    </div>
-                `;
-                
-                if (dropdownMenu) {
-                    if (currentUser.role === 'admin') {
-                        dropdownMenu.innerHTML = `
-                            <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Admin Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        `;
-                    } else {
-                        dropdownMenu.innerHTML = `
-                            <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2 text-success"></i> My Profile</a></li>
-                            <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2 text-warning"></i> My Orders</a></li>
-                            <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2 text-info"></i> Withdraw</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        `;
-                    }
-                }
+                userMenu.innerHTML = `<div class="d-flex align-items-center"><div style="width:30px;height:30px;background:#ffd700;color:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:8px;">${firstLetter}</div><span class="fw-bold text-white">${(currentUser.name || 'User').split(' ')[0]}</span></div>`;
             }
         }
 
-        // Logout function
         window.logoutUser = function() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userLoggedIn');
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('adminLoggedIn');
+                localStorage.clear();
                 window.location.href = 'index.html';
             }
         };
 
-        // Update cart count on page load
         updateCartCount();
         updateNavbarForUser();
-        
-        // Monitor cart changes
-        const originalSetItem = localStorage.setItem;
-        localStorage.setItem = function(key, value) {
-            originalSetItem.apply(this, arguments);
-            if (key === 'cart') {
-                updateCartCount();
-            }
-        };
     </script>
 </body>
 
