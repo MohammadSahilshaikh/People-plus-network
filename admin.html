@@ -217,7 +217,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+    const _cu = JSON.parse(localStorage.getItem('currentUser'));
+    if (!_cu || _cu.role !== 'admin') {
         window.location.href = 'register.html';
     }
     
