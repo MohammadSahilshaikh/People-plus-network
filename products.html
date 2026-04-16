@@ -12,27 +12,15 @@
         rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
 
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             padding: 1rem 0;
         }
-
-        .navbar-brand {
-            white-space: normal;
-        }
-
+        .navbar-brand { white-space: normal; }
         .brand-text {
             display: inline-block;
             font-weight: 800;
@@ -40,7 +28,6 @@
             color: white;
             font-size: 1.3rem;
         }
-
         .nav-link {
             color: white !important;
             font-weight: 500;
@@ -48,16 +35,8 @@
             margin: 0 5px;
             position: relative;
         }
-
-        .nav-link:hover {
-            color: #ffd700 !important;
-        }
-
-        .nav-link.active {
-            color: #ffd700 !important;
-            font-weight: 700;
-        }
-
+        .nav-link:hover { color: #ffd700 !important; }
+        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
         .nav-link.active::after {
             content: '';
             position: absolute;
@@ -69,22 +48,8 @@
             border-radius: 2px;
         }
 
-        @media (max-width: 992px) {
-            .brand-text {
-                font-size: 1rem;
-                max-width: 180px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .brand-text {
-                font-size: 0.85rem;
-                max-width: 150px;
-            }
-            .navbar-brand img {
-                height: 35px !important;
-            }
-        }
+        @media (max-width: 992px) { .brand-text { font-size: 1rem; max-width: 180px; } }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; max-width: 150px; } .navbar-brand img { height: 35px !important; } }
 
         .page-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -104,31 +69,10 @@
             display: flex;
             flex-direction: column;
         }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .product-card .price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .product-card .mrp {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 0.9rem;
-            margin-left: 10px;
-        }
-
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); }
+        .product-card img { width: 100%; height: 250px; object-fit: cover; }
+        .product-card .price { font-size: 1.5rem; font-weight: 700; color: #667eea; }
+        .product-card .mrp { text-decoration: line-through; color: #999; font-size: 0.9rem; margin-left: 10px; }
         .btn-add-cart {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -141,29 +85,10 @@
             margin-top: 5px;
             margin-bottom: 0;
         }
-
-        .btn-add-cart:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .product-card .p-3 {
-            padding: 12px !important;
-            padding-top: 12px !important;
-            padding-bottom: 12px !important;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-card h5 {
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-
-        .row>[class*="col-"] {
-            margin-bottom: 25px;
-        }
+        .btn-add-cart:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .product-card .p-3 { padding: 12px !important; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-card h5 { margin-bottom: 8px; font-size: 1.1rem; }
+        .row>[class*="col-"] { margin-bottom: 25px; }
 
         .footer {
             background: #1a1a2e;
@@ -171,16 +96,8 @@
             padding: 50px 0 20px;
             margin-top: 50px;
         }
-
-        .footer a {
-            color: #ffd700;
-            text-decoration: none;
-        }
-
-        .loading-spinner {
-            text-align: center;
-            padding: 50px;
-        }
+        .footer a { color: #ffd700; text-decoration: none; }
+        .loading-spinner { text-align: center; padding: 50px; }
     </style>
 </head>
 
@@ -271,17 +188,26 @@
             const container = document.getElementById('productsContainer');
             
             try {
-                const products = await getAllProducts();
+                let products = await getAllProducts();
                 
                 if (!products || products.length === 0) {
                     container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No products available.</p></div>';
                     return;
                 }
                 
+                // Force replace broken via.placeholder.com URLs
+                products = products.map((product, index) => {
+                    let imageUrl = product.image || '';
+                    if (imageUrl.includes('via.placeholder.com') || !imageUrl.startsWith('http')) {
+                        imageUrl = `https://picsum.photos/300/250?random=${product.id || index}`;
+                    }
+                    return { ...product, image: imageUrl };
+                });
+                
                 container.innerHTML = products.map(product => `
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="product-card">
-                            <img src="${product.image || 'https://via.placeholder.com/300x250/667eea/white?text=Product'}" alt="${product.name}">
+                            <img src="${product.image}" alt="${product.name}" onerror="this.src='https://picsum.photos/300/250?random=${Date.now()}'">
                             <div class="p-3">
                                 <h5>${product.name}</h5>
                                 <p class="price">₹${product.price} <span class="mrp">₹${product.mrp}</span></p>
