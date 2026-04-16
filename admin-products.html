@@ -194,15 +194,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-<script src="js/firebase-config.js"></script>
-<script>
+<script type="module">
+    import { 
+        getAllProducts, 
+        addProduct, 
+        deleteProduct 
+    } from './js/firebase-config.js';
+    
     // Admin authentication check
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-    
-    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
+    if (!currentUser || currentUser.role !== 'admin') {
         window.location.href = 'register.html';
     }
     
@@ -212,18 +213,16 @@
         document.getElementById('adminSidebar').classList.toggle('show');
     }
     
-    function logoutUser() {
+    window.logoutUser = function() {
         if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminEmail');
-            localStorage.removeItem('currentUser');
+            localStorage.clear();
             window.location.href = 'index.html';
         }
-    }
+    };
     
     async function loadProducts() {
         try {
-            products = await window.firebaseAPI.getAllProducts();
+            products = await getAllProducts();
             displayProducts();
         } catch (error) {
             console.error('Error loading products:', error);
@@ -234,7 +233,7 @@
     function displayProducts() {
         const tbody = document.getElementById('productsTableBody');
         if (products.length === 0) {
-            tbody.innerHTML = '<td><td colspan="7" class="text-center">No products found<\/td><\/tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No products found<\/td><\/tr>';
         } else {
             tbody.innerHTML = products.map(p => `
                 <tr>
@@ -245,7 +244,7 @@
                     <td><span class="text-muted">₹${p.mrp}</span></td>
                     <td>${p.stock || 0}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')" title="Delete Product">
+                        <button class="btn btn-sm btn-danger" onclick="deleteProductHandler('${p.id}')" title="Delete Product">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </td>
@@ -266,7 +265,7 @@
             desc: document.getElementById('productDesc').value || ''
         };
         
-        const result = await window.firebaseAPI.addProduct(newProduct);
+        const result = await addProduct(newProduct);
         
         if (result.success) {
             alert('✅ Product added successfully!');
@@ -278,9 +277,9 @@
         }
     });
     
-    async function deleteProduct(productId) {
+    window.deleteProductHandler = async function(productId) {
         if (confirm('Delete this product permanently?')) {
-            const result = await window.firebaseAPI.deleteProduct(productId);
+            const result = await deleteProduct(productId);
             if (result.success) {
                 alert('✅ Product deleted successfully!');
                 loadProducts();
@@ -288,7 +287,7 @@
                 alert('❌ Failed to delete product: ' + result.error);
             }
         }
-    }
+    };
     
     loadProducts();
 </script>
