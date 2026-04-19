@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Admin - Withdrawals</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,6 +47,7 @@
             border-radius: 10px;
             text-decoration: none;
             display: block;
+            font-size: 14px;
         }
         .admin-sidebar .nav-link:hover,
         .admin-sidebar .nav-link.active {
@@ -70,6 +71,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .withdrawal-table {
             background: white;
@@ -82,31 +85,35 @@
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         .sidebar-toggle {
             display: none;
         }
         
-        @media (max-width: 768px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            .admin-sidebar.show {
-                transform: translateX(0);
-            }
-            .admin-content {
-                margin-left: 0;
-            }
-            .sidebar-toggle {
-                display: block;
-            }
+        .badge-pending { background: #ffc107; color: #333; }
+        .badge-approved { background: #28a745; color: white; }
+        .badge-rejected { background: #dc3545; color: white; }
+        
+        @media (max-width: 992px) {
+            .admin-sidebar { transform: translateX(-100%); }
+            .admin-sidebar.show { transform: translateX(0); }
+            .admin-content { margin-left: 0; }
+            .sidebar-toggle { display: block; }
         }
+        
+        @media (max-width: 768px) {
+            .admin-content { padding: 15px; }
+            .withdrawal-table { padding: 15px; font-size: 12px; }
+            .stat-card { padding: 15px; }
+        }
+        
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-<!-- Admin Sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
     <div class="brand">
         <img src="img/site-logo.jpg" alt="Logo">
@@ -125,7 +132,6 @@
     </nav>
 </div>
 
-<!-- Main Content -->
 <div class="admin-content">
     <div class="admin-header">
         <div>
@@ -139,23 +145,23 @@
         </div>
     </div>
     
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row g-4 mb-4">
+        <div class="col-md-4 col-6">
             <div class="stat-card">
                 <i class="fas fa-clock fa-2x text-warning"></i>
                 <h2 id="pendingCount">0</h2>
-                <p>Pending Requests</p>
+                <p>Pending</p>
                 <h5 id="pendingAmount">₹0</h5>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-6">
             <div class="stat-card">
                 <i class="fas fa-check-circle fa-2x text-success"></i>
                 <h2 id="approvedCount">0</h2>
                 <p>Approved</p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-6">
             <div class="stat-card">
                 <i class="fas fa-rupee-sign fa-2x text-primary"></i>
                 <h2 id="totalPaid">₹0</h2>
@@ -166,12 +172,12 @@
     
     <div class="withdrawal-table">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr><th>ID</th><th>User</th><th>Amount</th><th>Bank Details</th><th>Date</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="withdrawalsTableBody">
-                    <tr><td colspan="7" class="text-center">Loading...<\/td><\/tr>
+                    <td><td colspan="7" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -182,12 +188,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
 <script>
-    // Admin authentication check
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-    
-    if (!adminLoggedIn && (!currentUser || currentUser.role !== 'admin')) {
+    if (!currentUser || currentUser.role !== 'admin') {
         window.location.href = 'register.html';
     }
     
@@ -197,47 +201,8 @@
         document.getElementById('adminSidebar').classList.toggle('show');
     }
     
-    function logoutUser() {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminEmail');
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }
-    }
-    
     async function loadWithdrawals() {
-        // Load withdrawals from Firebase
         withdrawals = await window.firebaseAPI.getAllWithdrawals();
-        
-        if (withdrawals.length === 0) {
-            // Sample data if empty
-            withdrawals = [
-                {
-                    id: 1001,
-                    userName: 'Mohammad Sahil',
-                    userEmail: 'sahilfact549@gmail.com',
-                    userId: 'user123',
-                    amount: 5000,
-                    bankDetails: 'State Bank of India, ****1234',
-                    fullBankDetails: { bankName: 'SBI', accountName: 'Mohammad Sahil', accountNumber: '1234567890', ifsc: 'SBIN0012345' },
-                    date: new Date().toISOString(),
-                    status: 'Pending'
-                },
-                {
-                    id: 1002,
-                    userName: 'Rajesh Kumar',
-                    userEmail: 'rajesh@email.com',
-                    userId: 'user456',
-                    amount: 3000,
-                    bankDetails: 'HDFC Bank, ****5678',
-                    fullBankDetails: { bankName: 'HDFC', accountName: 'Rajesh Kumar', accountNumber: '9876543210', ifsc: 'HDFC0012345' },
-                    date: new Date().toISOString(),
-                    status: 'Pending'
-                }
-            ];
-        }
-        
         updateStats();
         displayWithdrawals();
     }
@@ -245,13 +210,19 @@
     function updateStats() {
         const pending = withdrawals.filter(w => w.status === 'Pending');
         const approved = withdrawals.filter(w => w.status === 'Approved');
-        const pendingAmount = pending.reduce((sum, w) => sum + w.amount, 0);
-        const totalPaid = approved.reduce((sum, w) => sum + w.amount, 0);
+        const pendingAmount = pending.reduce((sum, w) => sum + (w.amount || 0), 0);
+        const totalPaid = approved.reduce((sum, w) => sum + (w.amount || 0), 0);
         
         document.getElementById('pendingCount').innerText = pending.length;
         document.getElementById('pendingAmount').innerHTML = '₹' + pendingAmount.toLocaleString();
         document.getElementById('approvedCount').innerText = approved.length;
         document.getElementById('totalPaid').innerHTML = '₹' + totalPaid.toLocaleString();
+    }
+    
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN');
     }
     
     function displayWithdrawals() {
@@ -261,12 +232,12 @@
         } else {
             tbody.innerHTML = withdrawals.map(w => `
                 <tr>
-                    <td>#${w.id}</td>
-                    <td><strong>${w.userName}</strong><br><small class="text-muted">${w.userEmail}</small></td>
-                    <td class="fw-bold text-${w.status === 'Pending' ? 'warning' : 'success'}">₹${w.amount.toLocaleString()}</td>
-                    <td>${w.bankDetails}<br><small>${w.fullBankDetails?.accountName || ''}</small></td>
-                    <td>${w.date ? new Date(w.date).toLocaleDateString() : 'N/A'}</td>
-                    <td><span class="badge bg-${w.status === 'Pending' ? 'warning' : 'success'}">${w.status}</span></td>
+                    <td>#${w.id?.substring(0, 8) || 'N/A'}</td>
+                    <td><strong>${w.userName || 'User'}</strong><br><small>${w.userEmail || ''}</small></td>
+                    <td class="fw-bold text-warning">₹${(w.amount || 0).toLocaleString()}</td>
+                    <td>${w.bankDetails || 'N/A'}<br><small>${w.fullBankDetails?.accountName || ''}</small></td>
+                    <td>${formatDate(w.date)}</td>
+                    <td>${w.status === 'Pending' ? '<span class="badge badge-pending">⏳ Pending</span>' : '<span class="badge badge-approved">✅ Approved</span>'}</td>
                     <td>
                         ${w.status === 'Pending' ? `
                             <button class="btn btn-sm btn-success me-1" onclick="approveWithdrawal('${w.id}', '${w.userId}', ${w.amount})">
@@ -282,30 +253,26 @@
         }
     }
     
-    // Approve withdrawal
     async function approveWithdrawal(withdrawalId, userId, amount) {
         if (confirm('Approve this withdrawal request? Amount will be sent to user\'s bank account.')) {
             const result = await window.firebaseAPI.updateWithdrawalStatus(withdrawalId, 'Approved', userId, amount);
-            
             if (result.success) {
-                alert(`✅ Withdrawal APPROVED! Amount has been credited to user's bank account.`);
+                alert('✅ Withdrawal approved! Amount will be sent to user.');
                 loadWithdrawals();
             } else {
-                alert('❌ Failed to approve withdrawal: ' + result.error);
+                alert('❌ Failed: ' + result.error);
             }
         }
     }
     
-    // Reject withdrawal
     async function rejectWithdrawal(withdrawalId, userId, amount) {
         if (confirm('Reject this withdrawal request? Amount will be returned to user\'s wallet.')) {
             const result = await window.firebaseAPI.updateWithdrawalStatus(withdrawalId, 'Rejected', userId, amount);
-            
             if (result.success) {
-                alert(`❌ Withdrawal REJECTED! Amount has been returned to user's wallet.`);
+                alert('❌ Withdrawal rejected! Amount returned to wallet.');
                 loadWithdrawals();
             } else {
-                alert('❌ Failed to reject withdrawal: ' + result.error);
+                alert('❌ Failed: ' + result.error);
             }
         }
     }
