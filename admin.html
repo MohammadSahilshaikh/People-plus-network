@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Admin Dashboard - People Plus Network</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -109,8 +109,17 @@
         .sidebar-toggle {
             display: none;
         }
-        .btn-sm {
-            margin: 2px;
+        .filter-dropdown {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .filter-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.3);
         }
         
         /* Mobile Responsive */
@@ -130,9 +139,6 @@
             .stat-number {
                 font-size: 1.3rem;
             }
-            .stat-card i {
-                font-size: 1.5rem;
-            }
         }
         
         @media (max-width: 768px) {
@@ -149,22 +155,6 @@
                 padding: 15px;
                 font-size: 12px;
             }
-            .admin-sidebar .nav-link {
-                padding: 10px 20px;
-                font-size: 13px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .stat-number {
-                font-size: 1rem;
-            }
-            .stat-card p {
-                font-size: 12px;
-            }
-            .table-card h5 {
-                font-size: 14px;
-            }
         }
         
         /* Status Badges */
@@ -172,9 +162,7 @@
         .badge-processing { background: #17a2b8; color: white; }
         .badge-delivered { background: #28a745; color: white; }
         .badge-approved { background: #28a745; color: white; }
-        .badge-rejected { background: #dc3545; color: white; }
         
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 5px; }
@@ -210,8 +198,14 @@
             </button>
             <h4 class="mb-0 d-inline-block">Dashboard</h4>
         </div>
-        <div>
-            <span class="me-3"><i class="fas fa-user-circle"></i> <span id="adminName">Admin</span></span>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-calendar-alt text-primary"></i>
+            <select id="dateFilter" class="filter-dropdown" onchange="loadDashboard()">
+                <option value="today">📅 Today</option>
+                <option value="week" selected>📊 This Week</option>
+                <option value="month">📆 This Month</option>
+                <option value="year">🗓️ This Year</option>
+            </select>
         </div>
     </div>
     
@@ -222,58 +216,63 @@
                 <i class="fas fa-users"></i>
                 <div class="stat-number" id="totalUsers">0</div>
                 <p class="text-muted">Total Users</p>
-                <small class="text-success" id="todayUsers">+0 today</small>
+                <small class="text-success" id="newUsers">+0 new</small>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
-                <i class="fas fa-user-plus"></i>
-                <div class="stat-number" id="weekUsers">0</div>
-                <p class="text-muted">This Week</p>
-                <small class="text-success" id="monthUsers">+0 this month</small>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <i class="fas fa-chart-line"></i>
-                <div class="stat-number" id="totalSales">₹0</div>
-                <p class="text-muted">Total Sales</p>
-                <small class="text-success" id="todaySales">+₹0 today</small>
+                <i class="fas fa-rupee-sign"></i>
+                <div class="stat-number" id="totalRevenue">₹0</div>
+                <p class="text-muted">Total Revenue</p>
+                <small class="text-success" id="newRevenue">+₹0</small>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
                 <i class="fas fa-box"></i>
-                <div class="stat-number" id="totalProducts">0</div>
-                <p class="text-muted">Products Sold</p>
-                <small class="text-success" id="weekSales">+0 this week</small>
+                <div class="stat-number" id="totalOrders">0</div>
+                <p class="text-muted">Total Orders</p>
+                <small class="text-success" id="newOrders">+0</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card text-center">
+                <i class="fas fa-trophy"></i>
+                <div class="stat-number" id="totalWithdrawals">₹0</div>
+                <p class="text-muted">Withdrawn</p>
+                <small class="text-warning" id="pendingWithdrawalsCount">0 pending</small>
             </div>
         </div>
     </div>
     
-    <!-- Stats Row 2 - Financial Stats -->
+    <!-- Stats Row 2 - Detailed Stats -->
     <div class="row g-4 mb-4">
-        <div class="col-md-4 col-6">
+        <div class="col-md-3 col-6">
             <div class="stat-card text-center">
-                <i class="fas fa-wallet"></i>
-                <div class="stat-number" id="totalWithdrawals">₹0</div>
-                <p class="text-muted">Total Withdrawn</p>
+                <i class="fas fa-user-plus"></i>
+                <div class="stat-number" id="newUsersCount">0</div>
+                <p class="text-muted">New Users</p>
             </div>
         </div>
-        <div class="col-md-4 col-6">
+        <div class="col-md-3 col-6">
             <div class="stat-card text-center">
-                <i class="fas fa-clock"></i>
-                <div class="stat-number" id="pendingWithdrawals">0</div>
-                <p class="text-muted">Pending Withdrawals</p>
-                <small class="text-warning" id="pendingAmount">₹0</small>
+                <i class="fas fa-chart-line"></i>
+                <div class="stat-number" id="periodRevenue">₹0</div>
+                <p class="text-muted" id="periodLabel">This Week</p>
             </div>
         </div>
-        <div class="col-md-4 col-6">
+        <div class="col-md-3 col-6">
             <div class="stat-card text-center">
-                <i class="fas fa-check-circle"></i>
-                <div class="stat-number" id="approvedWithdrawals">0</div>
-                <p class="text-muted">Approved</p>
-                <small class="text-success" id="approvedAmount">₹0</small>
+                <i class="fas fa-shopping-cart"></i>
+                <div class="stat-number" id="periodOrders">0</div>
+                <p class="text-muted">Orders</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card text-center">
+                <i class="fas fa-money-bill-wave"></i>
+                <div class="stat-number" id="periodWithdrawals">₹0</div>
+                <p class="text-muted">Withdrawals</p>
             </div>
         </div>
     </div>
@@ -290,7 +289,7 @@
                     <tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr>
                 </thead>
                 <tbody id="recentOrdersBody">
-                    <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                    <tr><td colspan="6" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -305,10 +304,10 @@
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead>
-                    <tr><th>User</th><th>Amount</th><th>Bank</th><th>Date</th><th>Action</th></tr>
+                    <tr><th>User</th><th>Amount</th><th>Bank</th><th>Date</th><th>Action</th></td>
                 </thead>
                 <tbody id="pendingWithdrawalsBody">
-                    <td><td colspan="5" class="text-center">Loading...</td></tr>
+                    <tr><td colspan="5" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -326,7 +325,7 @@
                     <tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th></tr>
                 </thead>
                 <tbody id="recentUsersBody">
-                    <td><td colspan="5" class="text-center">Loading...</td></tr>
+                    <tr><td colspan="5" class="text-center">Loading...<\/td><\/tr>
                 </tbody>
             </table>
         </div>
@@ -339,7 +338,6 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/auth.js"></script>
 <script>
-    // Check if admin is logged in
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser || currentUser.role !== 'admin') {
         window.location.href = 'register.html';
@@ -349,87 +347,90 @@
         document.getElementById('adminSidebar').classList.toggle('show');
     }
     
-    // Format date
     function formatDate(dateString) {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
         return date.toLocaleDateString('en-IN');
     }
     
-    // Get today's date string (YYYY-MM-DD)
-    function getTodayDate() {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    }
-    
-    // Get start of week
-    function getStartOfWeek() {
-        const today = new Date();
-        const day = today.getDay();
-        const start = new Date(today);
-        start.setDate(today.getDate() - day + (day === 0 ? -6 : 1));
-        return start.toISOString().split('T')[0];
-    }
-    
-    // Get start of month
-    function getStartOfMonth() {
-        const today = new Date();
-        return new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+    function getDateRange(filter) {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        let startDate = new Date(today);
+        
+        switch(filter) {
+            case 'today':
+                startDate = today;
+                break;
+            case 'week':
+                startDate = new Date(today);
+                startDate.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+                break;
+            case 'month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+            case 'year':
+                startDate = new Date(now.getFullYear(), 0, 1);
+                break;
+            default:
+                startDate = new Date(today);
+                startDate.setDate(today.getDate() - 7);
+        }
+        
+        return { start: startDate.toISOString().split('T')[0], end: today.toISOString().split('T')[0] };
     }
     
     async function loadDashboard() {
+        const filter = document.getElementById('dateFilter').value;
+        const range = getDateRange(filter);
+        
+        // Update period label
+        const labels = { today: 'Today', week: 'This Week', month: 'This Month', year: 'This Year' };
+        document.getElementById('periodLabel').innerText = labels[filter];
+        
         // Load data from Firebase
         const users = await window.firebaseAPI.getAllUsers();
         const orders = await window.firebaseAPI.getAllOrders();
         const withdrawals = await window.firebaseAPI.getAllWithdrawals();
-        const products = await window.firebaseAPI.getAllProducts();
         
-        const today = getTodayDate();
-        const weekStart = getStartOfWeek();
-        const monthStart = getStartOfMonth();
-        
-        // User Stats
+        // Total Stats (All Time)
         const totalUsers = users.length;
-        const todayUsers = users.filter(u => u.joined && u.joined.split('T')[0] === today).length;
-        const weekUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= weekStart).length;
-        const monthUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= monthStart).length;
+        const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const totalOrders = orders.length;
+        const totalWithdrawn = withdrawals.filter(w => w.status === 'Approved').reduce((sum, w) => sum + (w.amount || 0), 0);
+        const pendingWithdrawals = withdrawals.filter(w => w.status === 'Pending').length;
         
         document.getElementById('totalUsers').innerText = totalUsers;
-        document.getElementById('todayUsers').innerHTML = `+${todayUsers} today`;
-        document.getElementById('weekUsers').innerText = weekUsers;
-        document.getElementById('monthUsers').innerHTML = `+${monthUsers} this month`;
-        
-        // Sales Stats
-        const totalSales = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const todaySales = orders.filter(o => o.date && o.date.split('T')[0] === today).reduce((sum, o) => sum + (o.total || 0), 0);
-        const weekSales = orders.filter(o => o.date && o.date.split('T')[0] >= weekStart).reduce((sum, o) => sum + (o.total || 0), 0);
-        const totalProductsSold = orders.reduce((sum, o) => sum + (o.items ? o.items.reduce((s, i) => s + i.quantity, 0) : 0), 0);
-        const weekProductsSold = orders.filter(o => o.date && o.date.split('T')[0] >= weekStart).reduce((sum, o) => sum + (o.items ? o.items.reduce((s, i) => s + i.quantity, 0) : 0), 0);
-        
-        document.getElementById('totalSales').innerHTML = '₹' + totalSales.toLocaleString();
-        document.getElementById('todaySales').innerHTML = '+₹' + todaySales.toLocaleString();
-        document.getElementById('totalProducts').innerText = totalProductsSold;
-        document.getElementById('weekSales').innerHTML = '+₹' + weekSales.toLocaleString();
-        
-        // Withdrawal Stats
-        const pendingWithdrawals = withdrawals.filter(w => w.status === 'Pending');
-        const approvedWithdrawals = withdrawals.filter(w => w.status === 'Approved');
-        const totalWithdrawn = approvedWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
-        const pendingAmount = pendingWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
-        const approvedAmount = approvedWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
-        
+        document.getElementById('totalRevenue').innerHTML = '₹' + totalRevenue.toLocaleString();
+        document.getElementById('totalOrders').innerText = totalOrders;
         document.getElementById('totalWithdrawals').innerHTML = '₹' + totalWithdrawn.toLocaleString();
-        document.getElementById('pendingWithdrawals').innerText = pendingWithdrawals.length;
-        document.getElementById('pendingAmount').innerHTML = '₹' + pendingAmount.toLocaleString();
-        document.getElementById('approvedWithdrawals').innerText = approvedWithdrawals.length;
-        document.getElementById('approvedAmount').innerHTML = '₹' + approvedAmount.toLocaleString();
-        document.getElementById('totalProducts').innerText = products.length;
+        document.getElementById('pendingWithdrawalsCount').innerHTML = pendingWithdrawals + ' pending';
+        
+        // Period Stats (Filtered)
+        const filteredUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= range.start);
+        const filteredOrders = orders.filter(o => o.date && o.date.split('T')[0] >= range.start);
+        const filteredWithdrawals = withdrawals.filter(w => w.date && w.date.split('T')[0] >= range.start && w.status === 'Approved');
+        
+        const newUsers = filteredUsers.length;
+        const periodRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const periodOrders = filteredOrders.length;
+        const periodWithdrawals = filteredWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
+        
+        document.getElementById('newUsersCount').innerText = newUsers;
+        document.getElementById('periodRevenue').innerHTML = '₹' + periodRevenue.toLocaleString();
+        document.getElementById('periodOrders').innerText = periodOrders;
+        document.getElementById('periodWithdrawals').innerHTML = '₹' + periodWithdrawals.toLocaleString();
+        
+        // Growth indicators
+        document.getElementById('newUsers').innerHTML = '+ ' + newUsers + ' new';
+        document.getElementById('newRevenue').innerHTML = '+₹' + periodRevenue.toLocaleString();
+        document.getElementById('newOrders').innerHTML = '+' + periodOrders;
         
         // Recent Orders (last 5)
         const recentOrders = orders.slice(-5).reverse();
         let ordersHtml = '';
         if (recentOrders.length === 0) {
-            ordersHtml = '<tr><td colspan="6" class="text-center">No orders found</td></tr>';
+            ordersHtml = '<tr><td colspan="6" class="text-center">No orders found<\/td><\/tr>';
         } else {
             recentOrders.forEach(o => {
                 let statusClass = '';
@@ -439,7 +440,7 @@
                 
                 ordersHtml += `
                     <tr>
-                        <td><strong>#${o.orderId || o.id}</strong></td>
+                        <td><strong>#${o.orderId || o.id?.substring(0, 8)}</strong></td>
                         <td>${o.userName || 'User'}</td>
                         <td>₹${(o.total || 0).toLocaleString()}</td>
                         <td><span class="badge ${statusClass}">${o.status || 'Pending'}</span></td>
@@ -455,7 +456,7 @@
         const pendingWithdrawalsList = withdrawals.filter(w => w.status === 'Pending').slice(-5);
         let withdrawalsHtml = '';
         if (pendingWithdrawalsList.length === 0) {
-            withdrawalsHtml = '<tr><td colspan="5" class="text-center">No pending withdrawals</td></tr>';
+            withdrawalsHtml = '<tr><td colspan="5" class="text-center">No pending withdrawals<\/td><\/tr>';
         } else {
             pendingWithdrawalsList.forEach(w => {
                 withdrawalsHtml += `
@@ -464,9 +465,7 @@
                         <td class="text-danger fw-bold">₹${(w.amount || 0).toLocaleString()}</td>
                         <td>${w.bankDetails || 'N/A'}</td>
                         <td>${formatDate(w.date)}</td>
-                        <td>
-                            <a href="admin-withdrawals.html" class="btn btn-sm btn-success">Process</a>
-                        </td>
+                        <td><a href="admin-withdrawals.html" class="btn btn-sm btn-success">Process</a></td>
                     </tr>
                 `;
             });
@@ -477,7 +476,7 @@
         const recentUsers = users.slice(-5).reverse();
         let usersHtml = '';
         if (recentUsers.length === 0) {
-            usersHtml = '<tr><td colspan="5" class="text-center">No users found</td></tr>';
+            usersHtml = '<tr><td colspan="5" class="text-center">No users found<\/td><\/tr>';
         } else {
             recentUsers.forEach(u => {
                 usersHtml += `
