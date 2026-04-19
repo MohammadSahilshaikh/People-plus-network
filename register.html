@@ -10,25 +10,107 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        
+        /* Navbar */
         .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; }
+        .navbar-brand { white-space: normal; }
         .brand-text { display: inline-block; font-weight: 800; letter-spacing: 1px; color: white; font-size: 1.3rem; }
-        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } .navbar-brand img { height: 35px !important; } }
-        .nav-link { color: white !important; }
+        .nav-link { 
+            color: white !important; 
+            font-weight: 500; 
+            transition: all 0.3s ease; 
+            margin: 0 5px; 
+            position: relative; 
+        }
+        .nav-link:hover { color: #ffd700 !important; }
+        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
+        /* Active link ke neeche yellow line */
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 2px;
+        }
+        
+        @media (max-width: 768px) { 
+            .brand-text { font-size: 0.85rem; } 
+            .navbar-brand img { height: 35px !important; } 
+        }
+        
+        /* Auth Card */
         .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
         .auth-container { max-width: 550px; width: 100%; margin: 0 auto; }
         .auth-card { background: white; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
         .auth-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 30px; text-align: center; color: white; }
-        .nav-pills { background: rgba(255,255,255,0.2); border-radius: 50px; padding: 5px; max-width: 300px; margin: 0 auto; display: flex; }
-        .nav-pills .nav-link { color: white; border-radius: 50px; padding: 8px 30px; font-weight: 600; cursor: pointer; }
-        .nav-pills .nav-link.active { background: white; color: #667eea; }
+        
+        /* Nav Pills - Login/Register Buttons */
+        .nav-pills { 
+            background: rgba(255,255,255,0.2); 
+            border-radius: 50px; 
+            padding: 5px; 
+            max-width: 300px; 
+            margin: 0 auto; 
+            display: flex; 
+        }
+        .nav-pills .nav-link { 
+            color: white !important; 
+            border-radius: 50px; 
+            padding: 8px 30px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            background: transparent;
+            transition: all 0.3s;
+        }
+        /* Active tab - white background */
+        .nav-pills .nav-link.active { 
+            background: white !important; 
+            color: #667eea !important; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        /* Hover effect - yellow */
+        .nav-pills .nav-link:hover:not(.active) { 
+            background: rgba(255,215,0,0.2) !important; 
+            color: #ffd700 !important; 
+        }
+        
         .auth-body { padding: 35px; }
         .form-group { margin-bottom: 20px; }
+        .form-group label { font-weight: 500; margin-bottom: 8px; display: block; color: #333; }
         .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; }
-        .btn-auth { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 100%; padding: 14px; border-radius: 50px; font-weight: 600; transition: all 0.3s; }
+        .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        
+        .btn-auth { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+        }
         .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        
         .home-link { text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
-        .btn-back-home { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #667eea; padding: 12px 25px; border-radius: 50px; font-weight: 600; text-decoration: none; border: 2px solid #667eea; transition: all 0.3s; }
+        .btn-back-home { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: transparent; 
+            color: #667eea; 
+            padding: 12px 25px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            border: 2px solid #667eea; 
+            transition: all 0.3s; 
+        }
         .btn-back-home:hover { background: #667eea; color: white; }
+        
         @media (max-width: 768px) { .auth-body { padding: 25px; } }
     </style>
 </head>
@@ -94,22 +176,10 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script type="module">
-    // ============ FIREBASE IMPORT (Direct CDN) ============
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-        getFirestore, 
-        collection, 
-        addDoc, 
-        getDocs, 
-        doc, 
-        updateDoc, 
-        deleteDoc,
-        query,
-        where
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Firebase Config
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script>
+    // ============ FIREBASE SETUP ============
     const firebaseConfig = {
         apiKey: "AIzaSyDbjm0SEvm08Sl6adjeF_v3pSscbPtmTdo",
         authDomain: "people-plus-network.firebaseapp.com",
@@ -120,31 +190,19 @@
         measurementId: "G-422JG8E9KM"
     };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const usersCollection = collection(db, "users");
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const usersCollection = db.collection("users");
 
-    // ============ REGISTER FUNCTION ============
     async function registerUser(userData) {
         try {
-            const q = query(usersCollection, where("email", "==", userData.email));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                return { success: false, error: "Email already exists" };
-            }
+            const querySnapshot = await usersCollection.where("email", "==", userData.email).get();
+            if (!querySnapshot.empty) return { success: false, error: "Email already exists" };
             const userId = "PPN" + Math.floor(Math.random() * 90000 + 10000);
-            const docRef = await addDoc(usersCollection, {
-                userId: userId,
-                name: userData.name,
-                email: userData.email,
-                phone: userData.phone,
-                password: userData.password,
-                sponsor: userData.sponsor || "PPN0001",
-                wallet: 0,
-                status: "active",
-                role: "user",
-                joined: new Date().toISOString()
+            const docRef = await usersCollection.add({
+                userId: userId, name: userData.name, email: userData.email, phone: userData.phone,
+                password: userData.password, sponsor: userData.sponsor || "PPN0001", wallet: 0,
+                status: "active", role: "user", joined: new Date().toISOString()
             });
             return { success: true, user: { id: docRef.id, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
         } catch (error) {
@@ -152,46 +210,30 @@
         }
     }
 
-    // ============ LOGIN FUNCTION ============
     async function loginUser(email, password) {
         try {
-            const q = query(usersCollection, where("email", "==", email), where("password", "==", password));
-            const querySnapshot = await getDocs(q);
-            if (querySnapshot.empty) {
-                return { success: false, error: "Invalid credentials" };
-            }
+            const querySnapshot = await usersCollection.where("email", "==", email).where("password", "==", password).get();
+            if (querySnapshot.empty) return { success: false, error: "Invalid credentials" };
             let userData = null;
-            querySnapshot.forEach(doc => {
-                userData = { id: doc.id, ...doc.data() };
-            });
+            querySnapshot.forEach(doc => { userData = { id: doc.id, ...doc.data() }; });
             return { success: true, user: userData };
         } catch (error) {
             return { success: false, error: error.message };
         }
     }
 
-    // ============ CREATE DEFAULT ADMIN ============
     async function createDefaultAdmin() {
-        const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await usersCollection.where("email", "==", "admin@peopleplus.com").get();
         if (querySnapshot.empty) {
-            await addDoc(usersCollection, {
-                userId: "ADMIN001",
-                name: "Super Admin",
-                email: "admin@peopleplus.com",
-                phone: "9999999999",
-                password: "admin123",
-                role: "admin",
-                status: "active",
-                wallet: 0,
-                joined: new Date().toISOString()
+            await usersCollection.add({
+                userId: "ADMIN001", name: "Super Admin", email: "admin@peopleplus.com", phone: "9999999999",
+                password: "admin123", role: "admin", status: "active", wallet: 0, joined: new Date().toISOString()
             });
             console.log("✅ Default admin created");
         }
     }
     createDefaultAdmin();
 
-    // ============ UI FUNCTIONS ============
     function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -200,7 +242,7 @@
     }
     updateCartCount();
 
-    // ============ LOGIN EVENT ============
+    // LOGIN
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value.trim();
@@ -234,7 +276,7 @@
         }
     });
 
-    // ============ REGISTER EVENT ============
+    // REGISTER
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('regName').value.trim();
