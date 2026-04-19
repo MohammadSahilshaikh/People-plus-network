@@ -99,6 +99,14 @@
             margin-top: 10px;
             margin-bottom: 5px;
         }
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
         .table-card {
             background: white;
             border-radius: 15px;
@@ -161,7 +169,6 @@
         .badge-pending { background: #ffc107; color: #333; }
         .badge-processing { background: #17a2b8; color: white; }
         .badge-delivered { background: #28a745; color: white; }
-        .badge-approved { background: #28a745; color: white; }
         
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -205,74 +212,43 @@
                 <option value="week" selected>📊 This Week</option>
                 <option value="month">📆 This Month</option>
                 <option value="year">🗓️ This Year</option>
+                <option value="all">🏆 All Time</option>
             </select>
         </div>
     </div>
     
-    <!-- Stats Row 1 - User Stats -->
+    <!-- Stats Row - 4 Main Cards -->
     <div class="row g-4 mb-4">
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
                 <i class="fas fa-users"></i>
                 <div class="stat-number" id="totalUsers">0</div>
-                <p class="text-muted">Total Users</p>
-                <small class="text-success" id="newUsers">+0 new</small>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-change text-success" id="userChange">+0 new</div>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
                 <i class="fas fa-rupee-sign"></i>
                 <div class="stat-number" id="totalRevenue">₹0</div>
-                <p class="text-muted">Total Revenue</p>
-                <small class="text-success" id="newRevenue">+₹0</small>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <i class="fas fa-box"></i>
-                <div class="stat-number" id="totalOrders">0</div>
-                <p class="text-muted">Total Orders</p>
-                <small class="text-success" id="newOrders">+0</small>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <i class="fas fa-trophy"></i>
-                <div class="stat-number" id="totalWithdrawals">₹0</div>
-                <p class="text-muted">Withdrawn</p>
-                <small class="text-warning" id="pendingWithdrawalsCount">0 pending</small>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Stats Row 2 - Detailed Stats -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <i class="fas fa-user-plus"></i>
-                <div class="stat-number" id="newUsersCount">0</div>
-                <p class="text-muted">New Users</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <i class="fas fa-chart-line"></i>
-                <div class="stat-number" id="periodRevenue">₹0</div>
-                <p class="text-muted" id="periodLabel">This Week</p>
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-change text-success" id="revenueChange">+₹0</div>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
                 <i class="fas fa-shopping-cart"></i>
-                <div class="stat-number" id="periodOrders">0</div>
-                <p class="text-muted">Orders</p>
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-change text-success" id="orderChange">+0</div>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="stat-card text-center">
                 <i class="fas fa-money-bill-wave"></i>
-                <div class="stat-number" id="periodWithdrawals">₹0</div>
-                <p class="text-muted">Withdrawals</p>
+                <div class="stat-number" id="totalWithdrawn">₹0</div>
+                <div class="stat-label">Total Withdrawn</div>
+                <div class="stat-change text-warning" id="pendingCount">0 pending</div>
             </div>
         </div>
     </div>
@@ -304,7 +280,7 @@
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead>
-                    <tr><th>User</th><th>Amount</th><th>Bank</th><th>Date</th><th>Action</th></td>
+                    <tr><th>User</th><th>Amount</th><th>Bank Details</th><th>Date</th><th>Action</th></tr>
                 </thead>
                 <tbody id="pendingWithdrawalsBody">
                     <tr><td colspan="5" class="text-center">Loading...<\/td><\/tr>
@@ -322,7 +298,7 @@
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead>
-                    <tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th></tr>
+                    <td><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th></tr>
                 </thead>
                 <tbody id="recentUsersBody">
                     <tr><td colspan="5" class="text-center">Loading...<\/td><\/tr>
@@ -372,6 +348,8 @@
             case 'year':
                 startDate = new Date(now.getFullYear(), 0, 1);
                 break;
+            case 'all':
+                return { start: '1970-01-01', end: today.toISOString().split('T')[0] };
             default:
                 startDate = new Date(today);
                 startDate.setDate(today.getDate() - 7);
@@ -384,47 +362,60 @@
         const filter = document.getElementById('dateFilter').value;
         const range = getDateRange(filter);
         
-        // Update period label
-        const labels = { today: 'Today', week: 'This Week', month: 'This Month', year: 'This Year' };
-        document.getElementById('periodLabel').innerText = labels[filter];
-        
         // Load data from Firebase
         const users = await window.firebaseAPI.getAllUsers();
         const orders = await window.firebaseAPI.getAllOrders();
         const withdrawals = await window.firebaseAPI.getAllWithdrawals();
         
-        // Total Stats (All Time)
-        const totalUsers = users.length;
-        const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const totalOrders = orders.length;
-        const totalWithdrawn = withdrawals.filter(w => w.status === 'Approved').reduce((sum, w) => sum + (w.amount || 0), 0);
-        const pendingWithdrawals = withdrawals.filter(w => w.status === 'Pending').length;
+        // Filter data based on date range
+        const filteredUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= range.start);
+        const filteredOrders = orders.filter(o => o.date && o.date.split('T')[0] >= range.start);
+        const filteredWithdrawals = withdrawals.filter(w => w.date && w.date.split('T')[0] >= range.start);
+        
+        const approvedWithdrawals = withdrawals.filter(w => w.status === 'Approved');
+        const pendingWithdrawalsList = withdrawals.filter(w => w.status === 'Pending');
+        
+        // Total Stats (Filtered)
+        const totalUsers = filteredUsers.length;
+        const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const totalOrders = filteredOrders.length;
+        const totalWithdrawn = approvedWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
+        const pendingCount = pendingWithdrawalsList.length;
+        
+        // For change indicators - get previous period data
+        const prevRangeStart = new Date(range.start);
+        const prevRangeEnd = new Date(range.end);
+        const duration = new Date(range.end) - new Date(range.start);
+        prevRangeStart.setDate(prevRangeStart.getDate() - (duration / (1000 * 60 * 60 * 24) + 1));
+        
+        const prevStart = prevRangeStart.toISOString().split('T')[0];
+        const prevUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= prevStart && u.joined.split('T')[0] < range.start).length;
+        const prevRevenue = orders.filter(o => o.date && o.date.split('T')[0] >= prevStart && o.date.split('T')[0] < range.start).reduce((sum, o) => sum + (o.total || 0), 0);
+        const prevOrders = orders.filter(o => o.date && o.date.split('T')[0] >= prevStart && o.date.split('T')[0] < range.start).length;
+        
+        const userChange = totalUsers - prevUsers;
+        const revenueChange = totalRevenue - prevRevenue;
+        const orderChange = totalOrders - prevOrders;
         
         document.getElementById('totalUsers').innerText = totalUsers;
         document.getElementById('totalRevenue').innerHTML = '₹' + totalRevenue.toLocaleString();
         document.getElementById('totalOrders').innerText = totalOrders;
-        document.getElementById('totalWithdrawals').innerHTML = '₹' + totalWithdrawn.toLocaleString();
-        document.getElementById('pendingWithdrawalsCount').innerHTML = pendingWithdrawals + ' pending';
+        document.getElementById('totalWithdrawn').innerHTML = '₹' + totalWithdrawn.toLocaleString();
+        document.getElementById('pendingCount').innerHTML = pendingCount + ' pending';
         
-        // Period Stats (Filtered)
-        const filteredUsers = users.filter(u => u.joined && u.joined.split('T')[0] >= range.start);
-        const filteredOrders = orders.filter(o => o.date && o.date.split('T')[0] >= range.start);
-        const filteredWithdrawals = withdrawals.filter(w => w.date && w.date.split('T')[0] >= range.start && w.status === 'Approved');
+        document.getElementById('userChange').innerHTML = (userChange >= 0 ? '+' : '') + userChange + ' new';
+        document.getElementById('revenueChange').innerHTML = (revenueChange >= 0 ? '+₹' : '-₹') + Math.abs(revenueChange).toLocaleString();
+        document.getElementById('orderChange').innerHTML = (orderChange >= 0 ? '+' : '') + orderChange;
         
-        const newUsers = filteredUsers.length;
-        const periodRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const periodOrders = filteredOrders.length;
-        const periodWithdrawals = filteredWithdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
-        
-        document.getElementById('newUsersCount').innerText = newUsers;
-        document.getElementById('periodRevenue').innerHTML = '₹' + periodRevenue.toLocaleString();
-        document.getElementById('periodOrders').innerText = periodOrders;
-        document.getElementById('periodWithdrawals').innerHTML = '₹' + periodWithdrawals.toLocaleString();
-        
-        // Growth indicators
-        document.getElementById('newUsers').innerHTML = '+ ' + newUsers + ' new';
-        document.getElementById('newRevenue').innerHTML = '+₹' + periodRevenue.toLocaleString();
-        document.getElementById('newOrders').innerHTML = '+' + periodOrders;
+        if (userChange >= 0) {
+            document.getElementById('userChange').className = 'stat-change text-success';
+            document.getElementById('revenueChange').className = 'stat-change text-success';
+            document.getElementById('orderChange').className = 'stat-change text-success';
+        } else {
+            document.getElementById('userChange').className = 'stat-change text-danger';
+            document.getElementById('revenueChange').className = 'stat-change text-danger';
+            document.getElementById('orderChange').className = 'stat-change text-danger';
+        }
         
         // Recent Orders (last 5)
         const recentOrders = orders.slice(-5).reverse();
@@ -453,12 +444,12 @@
         document.getElementById('recentOrdersBody').innerHTML = ordersHtml;
         
         // Pending Withdrawals
-        const pendingWithdrawalsList = withdrawals.filter(w => w.status === 'Pending').slice(-5);
+        const pendingWithdrawalsListDisplay = withdrawals.filter(w => w.status === 'Pending').slice(-5);
         let withdrawalsHtml = '';
-        if (pendingWithdrawalsList.length === 0) {
+        if (pendingWithdrawalsListDisplay.length === 0) {
             withdrawalsHtml = '<tr><td colspan="5" class="text-center">No pending withdrawals<\/td><\/tr>';
         } else {
-            pendingWithdrawalsList.forEach(w => {
+            pendingWithdrawalsListDisplay.forEach(w => {
                 withdrawalsHtml += `
                     <tr>
                         <td><strong>${w.userName || 'User'}</strong><br><small>${w.userEmail || ''}</small></td>
