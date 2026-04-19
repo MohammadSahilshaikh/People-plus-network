@@ -31,8 +31,7 @@ const productsCollection = collection(db, "products");
 const ordersCollection = collection(db, "orders");
 const withdrawalsCollection = collection(db, "withdrawals");
 
-// ============ USER FUNCTIONS ============
-
+// ============ REGISTER USER ============
 async function registerUserFirebase(userData) {
   try {
     const q = query(usersCollection, where("email", "==", userData.email));
@@ -63,6 +62,7 @@ async function registerUserFirebase(userData) {
   }
 }
 
+// ============ LOGIN USER ============
 async function loginUserFirebase(email, password) {
   try {
     const q = query(usersCollection, where("email", "==", email), where("password", "==", password));
@@ -80,6 +80,7 @@ async function loginUserFirebase(email, password) {
   }
 }
 
+// ============ GET ALL USERS ============
 async function getAllUsers() {
   try {
     const querySnapshot = await getDocs(usersCollection);
@@ -93,6 +94,7 @@ async function getAllUsers() {
   }
 }
 
+// ============ UPDATE USER STATUS ============
 async function updateUserStatus(userId, status) {
   try {
     const userRef = doc(db, "users", userId);
@@ -103,6 +105,7 @@ async function updateUserStatus(userId, status) {
   }
 }
 
+// ============ DELETE USER ============
 async function deleteUser(userId) {
   try {
     await deleteDoc(doc(db, "users", userId));
@@ -112,6 +115,7 @@ async function deleteUser(userId) {
   }
 }
 
+// ============ UPDATE USER WALLET ============
 async function updateUserWallet(userId, amount) {
   try {
     const userRef = doc(db, "users", userId);
@@ -124,6 +128,7 @@ async function updateUserWallet(userId, amount) {
   }
 }
 
+// ============ GET ALL PRODUCTS ============
 async function getAllProducts() {
   try {
     const querySnapshot = await getDocs(productsCollection);
@@ -137,6 +142,7 @@ async function getAllProducts() {
   }
 }
 
+// ============ ADD PRODUCT ============
 async function addProduct(productData) {
   try {
     const docRef = await addDoc(productsCollection, {
@@ -154,6 +160,7 @@ async function addProduct(productData) {
   }
 }
 
+// ============ DELETE PRODUCT ============
 async function deleteProduct(productId) {
   try {
     await deleteDoc(doc(db, "products", productId));
@@ -163,6 +170,7 @@ async function deleteProduct(productId) {
   }
 }
 
+// ============ GET ALL ORDERS ============
 async function getAllOrders() {
   try {
     const querySnapshot = await getDocs(ordersCollection);
@@ -176,6 +184,7 @@ async function getAllOrders() {
   }
 }
 
+// ============ UPDATE ORDER STATUS ============
 async function updateOrderStatus(orderId, status, tracking) {
   try {
     const orderRef = doc(db, "orders", orderId);
@@ -186,6 +195,7 @@ async function updateOrderStatus(orderId, status, tracking) {
   }
 }
 
+// ============ GET ALL WITHDRAWALS ============
 async function getAllWithdrawals() {
   try {
     const querySnapshot = await getDocs(withdrawalsCollection);
@@ -199,6 +209,7 @@ async function getAllWithdrawals() {
   }
 }
 
+// ============ UPDATE WITHDRAWAL STATUS ============
 async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   try {
     const withdrawalRef = doc(db, "withdrawals", withdrawalId);
@@ -212,6 +223,7 @@ async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   }
 }
 
+// ============ CREATE DEFAULT ADMIN ============
 async function createDefaultAdmin() {
   const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
   const querySnapshot = await getDocs(q);
@@ -231,6 +243,7 @@ async function createDefaultAdmin() {
   }
 }
 
+// ============ CREATE DEFAULT PRODUCTS ============
 async function createDefaultProducts() {
   const querySnapshot = await getDocs(productsCollection);
   if (querySnapshot.empty) {
@@ -253,7 +266,7 @@ async function initFirebase() {
 }
 initFirebase();
 
-// EXPORT ALL FUNCTIONS
+// ============ EXPORT ALL FUNCTIONS ============
 window.firebaseAPI = {
   registerUserFirebase,
   loginUserFirebase,
