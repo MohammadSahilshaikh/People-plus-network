@@ -1,189 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication - People Plus Network</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; }
-        .brand-text { display: inline-block; font-weight: 800; letter-spacing: 1px; color: white; font-size: 1.3rem; }
-        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } .navbar-brand img { height: 35px !important; } }
-        .nav-link { color: white !important; }
-        .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-        .auth-container { max-width: 550px; width: 100%; margin: 0 auto; }
-        .auth-card { background: white; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
-        .auth-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 30px; text-align: center; color: white; }
-        .nav-pills { background: rgba(255,255,255,0.2); border-radius: 50px; padding: 5px; max-width: 300px; margin: 0 auto; display: flex; }
-        .nav-pills .nav-link { color: white; border-radius: 50px; padding: 8px 30px; font-weight: 600; cursor: pointer; }
-        .nav-pills .nav-link.active { background: white; color: #667eea; }
-        .auth-body { padding: 35px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; }
-        .btn-auth { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 100%; padding: 14px; border-radius: 50px; font-weight: 600; }
-        .home-link { text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
-        .btn-back-home { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #667eea; padding: 12px 25px; border-radius: 50px; font-weight: 600; text-decoration: none; border: 2px solid #667eea; transition: all 0.3s; }
-        .btn-back-home:hover { background: #667eea; color: white; }
-        @media (max-width: 768px) { .auth-body { padding: 25px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            white-space: normal;
+        }
+
+        .brand-text {
+            display: inline-block;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #ffd700 !important;
+        }
+
+        .nav-link.active {
+            color: #ffd700 !important;
+            font-weight: 700;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 992px) {
+            .brand-text {
+                font-size: 1rem;
+                max-width: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .brand-text {
+                font-size: 0.85rem;
+                max-width: 150px;
+            }
+            .navbar-brand img {
+                height: 35px !important;
+            }
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-container {
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .auth-header h2 {
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .nav-pills {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+            margin: 0 auto;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-pills .nav-link {
+            color: white;
+            border-radius: 50px;
+            padding: 8px 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .nav-pills .nav-link.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-body {
+            padding: 35px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-auth:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .home-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: transparent;
+            color: #667eea;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 2px solid #667eea;
+        }
+
+        .btn-back-home:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .auth-body {
+                padding: 25px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-            <img src="img/site-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px;">
-            <span class="brand-text">PEOPLE PLUS NETWORK</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="register.html">Login/Register</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="main-container">
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <i class="fas fa-users-cog fa-3x mb-3"></i>
-                <h2>Welcome to People Plus</h2>
-                <ul class="nav nav-pills" id="authTab">
-                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login">Login</button></li>
-                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#register">Join Now</button></li>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+                <img src="img/site-logo.jpg" alt="Logo"
+                    style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <span class="brand-text">PEOPLE PLUS NETWORK</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon bg-white rounded"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 10px;">
+                                <img src="img/default-avatar.png" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                                <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
-            <div class="auth-body">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="login">
-                        <form id="loginForm">
-                            <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email" required></div>
-                            <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter your password" required></div>
-                            <button type="submit" class="btn-auth">Login Securely</button>
-                        </form>
-                        <div class="text-center mt-3"><small class="text-muted">Admin: admin@peopleplus.com / admin123</small></div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-users-cog fa-3x mb-3"></i>
+                    <h2>Welcome to People Plus</h2>
+                    <ul class="nav nav-pills" id="authTab" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login">Login</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#register">Join Now</button></li>
+                    </ul>
+                </div>
+                <div class="auth-body">
+                    <div class="tab-content">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="login">
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                                </div>
+                                <button type="submit" class="btn-auth">Login Securely</button>
+                            </form>
+                            <div class="text-center mt-3">
+                                <small class="text-muted">Admin: admin@peopleplus.com / admin123</small>
+                            </div>
+                        </div>
+
+                        <!-- Register Tab -->
+                        <div class="tab-pane fade" id="register">
+                            <form id="registerForm">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="regName" placeholder="Enter your full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="regPhone" placeholder="10-digit mobile number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="regPassword" placeholder="Create a strong password (min 6 characters)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sponsor ID (Optional)</label>
+                                    <input type="text" id="regSponsor" placeholder="Enter sponsor ID if any">
+                                </div>
+                                <button type="submit" class="btn-auth">Create Account</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="tab-pane fade" id="register">
-                        <form id="registerForm">
-                            <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Enter your full name" required></div>
-                            <div class="form-group"><label>Email Address</label><input type="email" id="regEmail" placeholder="Enter your email" required></div>
-                            <div class="form-group"><label>Phone Number</label><input type="tel" id="regPhone" placeholder="10-digit mobile number" required></div>
-                            <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Create a strong password" required></div>
-                            <div class="form-group"><label>Sponsor ID (Optional)</label><input type="text" id="regSponsor" placeholder="Enter sponsor ID if any"></div>
-                            <button type="submit" class="btn-auth">Create Account</button>
-                        </form>
+                    <div class="home-link">
+                        <a href="index.html" class="btn-back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
                     </div>
                 </div>
-                <div class="home-link"><a href="index.html" class="btn-back-home"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-<script src="js/firebase-config.js"></script>
-<script>
-    function updateCartCount() {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        let span = document.getElementById('cartCount');
-        if (span) span.innerText = count;
-    }
-    updateCartCount();
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                const check = () => {
+                    if (window.firebaseAPI && window.firebaseAPI.loginUserFirebase) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+        }
 
-    // Simple wait for Firebase
-    function waitForFirebase() {
-        return new Promise((resolve) => {
-            if (window.firebaseAPI && typeof window.firebaseAPI.loginUserFirebase === 'function') {
-                resolve();
-            } else {
-                setTimeout(() => waitForFirebase().then(resolve), 100);
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+            
+            await waitForFirebase();
+            
+            try {
+                const result = await window.firebaseAPI.loginUserFirebase(email, password);
+                if (result.success) {
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    if (result.user.role === 'admin') {
+                        alert('✅ Welcome Admin!');
+                        window.location.href = 'admin.html';
+                    } else {
+                        alert('✅ Login Successful!');
+                        window.location.href = 'user-dashboard.html';
+                    }
+                } else {
+                    alert('❌ Login failed: ' + (result.error || 'Invalid credentials'));
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+                console.error(error);
             }
         });
-    }
 
-    // Login
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        if (!email || !password) { alert('Please enter email and password'); return; }
-        
-        const btn = e.target.querySelector('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-        btn.disabled = true;
-        
-        try {
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const sponsor = document.getElementById('regSponsor').value.trim();
+            
+            if (!name || !email || !phone || !password) {
+                alert('Please fill all required fields!');
+                return;
+            }
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long!");
+                return;
+            }
+            
             await waitForFirebase();
-            const result = await window.firebaseAPI.loginUserFirebase(email, password);
-            if (result.success) {
-                localStorage.setItem('currentUser', JSON.stringify(result.user));
-                if (result.user.role === 'admin') {
-                    alert('✅ Welcome Admin!');
-                    window.location.href = 'admin.html';
-                } else {
-                    alert('✅ Login Successful!');
+            
+            try {
+                const result = await window.firebaseAPI.registerUserFirebase({ name, email, phone, password, sponsor });
+                if (result.success) {
+                    alert('✅ Registration successful! Welcome to People Plus Network!');
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
                     window.location.href = 'user-dashboard.html';
+                } else {
+                    alert('❌ Registration failed: ' + (result.error || 'Please try again'));
                 }
-            } else {
-                alert('❌ Login failed: ' + (result.error || 'Invalid credentials'));
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+                console.error(error);
             }
-        } catch (error) {
-            alert('❌ Error: ' + error.message);
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    });
-
-    // Register
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const password = document.getElementById('regPassword').value;
-        const sponsor = document.getElementById('regSponsor').value.trim();
-        if (!name || !email || !phone || !password) { alert('Please fill all required fields!'); return; }
-        if (password.length < 6) { alert('Password must be at least 6 characters!'); return; }
-        
-        const btn = e.target.querySelector('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
-        btn.disabled = true;
-        
-        try {
-            await waitForFirebase();
-            const result = await window.firebaseAPI.registerUserFirebase({ name, email, phone, password, sponsor });
-            if (result.success) {
-                alert('✅ Registration successful! Welcome!');
-                localStorage.setItem('currentUser', JSON.stringify(result.user));
-                window.location.href = 'user-dashboard.html';
-            } else {
-                alert('❌ Registration failed: ' + (result.error || 'Please try again'));
-            }
-        } catch (error) {
-            alert('❌ Error: ' + error.message);
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    });
-</script>
+        });
+    </script>
 </body>
+
 </html>
