@@ -13,7 +13,6 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDbjm0SEvm08Sl6adjeF_v3pSscbPtmTdo",
   authDomain: "people-plus-network.firebaseapp.com",
@@ -24,11 +23,9 @@ const firebaseConfig = {
   measurementId: "G-422JG8E9KM"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Collection References
 const usersCollection = collection(db, "users");
 const productsCollection = collection(db, "products");
 const ordersCollection = collection(db, "orders");
@@ -36,16 +33,13 @@ const withdrawalsCollection = collection(db, "withdrawals");
 
 // ============ USER FUNCTIONS ============
 
-// Register User
 async function registerUserFirebase(userData) {
   try {
     const q = query(usersCollection, where("email", "==", userData.email));
     const querySnapshot = await getDocs(q);
-    
     if (!querySnapshot.empty) {
       return { success: false, error: "Email already exists" };
     }
-    
     const userId = "PPN" + Math.floor(Math.random() * 90000 + 10000);
     const docRef = await addDoc(usersCollection, {
       userId: userId,
@@ -63,35 +57,29 @@ async function registerUserFirebase(userData) {
       totalReferrals: 0,
       level: "Starter"
     });
-    
     return { success: true, user: { id: docRef.id, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-// Login User
 async function loginUserFirebase(email, password) {
   try {
     const q = query(usersCollection, where("email", "==", email), where("password", "==", password));
     const querySnapshot = await getDocs(q);
-    
     if (querySnapshot.empty) {
       return { success: false, error: "Invalid credentials" };
     }
-    
     let userData = null;
     querySnapshot.forEach(doc => {
       userData = { id: doc.id, ...doc.data() };
     });
-    
     return { success: true, user: userData };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-// Get All Users (Admin)
 async function getAllUsers() {
   try {
     const querySnapshot = await getDocs(usersCollection);
@@ -101,12 +89,10 @@ async function getAllUsers() {
     });
     return users;
   } catch (error) {
-    console.error("Error getting users:", error);
     return [];
   }
 }
 
-// Update User Status (Admin)
 async function updateUserStatus(userId, status) {
   try {
     const userRef = doc(db, "users", userId);
@@ -117,7 +103,6 @@ async function updateUserStatus(userId, status) {
   }
 }
 
-// Delete User (Admin)
 async function deleteUser(userId) {
   try {
     await deleteDoc(doc(db, "users", userId));
@@ -127,7 +112,6 @@ async function deleteUser(userId) {
   }
 }
 
-// Update User Wallet
 async function updateUserWallet(userId, amount) {
   try {
     const userRef = doc(db, "users", userId);
@@ -140,9 +124,6 @@ async function updateUserWallet(userId, amount) {
   }
 }
 
-// ============ PRODUCT FUNCTIONS ============
-
-// Get All Products
 async function getAllProducts() {
   try {
     const querySnapshot = await getDocs(productsCollection);
@@ -152,12 +133,10 @@ async function getAllProducts() {
     });
     return products;
   } catch (error) {
-    console.error("Error getting products:", error);
     return [];
   }
 }
 
-// Add Product (Admin)
 async function addProduct(productData) {
   try {
     const docRef = await addDoc(productsCollection, {
@@ -175,7 +154,6 @@ async function addProduct(productData) {
   }
 }
 
-// Delete Product (Admin)
 async function deleteProduct(productId) {
   try {
     await deleteDoc(doc(db, "products", productId));
@@ -185,9 +163,6 @@ async function deleteProduct(productId) {
   }
 }
 
-// ============ ORDER FUNCTIONS ============
-
-// Get All Orders (Admin)
 async function getAllOrders() {
   try {
     const querySnapshot = await getDocs(ordersCollection);
@@ -197,12 +172,10 @@ async function getAllOrders() {
     });
     return orders;
   } catch (error) {
-    console.error("Error getting orders:", error);
     return [];
   }
 }
 
-// Update Order Status (Admin)
 async function updateOrderStatus(orderId, status, tracking) {
   try {
     const orderRef = doc(db, "orders", orderId);
@@ -213,9 +186,6 @@ async function updateOrderStatus(orderId, status, tracking) {
   }
 }
 
-// ============ WITHDRAWAL FUNCTIONS ============
-
-// Get All Withdrawals (Admin)
 async function getAllWithdrawals() {
   try {
     const querySnapshot = await getDocs(withdrawalsCollection);
@@ -225,17 +195,14 @@ async function getAllWithdrawals() {
     });
     return withdrawals;
   } catch (error) {
-    console.error("Error getting withdrawals:", error);
     return [];
   }
 }
 
-// Update Withdrawal Status (Admin)
 async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   try {
     const withdrawalRef = doc(db, "withdrawals", withdrawalId);
     await updateDoc(withdrawalRef, { status: status });
-    
     if (status === "Rejected") {
       await updateUserWallet(userId, amount);
     }
@@ -245,11 +212,9 @@ async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   }
 }
 
-// ============ CREATE DEFAULT ADMIN ============
 async function createDefaultAdmin() {
   const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
   const querySnapshot = await getDocs(q);
-  
   if (querySnapshot.empty) {
     await addDoc(usersCollection, {
       userId: "ADMIN001",
@@ -266,10 +231,8 @@ async function createDefaultAdmin() {
   }
 }
 
-// Create default products
 async function createDefaultProducts() {
   const querySnapshot = await getDocs(productsCollection);
-  
   if (querySnapshot.empty) {
     const defaultProducts = [
       { name: "Ayurvedic Protein Powder", price: 999, mrp: 1499, stock: 250, image: "https://picsum.photos/300/250?random=1", desc: "Pure Ayurvedic protein powder" },
@@ -277,7 +240,6 @@ async function createDefaultProducts() {
       { name: "Organic Skin Cream", price: 799, mrp: 1299, stock: 300, image: "https://picsum.photos/300/250?random=3", desc: "Natural skin care" },
       { name: "Nutrition Supplement", price: 1499, mrp: 2499, stock: 200, image: "https://picsum.photos/300/250?random=4", desc: "Complete nutrition" }
     ];
-    
     for (const product of defaultProducts) {
       await addDoc(productsCollection, product);
     }
@@ -285,15 +247,13 @@ async function createDefaultProducts() {
   }
 }
 
-// Initialize Firebase Data
 async function initFirebase() {
   await createDefaultAdmin();
   await createDefaultProducts();
 }
-
 initFirebase();
 
-// ============ EXPORT FUNCTIONS TO WINDOW ============
+// EXPORT ALL FUNCTIONS
 window.firebaseAPI = {
   registerUserFirebase,
   loginUserFirebase,

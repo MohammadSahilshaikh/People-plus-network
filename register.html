@@ -342,23 +342,36 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
     <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
     <script>
-        // Wait for Firebase to load
+        // Simple helper to check if Firebase is ready
+        function isFirebaseReady() {
+            return window.firebaseAPI && typeof window.firebaseAPI.loginUserFirebase === 'function';
+        }
+
         function waitForFirebase() {
             return new Promise((resolve) => {
-                const check = () => {
-                    if (window.firebaseAPI && window.firebaseAPI.loginUserFirebase) {
-                        resolve();
-                    } else {
-                        setTimeout(check, 100);
-                    }
-                };
-                check();
+                if (isFirebaseReady()) {
+                    resolve();
+                } else {
+                    const interval = setInterval(() => {
+                        if (isFirebaseReady()) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 100);
+                }
             });
         }
 
-        // Login
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            let cartCountSpan = document.getElementById('cartCount');
+            if (cartCountSpan) cartCountSpan.innerText = count;
+        }
+        updateCartCount();
+
+        // LOGIN
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -369,12 +382,15 @@
                 return;
             }
             
-            await waitForFirebase();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            btn.disabled = true;
             
             try {
+                await waitForFirebase();
                 const result = await window.firebaseAPI.loginUserFirebase(email, password);
                 if (result.success) {
-                    localStorage.setItem('userLoggedIn', 'true');
                     localStorage.setItem('currentUser', JSON.stringify(result.user));
                     if (result.user.role === 'admin') {
                         alert('✅ Welcome Admin!');
@@ -387,12 +403,15 @@
                     alert('❌ Login failed: ' + (result.error || 'Invalid credentials'));
                 }
             } catch (error) {
-                alert('❌ Error: ' + error.message);
                 console.error(error);
+                alert('❌ Error: ' + error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
 
-        // Register
+        // REGISTER
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
@@ -410,21 +429,27 @@
                 return;
             }
             
-            await waitForFirebase();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            btn.disabled = true;
             
             try {
+                await waitForFirebase();
                 const result = await window.firebaseAPI.registerUserFirebase({ name, email, phone, password, sponsor });
                 if (result.success) {
-                    alert('✅ Registration successful! Welcome to People Plus Network!');
-                    localStorage.setItem('userLoggedIn', 'true');
+                    alert('✅ Registration successful! Welcome!');
                     localStorage.setItem('currentUser', JSON.stringify(result.user));
                     window.location.href = 'user-dashboard.html';
                 } else {
                     alert('❌ Registration failed: ' + (result.error || 'Please try again'));
                 }
             } catch (error) {
-                alert('❌ Error: ' + error.message);
                 console.error(error);
+                alert('❌ Error: ' + error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
     </script>
