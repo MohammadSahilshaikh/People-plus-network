@@ -175,6 +175,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
+    // ============ FIREBASE CONFIGURATION ============
     const firebaseConfig = {
         apiKey: "AIzaSyDbjm0SEvm08Sl6adjeF_v3pSscbPtmTdo",
         authDomain: "people-plus-network.firebaseapp.com",
@@ -185,10 +186,15 @@
         measurementId: "G-422JG8E9KM"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
 
+    // Test auth
+    console.log("Firebase Auth loaded:", auth);
+
+    // ============ REGISTER FUNCTION ============
     async function registerUser(userData) {
         try {
             const userCredential = await auth.createUserWithEmailAndPassword(userData.email, userData.password);
@@ -207,10 +213,16 @@
             });
             return { success: true, user: { id: user.uid, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Register error:", error);
+            let errorMessage = error.message;
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'Email already registered! Please login.';
+            }
+            return { success: false, error: errorMessage };
         }
     }
 
+    // ============ LOGIN FUNCTION ============
     async function loginUser(email, password) {
         try {
             const userCredential = await auth.signInWithEmailAndPassword(email, password);
@@ -221,14 +233,24 @@
             }
             return { success: true, user: { id: user.uid, ...doc.data() } };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Login error:", error);
+            let errorMessage = error.message;
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email. Please register.';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password. Please try again.';
+            }
+            return { success: false, error: errorMessage };
         }
     }
 
+    // ============ CREATE DEFAULT ADMIN ============
     async function createDefaultAdmin() {
         try {
             try {
                 await auth.signInWithEmailAndPassword("admin@peopleplus.com", "admin123");
+                console.log("Admin already exists");
+                return;
             } catch (error) {
                 const userCredential = await auth.createUserWithEmailAndPassword("admin@peopleplus.com", "admin123");
                 const user = userCredential.user;
@@ -245,11 +267,12 @@
                 console.log("✅ Default admin created");
             }
         } catch (error) {
-            console.log("Admin creation error:", error);
+            console.log("Admin creation error:", error.message);
         }
     }
     createDefaultAdmin();
 
+    // ============ UI FUNCTIONS ============
     function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -258,15 +281,18 @@
     }
     updateCartCount();
 
+    // ============ LOGIN EVENT ============
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         if (!email || !password) { alert('Please enter email and password'); return; }
+        
         const btn = e.target.querySelector('button');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
         btn.disabled = true;
+        
         try {
             const result = await loginUser(email, password);
             if (result.success) {
@@ -289,6 +315,7 @@
         }
     });
 
+    // ============ REGISTER EVENT ============
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('regName').value.trim();
@@ -296,16 +323,19 @@
         const phone = document.getElementById('regPhone').value.trim();
         const password = document.getElementById('regPassword').value;
         const sponsor = document.getElementById('regSponsor').value.trim();
+        
         if (!name || !email || !phone || !password) { alert('Please fill all required fields!'); return; }
         if (password.length < 6) { alert('Password must be at least 6 characters!'); return; }
+        
         const btn = e.target.querySelector('button');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
         btn.disabled = true;
+        
         try {
             const result = await registerUser({ name, email, phone, password, sponsor });
             if (result.success) {
-                alert('✅ Registration successful! Welcome!');
+                alert('✅ Registration successful! Welcome to People Plus Network!');
                 localStorage.setItem('currentUser', JSON.stringify(result.user));
                 window.location.href = 'user-dashboard.html';
             } else {
