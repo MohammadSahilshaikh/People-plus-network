@@ -1,4 +1,5 @@
-// Firebase Configuration
+// ============ COMPLETE FIREBASE CONFIGURATION WITH AUTH ============
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
   getFirestore, 
@@ -10,9 +11,22 @@ import {
   deleteDoc,
   query,
   where,
-  getDoc
+  getDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// ✅ YEH IMPORT MISSING THA - AB ADD KAR DIYA
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDbjm0SEvm08Sl6adjeF_v3pSscbPtmTdo",
   authDomain: "people-plus-network.firebaseapp.com",
@@ -23,29 +37,42 @@ const firebaseConfig = {
   measurementId: "G-422JG8E9KM"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);  // ✅ YEH AB KAAM KAREGA
+const googleProvider = new GoogleAuthProvider();
 
+// Collections
 const usersCollection = collection(db, "users");
 const productsCollection = collection(db, "products");
 const ordersCollection = collection(db, "orders");
 const withdrawalsCollection = collection(db, "withdrawals");
 
-// ============ REGISTER USER ============
+// ============ REGISTER USER (WITH FIREBASE AUTH) ============
 async function registerUserFirebase(userData) {
   try {
+    // Check if email already exists in Firestore
     const q = query(usersCollection, where("email", "==", userData.email));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       return { success: false, error: "Email already exists" };
     }
+    
+    // ✅ Create user in Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+    const firebaseUser = userCredential.user;
+    
+    // Generate unique user ID
     const userId = "PPN" + Math.floor(Math.random() * 90000 + 10000);
-    const docRef = await addDoc(usersCollection, {
+    
+    // ✅ Save user to Firestore with UID from Auth
+    await setDoc(doc(db, "users", firebaseUser.uid), {
+      uid: firebaseUser.uid,
       userId: userId,
       name: userData.name,
       email: userData.email,
       phone: userData.phone,
-      password: userData.password,
       sponsor: userData.sponsor || "PPN0001",
       wallet: 0,
       status: "active",
@@ -56,28 +83,111 @@ async function registerUserFirebase(userData) {
       totalReferrals: 0,
       level: "Starter"
     });
-    return { success: true, user: { id: docRef.id, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
+    
+    return { success: true, user: { uid: firebaseUser.uid, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
+  } catch (error) {
+    let errorMessage = error.message;
+    if (error.code === 'auth/email-already-in-use') {
+      errorMessage = "Email already registered";
+    } else if (error.code === 'auth/weak-password') {
+      errorMessage = "Password should be at least 6 characters";
+    }
+    return { success: false, error: errorMessage };
+  }
+}
+
+// ============ LOGIN USER (WITH FIREBASE AUTH) ============
+async function loginUserFirebase(email, password) {
+  try {
+    // ✅ Sign in with Firebase Authentication
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+    
+    // ✅ Get user data from Firestore using UID
+    const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+    
+    if (!userDoc.exists()) {
+      return { success: false, error: "User data not found" };
+    }
+    
+    const userData = { uid: firebaseUser.uid, ...userDoc.data() };
+    return { success: true, user: userData };
+  } catch (error) {
+    if (error.code === 'auth/invalid-credential') {
+      return { success: false, error: "Invalid email or password" };
+    } else if (error.code === 'auth/user-not-found') {
+      return { success: false, error: "No account found with this email" };
+    } else if (error.code === 'auth/wrong-password') {
+      return { success: false, error: "Incorrect password" };
+    }
+    return { success: false, error: error.message };
+  }
+}
+
+// ============ LOGIN WITH GOOGLE ============
+async function loginWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const firebaseUser = result.user;
+    
+    // Check if user exists in Firestore
+    const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+    
+    if (!userDoc.exists()) {
+      // Create new user if doesn't exist
+      const userId = "PPN" + Math.floor(Math.random() * 90000 + 10000);
+      await setDoc(doc(db, "users", firebaseUser.uid), {
+        uid: firebaseUser.uid,
+        userId: userId,
+        name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+        email: firebaseUser.email,
+        phone: firebaseUser.phoneNumber || "",
+        sponsor: "PPN0001",
+        wallet: 0,
+        status: "active",
+        role: "user",
+        joined: new Date().toISOString(),
+        profileImage: firebaseUser.photoURL || "img/default-avatar.png",
+        directReferrals: 0,
+        totalReferrals: 0,
+        level: "Starter"
+      });
+    }
+    
+    const userData = { uid: firebaseUser.uid, ...(await getDoc(doc(db, "users", firebaseUser.uid))).data() };
+    return { success: true, user: userData };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-// ============ LOGIN USER ============
-async function loginUserFirebase(email, password) {
+// ============ LOGOUT USER ============
+async function logoutUser() {
   try {
-    const q = query(usersCollection, where("email", "==", email), where("password", "==", password));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-      return { success: false, error: "Invalid credentials" };
-    }
-    let userData = null;
-    querySnapshot.forEach(doc => {
-      userData = { id: doc.id, ...doc.data() };
-    });
-    return { success: true, user: userData };
+    await signOut(auth);
+    localStorage.removeItem('currentUser');
+    return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
   }
+}
+
+// ============ GET CURRENT USER ============
+function getCurrentUser() {
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          resolve({ uid: user.uid, ...userDoc.data() });
+        } else {
+          resolve(null);
+        }
+      } else {
+        resolve(null);
+      }
+    });
+  });
 }
 
 // ============ GET ALL USERS ============
@@ -122,7 +232,7 @@ async function updateUserWallet(userId, amount) {
     const userDoc = await getDoc(userRef);
     const currentWallet = userDoc.data()?.wallet || 0;
     await updateDoc(userRef, { wallet: currentWallet + amount });
-    return { success: true };
+    return { success: true, newWallet: currentWallet + amount };
   } catch (error) {
     return { success: false, error: error.message };
   }
@@ -152,7 +262,8 @@ async function addProduct(productData) {
       stock: productData.stock || 100,
       image: productData.image || "https://picsum.photos/300/250",
       desc: productData.desc || "",
-      status: "active"
+      status: "active",
+      createdAt: new Date().toISOString()
     });
     return { success: true, productId: docRef.id };
   } catch (error) {
@@ -188,7 +299,7 @@ async function getAllOrders() {
 async function updateOrderStatus(orderId, status, tracking) {
   try {
     const orderRef = doc(db, "orders", orderId);
-    await updateDoc(orderRef, { status: status, tracking: tracking });
+    await updateDoc(orderRef, { status: status, tracking: tracking, updatedAt: new Date().toISOString() });
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -213,7 +324,7 @@ async function getAllWithdrawals() {
 async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   try {
     const withdrawalRef = doc(db, "withdrawals", withdrawalId);
-    await updateDoc(withdrawalRef, { status: status });
+    await updateDoc(withdrawalRef, { status: status, processedAt: new Date().toISOString() });
     if (status === "Rejected") {
       await updateUserWallet(userId, amount);
     }
@@ -223,23 +334,38 @@ async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   }
 }
 
-// ============ CREATE DEFAULT ADMIN ============
+// ============ CREATE DEFAULT ADMIN (WITH AUTH) ============
 async function createDefaultAdmin() {
-  const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.empty) {
-    await addDoc(usersCollection, {
-      userId: "ADMIN001",
-      name: "Super Admin",
-      email: "admin@peopleplus.com",
-      phone: "9999999999",
-      password: "admin123",
-      role: "admin",
-      status: "active",
-      wallet: 0,
-      joined: new Date().toISOString()
-    });
-    console.log("✅ Default admin created");
+  try {
+    const q = query(usersCollection, where("email", "==", "admin@peopleplus.com"));
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+      // ✅ Create admin in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, "admin@peopleplus.com", "admin123");
+      const firebaseUser = userCredential.user;
+      
+      // ✅ Create admin in Firestore
+      await setDoc(doc(db, "users", firebaseUser.uid), {
+        uid: firebaseUser.uid,
+        userId: "ADMIN001",
+        name: "Super Admin",
+        email: "admin@peopleplus.com",
+        phone: "9999999999",
+        role: "admin",
+        status: "active",
+        wallet: 0,
+        joined: new Date().toISOString(),
+        profileImage: "img/default-avatar.png"
+      });
+      console.log("✅ Default admin created");
+      console.log("📧 Email: admin@peopleplus.com");
+      console.log("🔑 Password: admin123");
+    }
+  } catch (error) {
+    if (error.code !== 'auth/email-already-in-use') {
+      console.log("Admin creation error:", error.message);
+    }
   }
 }
 
@@ -260,16 +386,23 @@ async function createDefaultProducts() {
   }
 }
 
+// Initialize Firebase
 async function initFirebase() {
   await createDefaultAdmin();
   await createDefaultProducts();
+  console.log("✅ Firebase initialized successfully!");
 }
+
+// Auto-run initialization
 initFirebase();
 
 // ============ EXPORT ALL FUNCTIONS ============
 window.firebaseAPI = {
   registerUserFirebase,
   loginUserFirebase,
+  loginWithGoogle,
+  logoutUser,
+  getCurrentUser,
   getAllUsers,
   updateUserStatus,
   deleteUser,
@@ -282,3 +415,9 @@ window.firebaseAPI = {
   getAllWithdrawals,
   updateWithdrawalStatus
 };
+
+// Also export auth for other files
+window.auth = auth;
+window.db = db;
+
+console.log("✅ Firebase configuration loaded with Authentication!");
