@@ -24,7 +24,6 @@
         }
         .nav-link:hover { color: #ffd700 !important; }
         .nav-link.active { color: #ffd700 !important; font-weight: 700; }
-        /* Active link ke neeche yellow line */
         .nav-link.active::after {
             content: '';
             position: absolute;
@@ -41,7 +40,6 @@
             .navbar-brand img { height: 35px !important; } 
         }
         
-        /* Auth Card */
         .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
         .auth-container { max-width: 550px; width: 100%; margin: 0 auto; }
         .auth-card { background: white; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
@@ -65,13 +63,11 @@
             background: transparent;
             transition: all 0.3s;
         }
-        /* Active tab - white background */
         .nav-pills .nav-link.active { 
             background: white !important; 
             color: #667eea !important; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
         }
-        /* Hover effect - yellow */
         .nav-pills .nav-link:hover:not(.active) { 
             background: rgba(255,215,0,0.2) !important; 
             color: #ffd700 !important; 
@@ -194,15 +190,25 @@
     const db = firebase.firestore();
     const usersCollection = db.collection("users");
 
+    // ============ REGISTER FUNCTION ============
     async function registerUser(userData) {
         try {
             const querySnapshot = await usersCollection.where("email", "==", userData.email).get();
-            if (!querySnapshot.empty) return { success: false, error: "Email already exists" };
+            if (!querySnapshot.empty) {
+                return { success: false, error: "Email already exists" };
+            }
             const userId = "PPN" + Math.floor(Math.random() * 90000 + 10000);
             const docRef = await usersCollection.add({
-                userId: userId, name: userData.name, email: userData.email, phone: userData.phone,
-                password: userData.password, sponsor: userData.sponsor || "PPN0001", wallet: 0,
-                status: "active", role: "user", joined: new Date().toISOString()
+                userId: userId,
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                password: userData.password,
+                sponsor: userData.sponsor || "PPN0001",
+                wallet: 0,
+                status: "active",
+                role: "user",
+                joined: new Date().toISOString()
             });
             return { success: true, user: { id: docRef.id, userId: userId, name: userData.name, email: userData.email, role: "user", wallet: 0 } };
         } catch (error) {
@@ -210,30 +216,44 @@
         }
     }
 
+    // ============ LOGIN FUNCTION ============
     async function loginUser(email, password) {
         try {
             const querySnapshot = await usersCollection.where("email", "==", email).where("password", "==", password).get();
-            if (querySnapshot.empty) return { success: false, error: "Invalid credentials" };
+            if (querySnapshot.empty) {
+                return { success: false, error: "Invalid credentials" };
+            }
             let userData = null;
-            querySnapshot.forEach(doc => { userData = { id: doc.id, ...doc.data() }; });
+            querySnapshot.forEach(doc => {
+                userData = { id: doc.id, ...doc.data() };
+            });
             return { success: true, user: userData };
         } catch (error) {
             return { success: false, error: error.message };
         }
     }
 
+    // ============ CREATE DEFAULT ADMIN ============
     async function createDefaultAdmin() {
         const querySnapshot = await usersCollection.where("email", "==", "admin@peopleplus.com").get();
         if (querySnapshot.empty) {
             await usersCollection.add({
-                userId: "ADMIN001", name: "Super Admin", email: "admin@peopleplus.com", phone: "9999999999",
-                password: "admin123", role: "admin", status: "active", wallet: 0, joined: new Date().toISOString()
+                userId: "ADMIN001",
+                name: "Super Admin",
+                email: "admin@peopleplus.com",
+                phone: "9999999999",
+                password: "admin123",
+                role: "admin",
+                status: "active",
+                wallet: 0,
+                joined: new Date().toISOString()
             });
             console.log("✅ Default admin created");
         }
     }
     createDefaultAdmin();
 
+    // ============ UI FUNCTIONS ============
     function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -242,7 +262,7 @@
     }
     updateCartCount();
 
-    // LOGIN
+    // ============ LOGIN EVENT ============
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value.trim();
@@ -276,7 +296,7 @@
         }
     });
 
-    // REGISTER
+    // ============ REGISTER EVENT ============
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('regName').value.trim();
