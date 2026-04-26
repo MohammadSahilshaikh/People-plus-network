@@ -602,17 +602,6 @@
             if (currentUser) {
                 const userName = (currentUser.name || 'User').split(' ')[0];
                 
-                // Show Admin link if user is admin
-                if (currentUser.role === 'admin') {
-                    const navLinks = document.querySelector('.nav-links');
-                    if (navLinks && !document.getElementById('adminLink')) {
-                        const adminLi = document.createElement('li');
-                        adminLi.id = 'adminLink';
-                        adminLi.innerHTML = '<a href="admin.html" style="color: #ffd700;"><i class="fas fa-user-shield"></i> Admin</a>';
-                        navLinks.insertBefore(adminLi, navLinks.lastElementChild);
-                    }
-                }
-
                 if (btnJoinNow) {
                     btnJoinNow.innerHTML = `<i class="fas fa-user"></i> ${userName}`;
                     btnJoinNow.href = 'user-dashboard.html';
