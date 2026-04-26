@@ -449,13 +449,16 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/products', async (req, res) => {
     try {
+        console.log('Fetching active products...');
         const snapshot = await productsCollection.where('status', '==', 'active').get();
         const products = [];
         snapshot.forEach(doc => {
             products.push({ id: doc.id, ...doc.data() });
         });
+        console.log(`Found ${products.length} active products`);
         res.json(products);
     } catch (error) {
+        console.error('Error in GET /api/products:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -475,14 +478,17 @@ app.get('/api/products/all', authMiddleware, adminMiddleware, async (req, res) =
 
 app.post('/api/products', authMiddleware, adminMiddleware, async (req, res) => {
     try {
+        console.log('Creating new product:', req.body.name);
         const product = {
             ...req.body,
             createdAt: new Date().toISOString(),
             status: req.body.status || 'active'
         };
         const docRef = await productsCollection.add(product);
+        console.log('Product created with ID:', docRef.id);
         res.json({ id: docRef.id, ...product });
     } catch (error) {
+        console.error('Error creating product:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -1062,7 +1068,7 @@ async function createDefaultProducts() {
 
 // ============ START SERVER ============
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📍 http://localhost:${PORT}`);
     await createDefaultAdmin();

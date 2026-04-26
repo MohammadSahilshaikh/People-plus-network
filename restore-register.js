@@ -1,0 +1,367 @@
+const fs = require('fs');
+const content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; }
+        .navbar-brand { white-space: normal; }
+        .brand-text { display: inline-block; font-weight: 800; letter-spacing: 1px; color: white; font-size: 1.3rem; }
+        .nav-link { 
+            color: white !important; 
+            font-weight: 500; 
+            transition: all 0.3s ease; 
+            margin: 0 5px; 
+            position: relative; 
+        }
+        .nav-link:hover { color: #ffd700 !important; }
+        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 2px;
+        }
+        
+        /* User Avatar Dropdown */
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+        .user-name-text {
+            color: white;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+        .dropdown-menu {
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: none;
+            margin-top: 10px;
+        }
+        .dropdown-item {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) { 
+            .brand-text { font-size: 0.85rem; } 
+            .navbar-brand img { height: 35px !important; }
+            .user-name-text { display: none; }
+        }
+        
+        .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .auth-container { max-width: 550px; width: 100%; margin: 0 auto; }
+        .auth-card { background: white; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
+        .auth-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 30px; text-align: center; color: white; }
+        
+        .nav-pills { 
+            background: rgba(255,255,255,0.2); 
+            border-radius: 50px; 
+            padding: 5px; 
+            max-width: 300px; 
+            margin: 0 auto; 
+            display: flex; 
+        }
+        .nav-pills .nav-link { 
+            color: white !important; 
+            border-radius: 50px; 
+            padding: 8px 30px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            background: transparent;
+            transition: all 0.3s;
+        }
+        .nav-pills .nav-link.active { 
+            background: white !important; 
+            color: #667eea !important; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        .nav-pills .nav-link:hover:not(.active) { 
+            background: rgba(255,215,0,0.2) !important; 
+            color: #ffd700 !important; 
+        }
+        
+        .auth-body { padding: 35px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { font-weight: 500; margin-bottom: 8px; display: block; color: #333; }
+        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; }
+        .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        
+        .btn-auth { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+        }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        
+        .home-link { text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
+        .btn-back-home { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: transparent; 
+            color: #667eea; 
+            padding: 12px 25px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            border: 2px solid #667eea; 
+            transition: all 0.3s; 
+        }
+        .btn-back-home:hover { background: #667eea; color: white; }
+        
+        @media (max-width: 768px) { .auth-body { padding: 25px; } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        
+        <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-0 gap-3">
+            <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 10px;">
+                    <img src="img/default-avatar.png" class="user-avatar" alt="Avatar">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" id="userDropdown">
+                    <li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse d-none d-lg-block" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fas fa-users-cog fa-3x mb-3"></i>
+                <h2>Welcome to People Plus</h2>
+                <ul class="nav nav-pills" id="authTab">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login">Login</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#register">Join Now</button></li>
+                </ul>
+            </div>
+            <div class="auth-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="login">
+                        <form id="loginForm">
+                            <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email" required></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter your password" required></div>
+                            <button type="submit" class="btn-auth">Login Securely</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="register">
+                        <form id="registerForm">
+                            <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Enter your full name" required></div>
+                            <div class="form-group"><label>Email Address</label><input type="email" id="regEmail" placeholder="Enter your email" required></div>
+                            <div class="form-group"><label>Phone Number</label><input type="tel" id="regPhone" placeholder="10-digit mobile number" required></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Create a strong password (min 6 characters)" required></div>
+                            <div class="form-group"><label>Sponsor ID (Optional)</label><input type="text" id="regSponsor" placeholder="Enter sponsor ID if any"></div>
+                            <button type="submit" class="btn-auth">Create Account</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="home-link"><a href="index.html" class="btn-back-home"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script type="module">
+    import { registerUserFirebase, loginUserFirebase, getCurrentUser, logoutUser } from './js/firebase-config.js';
+
+    function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        let span = document.getElementById('cartCount');
+        if (span) span.innerText = count;
+    }
+    updateCartCount();
+
+    // Update navbar after login
+    function updateNavbar(userData) {
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userData) {
+            const firstLetter = (userData.name || 'U').charAt(0).toUpperCase();
+            userMenu.innerHTML = \`
+                <div class="d-flex align-items-center">
+                    <div style="width: 35px; height: 35px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px;">
+                        \${firstLetter}
+                    </div>
+                    <span class="user-name-text">\${(userData.name || 'User').split(' ')[0]}</span>
+                </div>
+            \`;
+            
+            if (userData.role === 'admin') {
+                userDropdown.innerHTML = \`
+                    <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+                    <li><a class="dropdown-item" href="admin-users.html"><i class="fas fa-users me-2"></i> Users</a></li>
+                    <li><a class="dropdown-item" href="admin-products.html"><i class="fas fa-box me-2"></i> Products</a></li>
+                    <li><a class="dropdown-item" href="admin-orders.html"><i class="fas fa-shopping-cart me-2"></i> Orders</a></li>
+                    <li><a class="dropdown-item" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave me-2"></i> Withdrawals</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                \`;
+            } else {
+                userDropdown.innerHTML = \`
+                    <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2"></i> My Profile</a></li>
+                    <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+                    <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2"></i> My Orders</a></li>
+                    <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2"></i> Withdraw</a></li>
+                    <li><a class="dropdown-item" href="user-team.html"><i class="fas fa-users me-2"></i> My Team</a></li>
+                    <li><a class="dropdown-item" href="user-commissions.html"><i class="fas fa-coins me-2"></i> Commissions</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                \`;
+            }
+        } else {
+            userMenu.innerHTML = \`<img src="img/default-avatar.png" class="user-avatar" alt="Avatar">\`;
+            userDropdown.innerHTML = \`<li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>\`;
+        }
+    }
+
+    // Check existing login on page load
+    getCurrentUser().then(user => {
+        if(user) {
+             localStorage.setItem('currentUser', JSON.stringify(user));
+             updateNavbar(user);
+        } else {
+             localStorage.removeItem('currentUser');
+             updateNavbar(null);
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) { alert('Please enter email and password'); return; }
+        
+        const btn = e.target.querySelector('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+        btn.disabled = true;
+        
+        try {
+            const result = await loginUserFirebase(email, password);
+            if (result.success) {
+                localStorage.setItem('currentUser', JSON.stringify(result.user));
+                updateNavbar(result.user);
+                if (result.user.role === 'admin') {
+                    alert('✅ Welcome Admin!');
+                    window.location.href = 'admin.html';
+                } else {
+                    alert('✅ Login Successful!');
+                    window.location.href = 'user-profile.html';
+                }
+            } else {
+                alert('❌ Login failed: ' + result.error);
+            }
+        } catch (error) {
+            alert('❌ Error: ' + error.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const sponsor = document.getElementById('regSponsor').value.trim();
+        
+        if (!name || !email || !phone || !password) { alert('Please fill all required fields'); return; }
+        if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
+        
+        const btn = e.target.querySelector('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+        btn.disabled = true;
+        
+        try {
+            const result = await registerUserFirebase({ name, email, phone, password, sponsor });
+            if (result.success) {
+                alert('✅ Registration successful! Welcome!');
+                localStorage.setItem('currentUser', JSON.stringify(result.user));
+                updateNavbar(result.user);
+                window.location.href = 'user-profile.html';
+            } else {
+                alert('❌ Registration failed: ' + result.error);
+            }
+        } catch (error) {
+            alert('❌ Error: ' + error.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    window.handleLogout = function() {
+        if (confirm('Are you sure you want to logout?')) {
+            logoutUser().then(() => {
+                localStorage.removeItem('currentUser');
+                updateNavbar(null);
+                window.location.href = 'index.html';
+            });
+        }
+    };
+
+    window.updateCartCount = updateCartCount;
+    window.updateNavbar = updateNavbar;
+</script>
+</body>
+</html>
+`;
+fs.writeFileSync(path.join(__dirname, 'register.html'), content, 'utf8');

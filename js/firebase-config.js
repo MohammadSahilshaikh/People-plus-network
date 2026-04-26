@@ -15,6 +15,19 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+export {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  getDoc,
+  setDoc
+};
+
 // ✅ YEH IMPORT MISSING THA - AB ADD KAR DIYA
 import { 
   getAuth, 
@@ -25,6 +38,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+export {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  signInWithPopup
+};
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -37,11 +58,15 @@ const firebaseConfig = {
   measurementId: "G-422JG8E9KM"
 };
 
+export const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:5000/api' 
+  : '/api';
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);  // ✅ YEH AB KAAM KAREGA
-const googleProvider = new GoogleAuthProvider();
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const auth = getAuth(app);  // ✅ YEH AB KAAM KAREGA
+export const googleProvider = new GoogleAuthProvider();
 
 // Collections
 const usersCollection = collection(db, "users");
@@ -50,7 +75,7 @@ const ordersCollection = collection(db, "orders");
 const withdrawalsCollection = collection(db, "withdrawals");
 
 // ============ REGISTER USER (WITH FIREBASE AUTH) ============
-async function registerUserFirebase(userData) {
+export async function registerUserFirebase(userData) {
   try {
     // Check if email already exists in Firestore
     const q = query(usersCollection, where("email", "==", userData.email));
@@ -97,7 +122,7 @@ async function registerUserFirebase(userData) {
 }
 
 // ============ LOGIN USER (WITH FIREBASE AUTH) ============
-async function loginUserFirebase(email, password) {
+export async function loginUserFirebase(email, password) {
   try {
     // ✅ Sign in with Firebase Authentication
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -125,7 +150,7 @@ async function loginUserFirebase(email, password) {
 }
 
 // ============ LOGIN WITH GOOGLE ============
-async function loginWithGoogle() {
+export async function loginWithGoogle() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const firebaseUser = result.user;
@@ -162,7 +187,7 @@ async function loginWithGoogle() {
 }
 
 // ============ LOGOUT USER ============
-async function logoutUser() {
+export async function logoutUser() {
   try {
     await signOut(auth);
     localStorage.removeItem('currentUser');
@@ -173,7 +198,7 @@ async function logoutUser() {
 }
 
 // ============ GET CURRENT USER ============
-function getCurrentUser() {
+export function getCurrentUser() {
   return new Promise((resolve) => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -191,7 +216,7 @@ function getCurrentUser() {
 }
 
 // ============ GET ALL USERS ============
-async function getAllUsers() {
+export async function getAllUsers() {
   try {
     const querySnapshot = await getDocs(usersCollection);
     const users = [];
@@ -205,7 +230,7 @@ async function getAllUsers() {
 }
 
 // ============ UPDATE USER STATUS ============
-async function updateUserStatus(userId, status) {
+export async function updateUserStatus(userId, status) {
   try {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { status: status });
@@ -216,7 +241,7 @@ async function updateUserStatus(userId, status) {
 }
 
 // ============ DELETE USER ============
-async function deleteUser(userId) {
+export async function deleteUser(userId) {
   try {
     await deleteDoc(doc(db, "users", userId));
     return { success: true };
@@ -226,7 +251,7 @@ async function deleteUser(userId) {
 }
 
 // ============ UPDATE USER WALLET ============
-async function updateUserWallet(userId, amount) {
+export async function updateUserWallet(userId, amount) {
   try {
     const userRef = doc(db, "users", userId);
     const userDoc = await getDoc(userRef);
@@ -239,7 +264,7 @@ async function updateUserWallet(userId, amount) {
 }
 
 // ============ GET ALL PRODUCTS ============
-async function getAllProducts() {
+export async function getAllProducts() {
   try {
     const querySnapshot = await getDocs(productsCollection);
     const products = [];
@@ -253,7 +278,7 @@ async function getAllProducts() {
 }
 
 // ============ ADD PRODUCT ============
-async function addProduct(productData) {
+export async function addProduct(productData) {
   try {
     const docRef = await addDoc(productsCollection, {
       name: productData.name,
@@ -272,7 +297,7 @@ async function addProduct(productData) {
 }
 
 // ============ DELETE PRODUCT ============
-async function deleteProduct(productId) {
+export async function deleteProduct(productId) {
   try {
     await deleteDoc(doc(db, "products", productId));
     return { success: true };
@@ -282,7 +307,7 @@ async function deleteProduct(productId) {
 }
 
 // ============ GET ALL ORDERS ============
-async function getAllOrders() {
+export async function getAllOrders() {
   try {
     const querySnapshot = await getDocs(ordersCollection);
     const orders = [];
@@ -296,7 +321,7 @@ async function getAllOrders() {
 }
 
 // ============ UPDATE ORDER STATUS ============
-async function updateOrderStatus(orderId, status, tracking) {
+export async function updateOrderStatus(orderId, status, tracking) {
   try {
     const orderRef = doc(db, "orders", orderId);
     await updateDoc(orderRef, { status: status, tracking: tracking, updatedAt: new Date().toISOString() });
@@ -307,7 +332,7 @@ async function updateOrderStatus(orderId, status, tracking) {
 }
 
 // ============ GET ALL WITHDRAWALS ============
-async function getAllWithdrawals() {
+export async function getAllWithdrawals() {
   try {
     const querySnapshot = await getDocs(withdrawalsCollection);
     const withdrawals = [];
@@ -321,7 +346,7 @@ async function getAllWithdrawals() {
 }
 
 // ============ UPDATE WITHDRAWAL STATUS ============
-async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
+export async function updateWithdrawalStatus(withdrawalId, status, userId, amount) {
   try {
     const withdrawalRef = doc(db, "withdrawals", withdrawalId);
     await updateDoc(withdrawalRef, { status: status, processedAt: new Date().toISOString() });

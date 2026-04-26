@@ -109,31 +109,82 @@
                 margin-bottom: 20px;
             }
         }
-    </style>
+    
+        /* User Sidebar Dashboard Layout */
+        .user-sidebar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .user-sidebar .brand {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+        .user-sidebar .brand img {
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            padding: 2px;
+        }
+        .user-sidebar .nav-link {
+            color: rgba(255,255,255,0.7) !important;
+            padding: 12px 25px;
+            margin: 5px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .user-sidebar .nav-link:hover,
+        .user-sidebar .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        .user-sidebar .nav-link i { width: 25px; margin-right: 10px; }
+        
+        .user-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .user-header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .sidebar-toggle { display: none; }
+        
+        @media (max-width: 992px) {
+            .user-sidebar { transform: translateX(-100%); }
+            .user-sidebar.show { transform: translateX(0); }
+            .user-content { margin-left: 0; padding: 15px; }
+            .sidebar-toggle { display: inline-block; }
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 5px; }
+        \n</style>
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-            <img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> 
-            PEOPLE PLUS NETWORK
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
-                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
 
 <div class="container my-4">
     <div class="row">
@@ -383,6 +434,30 @@
     updateWalletDisplay();
     displayWithdrawalHistory();
     updateCartCount();
+
+    window.updateWalletDisplay = updateWalletDisplay;
+    window.displayWithdrawalHistory = displayWithdrawalHistory;
+    window.updateCartCount = updateCartCount;
+    window.logout = logout;
+
+    function toggleSidebar() {
+        document.getElementById('userSidebar').classList.toggle('show');
+    }
+    window.toggleSidebar = toggleSidebar;
+
+    // Load common sidebar details if user exists
+    const localUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (localUser) {
+        let nameEl = document.getElementById('commonSidebarName');
+        if(nameEl) nameEl.innerText = localUser.name || 'User';
+        let idEl = document.getElementById('commonSidebarId');
+        if(idEl) idEl.innerText = localUser.userId || '---';
+        const simg = localStorage.getItem('profileImage_' + localUser.id);
+        if(simg) {
+             let imgEl = document.getElementById('commonSidebarImg');
+             if(imgEl) imgEl.src = simg;
+        }
+    }
 </script>
 </body>
 </html>

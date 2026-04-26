@@ -311,9 +311,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-<script src="js/firebase-config.js"></script>
-<script src="js/auth.js"></script>
-<script>
+<script type="module" src="js/firebase-config.js"></script>
+<script type="module" src="js/auth.js"></script>
+<script type="module">
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser || currentUser.role !== 'admin') {
         window.location.href = 'register.html';
@@ -322,6 +322,7 @@
     function toggleSidebar() {
         document.getElementById('adminSidebar').classList.toggle('show');
     }
+    window.toggleSidebar = toggleSidebar;
     
     function formatDate(dateString) {
         if (!dateString) return 'N/A';
@@ -485,6 +486,10 @@
     }
     
     loadDashboard();
+    window.loadDashboard = loadDashboard;
+
+    window.formatDate = formatDate;
+    window.getDateRange = getDateRange;
 </script>
 </body>
 </html>

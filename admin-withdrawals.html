@@ -181,7 +181,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-<script src="js/firebase-config.js"></script>
+<script type="module" src="js/firebase-config.js"></script>
 <script>
     // Admin authentication check
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -311,6 +311,14 @@
     }
     
     loadWithdrawals();
+
+    window.toggleSidebar = toggleSidebar;
+    window.logoutUser = logoutUser;
+    window.loadWithdrawals = loadWithdrawals;
+    window.updateStats = updateStats;
+    window.displayWithdrawals = displayWithdrawals;
+    window.approveWithdrawal = approveWithdrawal;
+    window.rejectWithdrawal = rejectWithdrawal;
 </script>
 </body>
 </html>

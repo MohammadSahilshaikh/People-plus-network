@@ -11,22 +11,75 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
         
-        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; }
-        .navbar-brand { white-space: normal; }
-        .brand-text { display: inline-block; font-weight: 800; letter-spacing: 1px; color: white; font-size: 1.3rem; }
-        .nav-link { 
-            color: white !important; 
-            font-weight: 500; 
-            transition: all 0.3s ease; 
-            margin: 0 5px; 
-            position: relative; 
+        /* ============ DESKTOP NAVBAR (TOP) ============ */
+        .desktop-navbar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        .nav-link:hover { color: #ffd700 !important; }
-        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
-        .nav-link.active::after {
+        
+        .desktop-navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 45px;
+            border-radius: 8px;
+            background: white;
+            padding: 3px;
+        }
+        
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links li a:hover, .nav-links li a.active {
+            color: #ffd700;
+        }
+        
+        .nav-links li a.active::after {
             content: '';
             position: absolute;
-            bottom: -4px;
+            bottom: -5px;
             left: 0;
             right: 0;
             height: 2px;
@@ -34,44 +87,121 @@
             border-radius: 2px;
         }
         
-        /* User Avatar Dropdown */
-        .user-avatar {
-            width: 35px;
-            height: 35px;
+        .btn-register-nav {
+            background: #ffd700;
+            color: #333 !important;
+            padding: 8px 25px !important;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .btn-register-nav:hover {
+            background: #ffed4a;
+            transform: translateY(-2px);
+        }
+        
+        .cart-badge {
+            background: #dc3545;
+            color: white;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
+            padding: 2px 6px;
+            font-size: 10px;
+            position: absolute;
+            top: -8px;
+            right: -12px;
         }
-        .user-name-text {
-            color: white;
-            font-weight: 500;
-            margin-left: 8px;
+        
+        .cart-icon {
+            position: relative;
         }
-        .dropdown-menu {
+        
+        /* ============ MOBILE BOTTOM NAVBAR ============ */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            padding: 8px 0;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .mobile-nav-items li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .mobile-nav-items li a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 8px 5px;
+        }
+        
+        .mobile-nav-items li a i {
+            font-size: 22px;
+        }
+        
+        .mobile-nav-items li a span {
+            font-size: 11px;
+        }
+        
+        .mobile-nav-items li a:hover,
+        .mobile-nav-items li a.active {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: none;
-            margin-top: 10px;
         }
-        .dropdown-item {
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-        .dropdown-item:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        
+        .mobile-cart-badge {
+            position: absolute;
+            top: 0;
+            right: 50%;
+            transform: translateX(50%);
+            background: #dc3545;
             color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            min-width: 18px;
         }
-        .dropdown-item i {
-            width: 20px;
-            margin-right: 10px;
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .desktop-navbar { display: none; }
+            .mobile-bottom-nav { display: block; }
+            body { padding-bottom: 70px; }
+            .main-container { padding-top: 50px !important; }
         }
-        
-        @media (max-width: 768px) { 
-            .brand-text { font-size: 0.85rem; } 
-            .navbar-brand img { height: 35px !important; }
-            .user-name-text { display: none; }
+        @media (min-width: 769px) {
+            .desktop-navbar { display: block; }
+            .mobile-bottom-nav { display: none; }
+            .main-container { padding-top: 100px !important; }
         }
-        
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #1a1a2e; }
+        ::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 5px; }
+
         .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
         .auth-container { max-width: 550px; width: 100%; margin: 0 auto; }
         .auth-card { background: white; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
@@ -137,41 +267,68 @@
             transition: all 0.3s; 
         }
         .btn-back-home:hover { background: #667eea; color: white; }
-        
-        @media (max-width: 768px) { .auth-body { padding: 25px; } }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-            <img src="img/site-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px;">
-            <span class="brand-text">PEOPLE PLUS NETWORK</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
-                <li class="nav-item" id="userNavItem">
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 10px;">
-                            <img src="img/default-avatar.png" class="user-avatar" alt="Avatar">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu" id="userDropdown">
-                            <li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
-                        </ul>
-                    </div>
+    <!-- ============ DESKTOP NAVBAR (TOP) ============ -->
+    <nav class="desktop-navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="img/site-logo.jpg" alt="Logo">
+                <span class="logo-text">PEOPLE PLUS NETWORK</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li>
+                    <a href="cart.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                        <span class="cart-badge" id="desktopCartCount">0</span>
+                    </a>
                 </li>
+                <li><a href="register.html" class="btn-register-nav active" id="btnJoinNow"><i class="fas fa-user-plus"></i> Join Now</a></li>
             </ul>
         </div>
-    </div>
-</nav>
+    </nav>
+
+    <!-- ============ MOBILE BOTTOM NAVBAR ============ -->
+    <nav class="mobile-bottom-nav">
+        <ul class="mobile-nav-items">
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="products.html">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li>
+                <a href="about.html">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="cart.html" style="position: relative;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    <span class="mobile-cart-badge" id="mobileCartCount">0</span>
+                </a>
+            </li>
+            <li>
+                <a href="register.html" class="active" id="btnJoinNowMobile">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Join</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 <div class="main-container">
     <div class="auth-container">
@@ -233,53 +390,10 @@
     function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        let span = document.getElementById('cartCount');
-        if (span) span.innerText = count;
-    }
-    updateCartCount();
-
-    // Update navbar after login
-    function updateNavbar(userData) {
-        const userMenu = document.getElementById('userMenu');
-        const userDropdown = document.getElementById('userDropdown');
-        
-        if (userData) {
-            const firstLetter = (userData.name || 'U').charAt(0).toUpperCase();
-            userMenu.innerHTML = `
-                <div class="d-flex align-items-center">
-                    <div style="width: 35px; height: 35px; background: #ffd700; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px;">
-                        ${firstLetter}
-                    </div>
-                    <span class="user-name-text">${(userData.name || 'User').split(' ')[0]}</span>
-                </div>
-            `;
-            
-            if (userData.role === 'admin') {
-                userDropdown.innerHTML = `
-                    <li><a class="dropdown-item" href="admin.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
-                    <li><a class="dropdown-item" href="admin-users.html"><i class="fas fa-users me-2"></i> Users</a></li>
-                    <li><a class="dropdown-item" href="admin-products.html"><i class="fas fa-box me-2"></i> Products</a></li>
-                    <li><a class="dropdown-item" href="admin-orders.html"><i class="fas fa-shopping-cart me-2"></i> Orders</a></li>
-                    <li><a class="dropdown-item" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave me-2"></i> Withdrawals</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                `;
-            } else {
-                userDropdown.innerHTML = `
-                    <li><a class="dropdown-item" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
-                    <li><a class="dropdown-item" href="user-profile.html"><i class="fas fa-user-edit me-2"></i> My Profile</a></li>
-                    <li><a class="dropdown-item" href="user-orders.html"><i class="fas fa-shopping-bag me-2"></i> My Orders</a></li>
-                    <li><a class="dropdown-item" href="user-withdrawal.html"><i class="fas fa-money-bill-wave me-2"></i> Withdraw</a></li>
-                    <li><a class="dropdown-item" href="user-team.html"><i class="fas fa-users me-2"></i> My Team</a></li>
-                    <li><a class="dropdown-item" href="user-commissions.html"><i class="fas fa-coins me-2"></i> Commissions</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                `;
-            }
-        } else {
-            userMenu.innerHTML = `<img src="img/default-avatar.png" class="user-avatar" alt="Avatar">`;
-            userDropdown.innerHTML = `<li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>`;
-        }
+        let dSpan = document.getElementById('desktopCartCount');
+        let mSpan = document.getElementById('mobileCartCount');
+        if (dSpan) dSpan.innerText = count;
+        if (mSpan) mSpan.innerText = count;
     }
 
     async function registerUser(userData) {
@@ -321,27 +435,12 @@
                     userId: "ADMIN001", name: "Super Admin", email: "admin@peopleplus.com", phone: "9999999999",
                     role: "admin", status: "active", wallet: 0, joined: new Date().toISOString()
                 });
-                console.log("✅ Default admin created");
             }
         } catch (error) {
             console.log("Admin error:", error.message);
         }
     }
     createDefaultAdmin();
-
-    // Check existing login on page load
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            const doc = await db.collection("users").doc(user.uid).get();
-            if (doc.exists) {
-                updateNavbar(doc.data());
-            } else {
-                updateNavbar(null);
-            }
-        } else {
-            updateNavbar(null);
-        }
-    });
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -358,13 +457,10 @@
             const result = await loginUser(email, password);
             if (result.success) {
                 localStorage.setItem('currentUser', JSON.stringify(result.user));
-                updateNavbar(result.user);
                 if (result.user.role === 'admin') {
-                    alert('✅ Welcome Admin!');
                     window.location.href = 'admin.html';
                 } else {
-                    alert('✅ Login Successful!');
-                    window.location.href = 'user-dashboard.html';
+                    window.location.href = 'user-profile.html';
                 }
             } else {
                 alert('❌ Login failed: ' + result.error);
@@ -396,10 +492,8 @@
         try {
             const result = await registerUser({ name, email, phone, password, sponsor });
             if (result.success) {
-                alert('✅ Registration successful! Welcome!');
                 localStorage.setItem('currentUser', JSON.stringify(result.user));
-                updateNavbar(result.user);
-                window.location.href = 'user-dashboard.html';
+                window.location.href = 'user-profile.html';
             } else {
                 alert('❌ Registration failed: ' + result.error);
             }
@@ -415,11 +509,38 @@
         if (confirm('Are you sure you want to logout?')) {
             auth.signOut().then(() => {
                 localStorage.removeItem('currentUser');
-                updateNavbar(null);
                 window.location.href = 'index.html';
             });
         }
     };
+
+    function updateNavbarForUser() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const btnJoinNow = document.getElementById('btnJoinNow');
+        const btnJoinNowMobile = document.getElementById('btnJoinNowMobile');
+        
+        if (currentUser) {
+            const userName = (currentUser.name || 'User').split(' ')[0];
+            if (btnJoinNow) {
+                btnJoinNow.innerHTML = `<i class="fas fa-user"></i> ${userName}`;
+                btnJoinNow.href = 'user-dashboard.html';
+            }
+            if (btnJoinNowMobile) {
+                btnJoinNowMobile.innerHTML = `<i class="fas fa-user-circle"></i> <span>Dashboard</span>`;
+                btnJoinNowMobile.href = 'user-dashboard.html';
+            }
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+        updateNavbarForUser();
+    });
+
+    window.updateCartCount = updateCartCount;
+    window.registerUser = registerUser;
+    window.loginUser = loginUser;
+    window.createDefaultAdmin = createDefaultAdmin;
 </script>
 </body>
 </html>

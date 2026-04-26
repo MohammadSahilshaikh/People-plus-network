@@ -152,11 +152,24 @@
             <img src="site-logo.jpg" alt="Logo" style="height: 48px; border-radius: 6px; background: white; padding: 2px; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             PEOPLE PLUS NETWORK
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+        
+        
+            <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-0 gap-3">
+                
+                    <a class="nav-link " href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
+                
+                
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 15px;">
+                            <img src="default-avatar.png" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3" aria-labelledby="userMenu">
+                            <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a>
+                        </ul>
+                    </div>
+                </div>
+            <div class="collapse navbar-collapse d-none d-lg-block" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
                     <a class="nav-link " href="index.html">Home</a>
                 </li>
@@ -166,19 +179,7 @@
                 <li class="nav-item">
                     <a class="nav-link " href="about.html">About</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger">0</span></a>
-                </li>
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 15px;">
-                            <img src="default-avatar.png" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;" alt="Guest Avatar">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3" aria-labelledby="userMenu">
-                            <li><a class="dropdown-item fw-bold" href="register.html" style="color: #667eea;"><i class="fas fa-user-plus me-2"></i> Join Now / Login</a></li>
-                        </ul>
-                    </div>
-                </li>
+                
             </ul>
         </div>
     </div>
@@ -304,6 +305,11 @@
     startTimer();
     document.getElementById('resendLink').style.pointerEvents = 'none';
 </script>
-    <script src="auth-check.js"></script>
+    <script src="auth-check.js">
+    window.startTimer = startTimer;
+    window.moveToNext = moveToNext;
+    window.verifyOTP = verifyOTP;
+    window.resendOTP = resendOTP;
+</script>
 </body>
 </html>

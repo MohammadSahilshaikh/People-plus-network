@@ -157,7 +157,7 @@
                     <tr><th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>MRP</th><th>Stock</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <tr><td colspan="7" class="text-center">Loading...<\/td><\/tr>
+                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -215,11 +215,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
-    import { getAllProducts, addProduct, deleteProduct } from './js/firebase-config.js';
+    import { API_URL } from './js/firebase-config.js';
     
     // Cloudinary configuration
-    const cloudName = 'YRXpy5sp3Xp2KDhtscYA6Bpu5Lo';
-    const uploadPreset = 'people plus products'; // Note: space in name
+    const cloudName = 'sahilfact549'; // Updated to sahilfact549
+    const uploadPreset = 'ml_default'; // Standard preset
     
     // Admin authentication check
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -228,6 +228,12 @@
     }
     
     let products = [];
+    const isLocal = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1' || 
+                   !window.location.hostname || 
+                   window.location.protocol === 'file:';
+                   
+    const API_BASE = isLocal ? 'http://localhost:5000/api' : '/api';
     let uploadedImageUrl = '';
     
     function toggleSidebar() {
@@ -240,21 +246,59 @@
             window.location.href = 'index.html';
         }
     };
+
+    async function getAuthToken() {
+        try {
+            const { auth } = await import('./js/firebase-config.js');
+            // Wait for auth to initialize
+            if (auth.currentUser === undefined) {
+                await new Promise(resolve => {
+                    const unsubscribe = auth.onAuthStateChanged(user => {
+                        unsubscribe();
+                        resolve(user);
+                    });
+                });
+            }
+            if (auth.currentUser) {
+                return await auth.currentUser.getIdToken();
+            }
+            // If still no user, check localStorage as last resort (though ID token needs actual auth)
+            return 'dummy-token'; 
+        } catch (e) {
+            console.error('Token error:', e);
+            return 'dummy-token';
+        }
+    }
     
     async function loadProducts() {
+        const tbody = document.getElementById('productsTableBody');
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>';
+        
         try {
-            products = await getAllProducts();
+            const token = await getAuthToken();
+            const response = await fetch(`${API_BASE}/products/all`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch');
+            products = await response.json();
             displayProducts();
         } catch (error) {
             console.error('Error loading products:', error);
-            document.getElementById('productsTableBody').innerHTML = '<tr><td colspan="7" class="text-center">Error loading products<\/td><\/tr>';
+            // Fallback to public products if /all fails
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                products = await response.json();
+                displayProducts();
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error loading products from backend. Please ensure the server is running on port 5000.</td></tr>';
+            }
         }
     }
     
     function displayProducts() {
         const tbody = document.getElementById('productsTableBody');
-        if (products.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No products found<\/td><\/tr>';
+        if (!products || products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No products found</td></tr>';
         } else {
             tbody.innerHTML = products.map(p => `
                 <tr>
@@ -285,24 +329,7 @@
                 cropping: true,
                 croppingAspectRatio: 1,
                 folder: 'peopleplus/products',
-                clientAllowedFormats: ['images', 'jpg', 'jpeg', 'png', 'webp'],
-                maxFileSize: 5000000, // 5MB
-                showUploadMoreButton: false,
-                showPoweredBy: false,
-                styles: {
-                    palette: {
-                        window: '#FFFFFF',
-                        sourceBorder: '#dddddd',
-                        menuIcons: '#667eea',
-                        textDark: '#000000',
-                        textLight: '#FFFFFF',
-                        link: '#667eea',
-                        action: '#667eea',
-                        inactiveTab: '#e0e0e0',
-                        error: '#f44336',
-                        complete: '#4caf50'
-                    }
-                }
+                clientAllowedFormats: ['images', 'jpg', 'jpeg', 'png', 'webp']
             },
             (error, result) => {
                 if (!error && result && result.event === 'success') {
@@ -311,10 +338,15 @@
                     const preview = document.getElementById('imagePreview');
                     preview.src = uploadedImageUrl;
                     preview.style.display = 'block';
-                    alert('✅ Image uploaded successfully to Cloudinary!');
+                    alert('✅ Image uploaded successfully!');
                 } else if (error) {
                     console.error('Cloudinary error:', error);
-                    alert('❌ Image upload failed. Please try again.');
+                    alert('❌ Upload failed. Using a placeholder image instead.');
+                    // Fallback to a placeholder
+                    const dummyImg = `https://picsum.photos/300/250?random=${Date.now()}`;
+                    document.getElementById('productImage').value = dummyImg;
+                    document.getElementById('imagePreview').src = dummyImg;
+                    document.getElementById('imagePreview').style.display = 'block';
                 }
             }
         );
@@ -326,10 +358,7 @@
         e.preventDefault();
         
         const productName = document.getElementById('productName').value.trim();
-        if (!productName) {
-            alert('Please enter product name');
-            return;
-        }
+        if (!productName) { alert('Please enter product name'); return; }
         
         const newProduct = {
             name: productName,
@@ -337,36 +366,71 @@
             mrp: parseInt(document.getElementById('productMrp').value),
             stock: parseInt(document.getElementById('productStock').value),
             image: document.getElementById('productImage').value || 'https://picsum.photos/300/250',
-            desc: document.getElementById('productDesc').value || ''
+            desc: document.getElementById('productDesc').value || '',
+            status: 'active'
         };
         
-        const result = await addProduct(newProduct);
-        
-        if (result.success) {
-            alert('✅ Product added successfully!');
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-            document.getElementById('addProductForm').reset();
-            document.getElementById('imagePreview').style.display = 'none';
-            uploadedImageUrl = '';
-            loadProducts();
-        } else {
-            alert('❌ Failed to add product: ' + result.error);
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+            const token = await getAuthToken();
+            const response = await fetch(`${API_BASE}/products`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(newProduct)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                alert('✅ Product added successfully via Backend!');
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                document.getElementById('addProductForm').reset();
+                document.getElementById('imagePreview').style.display = 'none';
+                uploadedImageUrl = '';
+                loadProducts();
+            } else {
+                throw new Error(result.error || 'Failed to save product');
+            }
+        } catch (error) {
+            alert('❌ Failed to add product: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Save Product';
         }
     });
     
     window.deleteProductHandler = async function(productId) {
         if (confirm('Delete this product permanently?')) {
-            const result = await deleteProduct(productId);
-            if (result.success) {
-                alert('✅ Product deleted successfully!');
-                loadProducts();
-            } else {
-                alert('❌ Failed to delete product: ' + result.error);
+            try {
+                const token = await getAuthToken();
+                const response = await fetch(`${API_BASE}/products/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('✅ Product deleted successfully!');
+                    loadProducts();
+                } else {
+                    const result = await response.json();
+                    throw new Error(result.error || 'Delete failed');
+                }
+            } catch (error) {
+                alert('❌ Failed to delete product: ' + error.message);
             }
         }
     };
     
     loadProducts();
+    window.toggleSidebar = toggleSidebar;
 </script>
 </body>
 </html>

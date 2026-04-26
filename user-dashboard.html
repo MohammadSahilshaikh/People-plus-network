@@ -22,62 +22,123 @@
         .stat-card i { font-size: 2rem; color: #667eea; }
         .content-card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
-    </style>
+    
+        /* User Sidebar Dashboard Layout */
+        .user-sidebar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .user-sidebar .brand {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+        .user-sidebar .brand img {
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            padding: 2px;
+        }
+        .user-sidebar .nav-link {
+            color: rgba(255,255,255,0.7) !important;
+            padding: 12px 25px;
+            margin: 5px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .user-sidebar .nav-link:hover,
+        .user-sidebar .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        .user-sidebar .nav-link i { width: 25px; margin-right: 10px; }
+        
+        .user-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .user-header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .sidebar-toggle { display: none; }
+        
+        @media (max-width: 992px) {
+            .user-sidebar { transform: translateX(-100%); }
+            .user-sidebar.show { transform: translateX(0); }
+            .user-content { margin-left: 0; padding: 15px; }
+            .sidebar-toggle { display: inline-block; }
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 5px; }
+        \n</style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-            <img src="img/site-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px; background: white; padding: 2px; margin-right: 8px;">
-            <span class="brand-text">PEOPLE PLUS NETWORK</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon bg-white rounded"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link active" href="cart.html">Cart</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<div class="container my-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="sidebar">
-                <div class="text-center mb-3">
-                    <img src="img/default-avatar.png" class="rounded-circle" width="80" id="profileImg">
-                    <h5 class="mt-2" id="userName">Loading...</h5>
-                    <p class="text-muted small">Member ID: <span id="userId">---</span></p>
-                    <span class="badge bg-success" id="userLevel">Starter</span>
-                </div>
-                <hr>
-                <nav class="nav flex-column">
-                       <a class="nav-link" href="user-profile.html"><i class="fas fa-user-edit"></i> Profile</a>
-                    <a class="nav-link active" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
-                    <a class="nav-link" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
-                    <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
-                    <a class="nav-link" href="user-orders.html"><i class="fas fa-shopping-cart"></i> My Orders</a>
-                 
-                    <a class="nav-link text-danger mt-3" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </nav>
-            </div>
-        </div>
-        <div class="col-md-9">
+
+
+<!-- User Sidebar -->
+<div class="user-sidebar" id="userSidebar">
+    <div class="brand">
+        <a href="index.html"><img src="img/site-logo.jpg" alt="Logo"></a>
+        <h5 class="text-white mt-2 mb-0">PeoplePlus</h5>
+        <small class="text-white-50">Member Area</small>
+    </div>
+    <div class="text-center py-3 border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+        <img src="img/default-avatar.png" class="rounded-circle" width="60" height="60" style="object-fit:cover; border:2px solid #667eea;" id="commonSidebarImg">
+        <div class="mt-2 fw-bold text-white"><span id="commonSidebarName">Loading...</span></div>
+        <small class="text-white-50">ID: <span id="commonSidebarId">---</span></small>
+    </div>
+    <nav class="nav flex-column mt-3">
+        <a class="nav-link " href="user-profile.html"><i class="fas fa-user-circle"></i> My Profile</a>
+        <a class="nav-link active" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link " href="user-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a>
+        <a class="nav-link " href="user-team.html"><i class="fas fa-users"></i> My Team</a>
+        <a class="nav-link " href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
+        <a class="nav-link " href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+        <hr class="bg-light opacity-25 mx-3">
+        <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Back to Home</a>
+        <a class="nav-link text-warning" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+
+<!-- Main Content -->
+<div class="user-content">
+    <div class="user-header">
+        <button class="btn btn-sm btn-outline-primary sidebar-toggle me-3" onclick="toggleSidebar()">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+        <h4 class="mb-0 text-primary fw-bold" style="letter-spacing:0.5px; text-transform:capitalize;">dashboard</h4>
+    </div>
+    <div class="container-fluid px-0">
+        <!-- INJECT CONTENT -->
+
             <div class="content-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div><h4>Welcome back, <span id="welcomeName">User</span>! 👋</h4><p>Here's what's happening with your network today.</p></div>
-                    <div><small class="text-muted">Last login: <span id="lastLogin"></span></small></div>
-                </div>
-            </div>
-            <div class="row g-4 mb-4">
+                    <div><small class="text-muted">Last login: <span id="lastLogin"></span></small>\n    </div>\n</div><div class="row g-4 mb-4">
                 <div class="col-md-4"><div class="stat-card"><i class="fas fa-users"></i><h3 class="mt-2" id="totalTeam">0</h3><p class="text-muted">Total Team</p></div></div>
                 <div class="col-md-4"><div class="stat-card"><i class="fas fa-rupee-sign"></i><h3 class="mt-2" id="todayEarning">₹0</h3><p class="text-muted">Today's Earning</p></div></div>
                 <div class="col-md-4"><div class="stat-card"><i class="fas fa-wallet"></i><h3 class="mt-2" id="walletBalance">₹0</h3><p class="text-muted">Wallet Balance</p></div></div>
@@ -100,8 +161,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
-<script src="js/firebase-config.js"></script>
-<script>
+<script type="module" src="js/firebase-config.js"></script>
+<script type="module">
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) window.location.href = 'register.html';
 
@@ -124,6 +185,26 @@
     document.getElementById('todayEarning').innerHTML = '₹' + (Math.random() * 500 + 100).toFixed(0);
 
     function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+    window.logout = logout;
+
+    function toggleSidebar() {
+        document.getElementById('userSidebar').classList.toggle('show');
+    }
+    window.toggleSidebar = toggleSidebar;
+
+    // Load common sidebar details if user exists
+    const localUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (localUser) {
+        let nameEl = document.getElementById('commonSidebarName');
+        if(nameEl) nameEl.innerText = localUser.name || 'User';
+        let idEl = document.getElementById('commonSidebarId');
+        if(idEl) idEl.innerText = localUser.userId || '---';
+        const simg = localStorage.getItem('profileImage_' + localUser.id);
+        if(simg) {
+             let imgEl = document.getElementById('commonSidebarImg');
+             if(imgEl) imgEl.src = simg;
+        }
+    }
 </script>
 </body>
 </html>
