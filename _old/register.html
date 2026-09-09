@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .navbar { background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); padding: 0.8rem 0; }
+        .brand-text { font-weight: 800; color: white; font-size: 1.2rem; }
+        .nav-link { color: white !important; font-weight: 500; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
+
+        .main-wrap { display: flex; align-items: center; justify-content: center; padding: 40px 15px; min-height: calc(100vh - 70px); }
+        .auth-card { background: white; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.25); overflow: hidden; width: 100%; max-width: 520px; }
+        .auth-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 28px; text-align: center; color: white; }
+        .auth-header h2 { font-size: 1.6rem; font-weight: 700; }
+        .tab-btns { display: flex; background: rgba(255,255,255,0.15); border-radius: 50px; padding: 4px; margin-top: 15px; max-width: 280px; margin-left: auto; margin-right: auto; }
+        .tab-btn { flex: 1; padding: 8px 16px; border: none; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; background: transparent; color: white; }
+        .tab-btn.active { background: white; color: #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .auth-body { padding: 30px; }
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+        .form-group { margin-bottom: 18px; }
+        label { font-weight: 500; font-size: 0.9rem; margin-bottom: 6px; display: block; color: #333; }
+        .form-control { border-radius: 10px; border: 1.5px solid #e0e0e0; padding: 11px 14px; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        .form-control:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); outline: none; }
+        .input-group .form-control { border-radius: 10px 0 0 10px; }
+        .input-group-text { border-radius: 0 10px 10px 0; border: 1.5px solid #e0e0e0; border-left: none; cursor: pointer; background: #f8f9fa; }
+        .btn-auth { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 100%; padding: 13px; border-radius: 50px; font-weight: 700; font-size: 1rem; transition: all 0.3s; margin-top: 5px; }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn-auth:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        .divider { text-align: center; margin: 15px 0; color: #999; font-size: 0.85rem; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #eee; }
+        .divider::before { left: 0; } .divider::after { right: 0; }
+        .alert-msg { padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 15px; display: none; }
+        .alert-msg.error { background: #fde8e8; color: #c0392b; border: 1px solid #f5c6cb; }
+        .alert-msg.success { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
+        .back-home { text-align: center; padding-top: 15px; border-top: 1px solid #f0f0f0; }
+        .back-home a { color: #667eea; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+        .sponsor-info { background: #f0f4ff; border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; color: #555; margin-top: 5px; display: none; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height:38px;border-radius:6px;background:white;padding:2px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        <div class="ms-auto">
+            <a href="index.html" class="nav-link d-inline"><i class="fas fa-home me-1"></i>Home</a>
+        </div>
+    </div>
+</nav>
+
+<div class="main-wrap">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fas fa-users-cog fa-2x mb-2"></i>
+            <h2>Welcome to People Plus</h2>
+            <p style="opacity:0.85;font-size:0.9rem;">India's #1 MLM Network</p>
+            <div class="tab-btns">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Join Now</button>
+            </div>
+        </div>
+        <div class="auth-body">
+            <!-- Alert -->
+            <div id="alertMsg" class="alert-msg"></div>
+
+            <!-- LOGIN PANEL -->
+            <div id="loginPanel" class="form-panel active">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope me-1 text-primary"></i>Email Address</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock me-1 text-primary"></i>Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                            <span class="input-group-text" onclick="togglePass('loginPassword', this)"><i class="fas fa-eye"></i></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth" id="loginBtn"><i class="fas fa-sign-in-alt me-2"></i>Login Securely</button>
+                </form>
+                <p class="text-center mt-3 text-muted small">Don't have an account? <a href="#" onclick="switchTab('register')" style="color:#667eea;font-weight:600;">Join Now</a></p>
+            </div>
+
+            <!-- REGISTER PANEL -->
+            <div id="registerPanel" class="form-panel">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label><i class="fas fa-user me-1 text-primary"></i>Full Name *</label>
+                        <input type="text" class="form-control" id="regName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope me-1 text-primary"></i>Email Address *</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone me-1 text-primary"></i>Phone Number *</label>
+                        <input type="tel" class="form-control" id="regPhone" placeholder="10-digit mobile number" required maxlength="10" pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock me-1 text-primary"></i>Password *</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="regPassword" placeholder="Min. 6 characters" required minlength="6">
+                            <span class="input-group-text" onclick="togglePass('regPassword', this)"><i class="fas fa-eye"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-badge me-1 text-primary"></i>Sponsor ID <small class="text-muted">(optional)</small></label>
+                        <input type="text" class="form-control" id="regSponsor" placeholder="e.g. PPN12345" oninput="checkSponsor(this.value)" autocomplete="off">
+                        <div id="sponsorInfo" class="sponsor-info"></div>
+                    </div>
+                    <button type="submit" class="btn-auth" id="registerBtn"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+                </form>
+                <p class="text-center mt-3 text-muted small">Already have an account? <a href="#" onclick="switchTab('login')" style="color:#667eea;font-weight:600;">Login</a></p>
+            </div>
+
+            <div class="back-home mt-4">
+                <a href="index.html"><i class="fas fa-arrow-left me-1"></i>Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { registerUser, loginUser, getCurrentUserLocal } from './js/firebase-config.js';
+
+    // If already logged in, redirect
+    const existing = getCurrentUserLocal();
+    if (existing) {
+        window.location.href = existing.role === 'admin' ? 'admin.html' : 'user-dashboard.html';
+    }
+
+    // Read URL param for sponsor
+    const urlParams = new URLSearchParams(window.location.search);
+    const refId = urlParams.get('ref');
+    if (refId) {
+        const field = document.getElementById('regSponsor');
+        if (field) { field.value = refId.toUpperCase(); }
+        // Auto switch to register tab
+        window.switchTab('register');
+    }
+
+    // Read URL for tab
+    const tab = urlParams.get('tab');
+    if (tab === 'register') window.switchTab('register');
+
+    function showAlert(msg, type = 'error') {
+        const el = document.getElementById('alertMsg');
+        el.className = `alert-msg ${type}`;
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (type === 'success') setTimeout(() => el.style.display = 'none', 4000);
+    }
+
+    window.switchTab = function(tab) {
+        document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
+        document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', (i === 0) === (tab === 'login')));
+        document.getElementById('alertMsg').style.display = 'none';
+    };
+
+    window.togglePass = function(id, el) {
+        const input = document.getElementById(id);
+        const icon = el.querySelector('i');
+        if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
+        else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+    };
+
+    let sponsorCheckTimer;
+    window.checkSponsor = async function(val) {
+        clearTimeout(sponsorCheckTimer);
+        const info = document.getElementById('sponsorInfo');
+        if (!val || val.trim().length < 5) { info.style.display = 'none'; return; }
+        sponsorCheckTimer = setTimeout(async () => {
+            try {
+                const { getDocs, query, collection, where } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+                const { db } = await import('./js/firebase-config.js');
+                const q = query(collection(db, 'users'), where('userId', '==', val.trim().toUpperCase()));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    const sponsor = snap.docs[0].data();
+                    info.style.display = 'block';
+                    info.style.background = '#e8f5e9';
+                    info.innerHTML = `<i class="fas fa-check-circle text-success me-1"></i><strong>Sponsor Found:</strong> ${sponsor.name}`;
+                } else {
+                    info.style.display = 'block';
+                    info.style.background = '#fde8e8';
+                    info.innerHTML = `<i class="fas fa-times-circle text-danger me-1"></i>Sponsor ID not found`;
+                }
+            } catch (e) { info.style.display = 'none'; }
+        }, 600);
+    };
+
+    window.handleLogin = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Logging in...';
+        const result = await loginUser(email, password);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login Securely';
+        if (result.success) {
+            showAlert('✅ Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = result.user.role === 'admin' ? 'admin.html' : 'user-dashboard.html';
+            }, 800);
+        } else {
+            showAlert('❌ ' + result.error);
+        }
+    };
+
+    window.handleRegister = async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const sponsorId = document.getElementById('regSponsor').value.trim().toUpperCase();
+        if (phone.length !== 10 || !/^\d{10}$/.test(phone)) { showAlert('❌ Enter valid 10-digit phone number.'); return; }
+        const btn = document.getElementById('registerBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating account...';
+        const result = await registerUser({ name, email, phone, password, sponsorId: sponsorId || null });
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Create Account';
+        if (result.success) {
+            showAlert('✅ Account created! Welcome to People Plus Network!', 'success');
+            setTimeout(() => window.location.href = 'user-dashboard.html', 1000);
+        } else {
+            showAlert('❌ ' + result.error);
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.8rem 0; }
+        .brand-text { font-weight: 800; color: white; font-size: 1.2rem; }
+        .nav-link { color: white !important; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: #ffd700 !important; }
+        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
+        .dropdown-menu { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: none; }
+        .dropdown-item:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
+        .cart-wrap { padding: 40px 0; }
+        .cart-box { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .cart-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item img { width: 75px; height: 75px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+        .cart-item-name { font-weight: 600; }
+        .cart-item-price { color: #667eea; font-weight: 600; }
+        .qty-control { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { width: 30px; height: 30px; border: 1.5px solid #ddd; border-radius: 8px; background: #f8f9fa; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .qty-btn:hover { background: #667eea; color: white; border-color: #667eea; }
+        .qty-val { font-weight: 700; min-width: 28px; text-align: center; }
+        .remove-btn { background: none; border: none; color: #e74c3c; cursor: pointer; padding: 5px 8px; border-radius: 8px; transition: 0.2s; }
+        .remove-btn:hover { background: #fde8e8; }
+        .summary-box { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); position: sticky; top: 80px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .summary-total { font-size: 1.3rem; font-weight: 700; color: #667eea; }
+        .btn-checkout { background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; width: 100%; padding: 13px; border-radius: 50px; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
+        .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40,167,69,0.3); }
+        .empty-cart { text-align: center; padding: 60px 20px; }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
+        .footer a { color: #ffd700; text-decoration: none; }
+        .free-badge { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height:40px;border-radius:6px;background:white;padding:2px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center gap-1">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link active" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger rounded-pill">0</span></a></li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" style="padding:6px 10px;">
+                            <img src="img/default-avatar.png" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);" alt="User">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdown">
+                            <li><a class="dropdown-item fw-bold" href="register.html" style="color:#667eea;"><i class="fas fa-user-plus me-2"></i>Join Now / Login</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container cart-wrap">
+    <h4 class="fw-bold mb-4"><i class="fas fa-shopping-cart me-2 text-primary"></i>My Cart</h4>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="cart-box">
+                <div id="cartItemsList"></div>
+                <div id="emptyCart" class="empty-cart" style="display:none;">
+                    <i class="fas fa-shopping-basket fa-4x text-muted mb-3 d-block"></i>
+                    <h5>Your cart is empty!</h5>
+                    <p class="text-muted">Add some products to get started.</p>
+                    <a href="products.html" class="btn btn-primary rounded-pill px-4 mt-2"><i class="fas fa-store me-2"></i>Shop Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="summary-box">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                <hr>
+                <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+                <div class="summary-row"><span>Delivery Charges</span><span id="delivery">₹0</span></div>
+                <div class="summary-row"><span>GST (5%)</span><span id="gst">₹0</span></div>
+                <hr>
+                <div class="summary-row"><strong>Total Amount</strong><strong class="summary-total" id="total">₹0</strong></div>
+                <p class="text-muted small text-center mb-3"><i class="fas fa-truck me-1"></i>Free delivery on orders above ₹500!</p>
+                <button class="btn-checkout" onclick="checkout()"><i class="fas fa-credit-card me-2"></i>Proceed to Checkout</button>
+                <a href="products.html" class="d-block text-center mt-3 text-muted small"><i class="fas fa-arrow-left me-1"></i>Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"><div class="container text-center"><p>&copy; 2024 People Plus Network. All rights reserved.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { updateNavbar, updateCartCount, getCurrentUserLocal } from './js/firebase-config.js';
+    updateNavbar(getCurrentUserLocal());
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); render(); updateCartCount(); }
+
+    window.changeQty = function(idx, delta) {
+        cart[idx].quantity = Math.max(1, (cart[idx].quantity || 1) + delta);
+        saveCart();
+    };
+
+    window.removeItem = function(idx) {
+        cart.splice(idx, 1);
+        saveCart();
+    };
+
+    function render() {
+        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const list = document.getElementById('cartItemsList');
+        const empty = document.getElementById('emptyCart');
+        if (!cart.length) { list.innerHTML = ''; empty.style.display = 'block'; updateTotals(); return; }
+        empty.style.display = 'none';
+        list.innerHTML = cart.map((item, idx) => `
+            <div class="cart-item">
+                <img src="${item.image || ''}" alt="${item.name}" onerror="this.src='https://placehold.co/75x75/667eea/white?text=P'">
+                <div class="flex-grow-1">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">₹${item.price}</div>
+                </div>
+                <div class="qty-control">
+                    <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+                    <span class="qty-val">${item.quantity}</span>
+                    <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+                </div>
+                <div class="fw-bold" style="min-width:65px;text-align:right;">₹${item.price * item.quantity}</div>
+                <button class="remove-btn" onclick="removeItem(${idx})" title="Remove"><i class="fas fa-trash"></i></button>
+            </div>`).join('');
+        updateTotals();
+    }
+
+    function updateTotals() {
+        const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const delivery = subtotal > 500 ? 0 : 50;
+        const gst = Math.round(subtotal * 0.05);
+        const total = subtotal + delivery + gst;
+        document.getElementById('subtotal').textContent = '₹' + subtotal;
+        document.getElementById('delivery').innerHTML = delivery === 0 ? '<span class="free-badge">FREE</span>' : '₹' + delivery;
+        document.getElementById('gst').textContent = '₹' + gst;
+        document.getElementById('total').textContent = '₹' + total;
+    }
+
+    function updateCartCount() {
+        const count = cart.reduce((s, i) => s + (i.quantity || 1), 0);
+        document.querySelectorAll('#cartCount').forEach(el => el.textContent = count);
+    }
+
+    window.checkout = function() {
+        if (!cart.length) { alert('Your cart is empty!'); return; }
+        window.location.href = 'checkout.html';
+    };
+
+    render();
+    updateCartCount();
+</script>
+</body>
+</html>

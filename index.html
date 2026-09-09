@@ -2,632 +2,227 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>People Plus Network - Build Your Future</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>People Plus Network - Build Your Future</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <title>People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+        /* ===== BASE ===== */
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Poppins',sans-serif;background:#f4f6f9;padding-top:60px;padding-bottom:70px;}
+        a{cursor:pointer;text-decoration:none;}
 
-        /* ============ DESKTOP NAVBAR (TOP) ============ */
-        .desktop-navbar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        
-        .desktop-navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        
-        .logo img {
-            height: 45px;
-            border-radius: 8px;
-            background: white;
-            padding: 3px;
-        }
-        
-        .logo-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: white;
-            letter-spacing: 1px;
-        }
-        
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .nav-links li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 5px 0;
-        }
-        
-        .nav-links li a:hover, .nav-links li a.active {
-            color: #ffd700;
-        }
-        
-        .nav-links li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #ffd700;
-            border-radius: 2px;
-        }
-        
-        .btn-register {
-            background: #ffd700;
-            color: #333 !important;
-            padding: 8px 25px !important;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-        
-        .btn-register:hover {
-            background: #ffed4a;
-            transform: translateY(-2px);
-        }
-        
-        .cart-badge {
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 10px;
-            position: absolute;
-            top: -8px;
-            right: -12px;
-        }
-        
-        .cart-icon {
-            position: relative;
-        }
-        
-        /* ============ MOBILE BOTTOM NAVBAR ============ */
-        .mobile-bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            padding: 8px 0;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-        }
-        
-        .mobile-nav-items {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .mobile-nav-items li {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .mobile-nav-items li a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-            transition: all 0.3s ease;
-            padding: 8px 5px;
-        }
-        
-        .mobile-nav-items li a i {
-            font-size: 22px;
-        }
-        
-        .mobile-nav-items li a span {
-            font-size: 11px;
-        }
-        
-        .mobile-nav-items li a:hover,
-        .mobile-nav-items li a.active {
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-            border-radius: 12px;
-        }
-        
-        .mobile-cart-badge {
-            position: absolute;
-            top: 0;
-            right: 50%;
-            transform: translateX(50%);
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 10px;
-            min-width: 18px;
+        /* ===== TOP NAVBAR ===== */
+        .top-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;box-shadow:0 2px 15px rgba(0,0,0,0.15);}
+        .nav-brand{display:flex;align-items:center;gap:8px;cursor:pointer;}
+        .nav-brand img{height:36px;border-radius:6px;background:white;padding:2px;flex-shrink:0;}
+        .brand-name{font-weight:800;color:white;font-size:0.95rem;line-height:1.1;letter-spacing:.5px;}
+        @media(max-width:400px){.brand-name{display:none;}}
+        .nav-right{display:flex;align-items:center;gap:14px;}
+        .cart-icon{position:relative;cursor:pointer;color:white;font-size:1.25rem;padding:5px;}
+        .cart-badge{position:absolute;top:-4px;right:-4px;background:#ff4444;color:white;font-size:9px;font-weight:700;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+        .user-wrap{position:relative;}
+        .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:0.95rem;font-weight:700;transition:.2s;}
+        .user-avatar:hover{background:rgba(255,255,255,0.3);}
+        .user-dropdown{position:absolute;right:0;top:46px;background:white;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.15);min-width:200px;overflow:hidden;display:none;z-index:9999;}
+        .user-dropdown.show-dropdown{display:block;}
+        .user-dropdown a,.user-dropdown div.dp-link{display:flex;align-items:center;gap:10px;padding:11px 18px;color:#333;font-size:0.85rem;transition:.2s;cursor:pointer;}
+        .user-dropdown a:hover,.user-dropdown div.dp-link:hover{background:#f0f4ff;color:#667eea;}
+        .user-dropdown hr{margin:3px 0;border-color:#f0f0f0;}
+        .dp-header{padding:12px 18px;border-bottom:1px solid #f0f0f0;}
+        .dp-header strong{display:block;font-size:0.88rem;color:#333;}
+        .dp-header small{color:#888;font-size:0.75rem;}
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:999;background:white;box-shadow:0 -2px 15px rgba(0,0,0,0.08);display:flex;justify-content:space-around;align-items:stretch;height:65px;padding-bottom:env(safe-area-inset-bottom,0px);}
+        .bn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;cursor:pointer;padding:6px 4px;color:#aaa;text-decoration:none;transition:.2s;border:none;background:none;position:relative;}
+        .bn-item i{font-size:1.15rem;line-height:1;}
+        .bn-item .bn-label{font-size:0.62rem;font-weight:600;line-height:1;}
+        .bn-item.active{color:#667eea;}
+        .bn-item.active i{color:#667eea;}
+        .bn-badge{position:absolute;top:6px;left:calc(50% + 4px);background:#ff4444;color:white;font-size:8px;font-weight:700;min-width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 2px;line-height:1;}
+
+        /* Desktop: no bottom nav, no bottom padding */
+        @media(min-width:769px){
+            .bottom-nav{display:none;}
+            body{padding-bottom:0;}
         }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            .desktop-navbar { display: none; }
-            .mobile-bottom-nav { display: block; }
-            body { padding-bottom: 70px; }
-            .hero { padding-top: 50px !important; }
-        }
-        @media (min-width: 769px) {
-            .desktop-navbar { display: block; }
-            .mobile-bottom-nav { display: none; }
-            .hero { padding-top: 130px !important; }
-        }
+        /* ===== VIEW ANIMATION ===== */
+        .view-enter{animation:fadeUp .22s ease-out;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #1a1a2e; }
-        ::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 5px; }
+        /* ===== COMMON COMPONENTS ===== */
+        .loading-view{text-align:center;padding:80px 20px;}
+        .loading-view i{color:#667eea;}
+        .page-hero{background:linear-gradient(135deg,#667eea,#764ba2);padding:28px 20px;color:white;}
+        .page-hero h2{font-size:1.4rem;font-weight:700;margin-bottom:4px;}
+        .card-box{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:15px;}
+        .card-box h6{font-weight:700;margin-bottom:12px;color:#333;}
+        .stat-card{background:white;border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+        .s-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:white;}
+        .s-val{font-size:1.5rem;font-weight:700;color:#333;}
+        .s-lbl{font-size:.78rem;color:#888;}
+        .btn-pp{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:12px 20px;border-radius:50px;font-weight:600;font-size:.9rem;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:6px;}
+        .btn-pp:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,.4);}
+        .btn-pp:disabled{opacity:.7;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+        .btn-pp.w100{width:100%;justify-content:center;}
+        .btn-outline-pp{border:2px solid #667eea;color:#667eea;background:none;padding:10px 20px;border-radius:50px;font-weight:600;font-size:.9rem;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;}
+        .btn-outline-pp:hover{background:#667eea;color:white;}
+        .form-f{border-radius:10px;border:1.5px solid #e0e0e0;padding:11px 14px;font-family:'Poppins',sans-serif;font-size:.88rem;width:100%;transition:.2s;outline:none;background:white;}
+        .form-f:focus{border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1);}
+        .form-f:disabled{background:#f8f9fa;}
+        .flabel{font-size:.82rem;font-weight:600;margin-bottom:5px;display:block;color:#444;}
+        .fgroup{margin-bottom:14px;}
 
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 100px 0;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-            background-size: cover;
-            opacity: 0.3;
-        }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; animation: fadeInUp 0.6s ease-out; }
-        .hero h2 { font-size: 2rem; margin-bottom: 20px; animation: fadeInUp 0.8s ease-out; }
-        .hero .btn { margin: 10px; padding: 12px 30px; font-weight: 600; border-radius: 50px; transition: all 0.3s ease; animation: fadeInUp 1s ease-out; }
-        .hero .btn-whatsapp { background: #25D366; color: white; border: none; }
-        .hero .btn-primary { background: #ffd700; border: none; color: #333; }
-        .hero .btn-primary:hover, .hero .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        /* ===== PRODUCT CARDS ===== */
+        .product-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 3px 15px rgba(0,0,0,.07);transition:.3s;height:100%;display:flex;flex-direction:column;}
+        .product-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,.12);}
+        .product-card img{width:100%;height:175px;object-fit:cover;}
+        .pc-body{padding:12px;flex-grow:1;display:flex;flex-direction:column;}
+        .pc-name{font-size:.9rem;font-weight:600;margin-bottom:4px;color:#333;}
+        .pc-price{font-size:1.15rem;font-weight:700;color:#667eea;}
+        .pc-mrp{text-decoration:line-through;color:#bbb;font-size:.8rem;margin-left:5px;}
+        .discount-pill{background:#e8f5e9;color:#2e7d32;padding:2px 7px;border-radius:20px;font-size:.72rem;font-weight:700;}
+        .btn-cart{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;width:100%;padding:9px;border-radius:25px;font-weight:600;font-size:.85rem;cursor:pointer;transition:.3s;margin-top:auto;font-family:'Poppins',sans-serif;}
+        .btn-cart:hover{transform:scale(1.02);box-shadow:0 4px 12px rgba(102,126,234,.4);}
 
-        .step-card {
-            text-align: center;
-            padding: 30px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        .step-card:hover { transform: translateY(-10px); }
-        .step-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            color: white;
-        }
-        .step-icon.step1 { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .step-icon.step2 { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .step-icon.step3 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        /* ===== USER SIDEBAR (desktop) ===== */
+        .user-sidebar-wrap{display:none;}
+        @media(min-width:992px){.user-sidebar-wrap{display:block;}}
+        .user-sidebar{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:76px;}
+        .us-avatar{width:64px;height:64px;border-radius:50%;border:3px solid #667eea;object-fit:cover;}
+        .us-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;color:#555;font-size:.85rem;cursor:pointer;transition:.2s;text-decoration:none;margin-bottom:3px;}
+        .us-link:hover,.us-link.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white;}
+        .us-link i{width:16px;text-align:center;}
 
-        .product-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-        .product-card img { width: 100%; height: 250px; object-fit: cover; transition: transform 0.3s ease; }
-        .product-card:hover img { transform: scale(1.05); }
-        .product-card .price { font-size: 1.5rem; font-weight: 700; color: #667eea; }
-        .product-card .mrp { text-decoration: line-through; color: #999; font-size: 0.9rem; margin-left: 10px; }
-        .btn-add-cart {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        .btn-add-cart:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        /* ===== BADGES ===== */
+        .b-Pending{background:#fff3cd;color:#856404;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-Confirmed{background:#cce5ff;color:#004085;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-Shipped{background:#d4edda;color:#155724;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-Delivered,.b-Approved{background:#d1e7dd;color:#0f5132;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-Cancelled,.b-Rejected{background:#f8d7da;color:#721c24;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-active{background:#d1e7dd;color:#0f5132;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+        .b-blocked{background:#f8d7da;color:#721c24;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
 
-        .cta-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 60px 0;
-            color: white;
-        }
-
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            padding: 50px 0 20px;
-        }
-        .footer a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
-        .footer a:hover { color: white; padding-left: 5px; }
-        .footer .social-icons a { display: inline-block; margin-right: 15px; font-size: 1.5rem; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in-up { animation: fadeInUp 0.6s ease-out; }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .hero h2 { font-size: 1.3rem; }
-            .hero { padding: 50px 0; }
-        }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; }
-        .section-subtitle { color: #666; margin-bottom: 40px; }
-        .loading-spinner { text-align: center; padding: 50px; }
+        /* ===== MISC ===== */
+        .footer{background:#1a1a2e;color:rgba(255,255,255,.7);padding:25px 20px;text-align:center;font-size:.82rem;}
+        .footer a{color:#ffd700;}
+        .empty-state{text-align:center;padding:50px 20px;color:#999;}
+        .empty-state i{font-size:2.5rem;margin-bottom:12px;display:block;}
+        .divider{text-align:center;margin:14px 0;color:#bbb;font-size:.82rem;position:relative;}
+        .divider::before,.divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:#eee;}
+        .divider::before{left:0;} .divider::after{right:0;}
+        .alert-box{padding:11px 15px;border-radius:10px;font-size:.87rem;margin-bottom:14px;display:none;}
+        .alert-box.err{background:#fde8e8;color:#c0392b;border:1px solid #f5c6cb;display:block;}
+        .alert-box.ok{background:#e8f5e9;color:#1b5e20;border:1px solid #c8e6c9;display:block;}
+        .tab-btns{display:flex;background:#f1f5f9;border-radius:50px;padding:4px;max-width:260px;margin:0 auto 20px;}
+        .tab-btn{flex:1;padding:8px;border:none;border-radius:50px;font-weight:600;font-size:.87rem;cursor:pointer;transition:.3s;background:transparent;color:#64748b;font-family:'Poppins',sans-serif;}
+        .tab-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white;box-shadow:0 2px 8px rgba(102,126,234,.3);}
+        .referral-box{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:14px;padding:18px;color:white;}
+        .ref-input{background:rgba(255,255,255,.15);border:none;border-radius:8px;padding:10px 12px;color:white;font-size:.82rem;width:100%;word-break:break-all;font-family:'Poppins',sans-serif;}
+        .ref-input::placeholder{color:rgba(255,255,255,.6);}
+        .plan-card{background:white;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,.06);border-top:4px solid #667eea;}
+        .member-card{border:1.5px solid #f0f0f0;border-radius:12px;padding:13px;display:flex;align-items:center;gap:12px;transition:.2s;margin-bottom:8px;}
+        .member-card:hover{border-color:#667eea;background:#f8f9ff;}
+        .m-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;flex-shrink:0;}
+        .order-card{border:1.5px solid #f0f0f0;border-radius:12px;padding:15px;transition:.2s;margin-bottom:10px;}
+        .order-card:hover{border-color:#667eea;}
+        .t-track{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px;}
+        .t-step{display:flex;align-items:center;gap:4px;font-size:.72rem;font-weight:500;}
+        .t-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;}
+        .t-step.done .t-dot{background:#28a745;color:white;}
+        .t-step.pending .t-dot{background:#e0e0e0;color:#999;}
+        .t-line{flex:1;height:2px;background:#e0e0e0;min-width:15px;}
+        .t-line.done{background:#28a745;}
+        .w-wallet{background:linear-gradient(135deg,#11998e,#38ef7d);border-radius:14px;padding:22px;color:white;text-align:center;margin-bottom:18px;}
+        .comm-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #f5f5f5;}
+        .comm-row:last-child{border-bottom:none;}
+        .c-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+        .info-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f5f5f5;}
+        .info-row:last-child{border-bottom:none;}
+        .info-row i{color:#667eea;width:18px;text-align:center;}
+        .qty-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid #ddd;background:#f8f9fa;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.2s;}
+        .qty-btn:hover{background:#667eea;color:white;border-color:#667eea;}
+        @media(max-width:768px){.hidden-mobile{display:none!important;}}
+        ::-webkit-scrollbar{width:5px;height:5px;}
+        ::-webkit-scrollbar-thumb{background:#667eea;border-radius:5px;}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
     </style>
 </head>
 <body>
 
-    <!-- ============ DESKTOP NAVBAR (TOP) ============ -->
-    <nav class="desktop-navbar">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <img src="img/site-logo.jpg" alt="Logo">
-                <span class="logo-text">PEOPLE PLUS NETWORK</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="about.html">About</a></li>
-                <li>
-                    <a href="cart.html" class="cart-icon">
-                        <i class="fas fa-shopping-cart"></i> Cart
-                        <span class="cart-badge" id="desktopCartCount">0</span>
-                    </a>
-                </li>
-                <li><a href="register.html" class="btn-register" id="btnJoinNow"><i class="fas fa-user-plus"></i> Join Now</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- ============ MOBILE BOTTOM NAVBAR ============ -->
-    <nav class="mobile-bottom-nav">
-        <ul class="mobile-nav-items">
-            <li>
-                <a href="index.html">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="products.html">
-                    <i class="fas fa-box"></i>
-                    <span>Products</span>
-                </a>
-            </li>
-            <li>
-                <a href="about.html">
-                    <i class="fas fa-info-circle"></i>
-                    <span>About</span>
-                </a>
-            </li>
-            <li>
-                <a href="cart.html" style="position: relative;">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cart</span>
-                    <span class="mobile-cart-badge" id="mobileCartCount">0</span>
-                </a>
-            </li>
-            <li>
-                <a href="register.html" id="btnJoinNowMobile">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Join</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container text-center" style="position: relative; z-index: 10;">
-            <h1 class="fade-in-up">BUILD YOUR FUTURE</h1>
-            <h2 class="fade-in-up">EMPOWER LIVES</h2>
-            <p class="lead mb-4 fade-in-up">People Plus Network is more than a business, it's a movement. <br>Join us and be a part of our network and grow together.</p>
-            <div>
-                <a href="https://wa.me/qr/IG74VRFZSKIRN1" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
-                <a href="register.html" class="btn btn-primary btn-lg"><i class="fas fa-user-plus"></i> Join Now</a>
+<!-- ===== TOP NAVBAR ===== -->
+<nav class="top-nav">
+    <div class="nav-brand" onclick="navigate('/')">
+        <img src="img/site-logo.jpg" alt="Logo">
+        <span class="brand-name">PEOPLE PLUS<br>NETWORK</span>
+    </div>
+    <div class="nav-right">
+        <!-- User Menu -->
+        <div class="user-wrap">
+            <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu(event)"><i class="fas fa-user"></i></div>
+            <div class="user-dropdown" id="userDropdown">
+                <a onclick="navigate('/login')"><i class="fas fa-sign-in-alt"></i> Login</a>
             </div>
         </div>
-    </section>
+    </div>
+</nav>
 
-    <!-- How It Works -->
-    <section class="container my-5">
-        <div class="text-center mb-5">
-            <h2 class="section-title">HOW IT WORKS</h2>
-            <p class="section-subtitle">Simple plan. Unlimited possibilities.</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4"><a href="register.html" style="text-decoration:none; color:inherit;"><div class="step-card"><div class="step-icon step1"><i class="fas fa-user-plus"></i></div><h4>1. JOIN</h4><p class="text-muted">Become a member with a simple registration</p></div></a></div>
-            <div class="col-md-4"><div class="step-card"><div class="step-icon step2"><i class="fas fa-users"></i></div><h4>2. BUILD</h4><p class="text-muted">Build your team and help others grow</p></div></div>
-            <div class="col-md-4"><div class="step-card"><div class="step-icon step3"><i class="fas fa-coins"></i></div><h4>3. EARN</h4><p class="text-muted">Earn unlimited income from multiple sources</p></div></div>
-        </div>
-    </section>
+<!-- ===== MAIN APP ===== -->
+<div class="app-wrap" id="app">
+    <div class="loading-view">
+        <i class="fas fa-spinner fa-spin fa-3x mb-3 d-block"></i>
+        <p style="color:#888;font-size:.9rem;">Loading...</p>
+    </div>
+</div>
 
-    <!-- Products Section - Dynamic from Firebase -->
-    <section class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title">OUR PRODUCTS</h2>
-            <a href="products.html" class="btn btn-outline-primary">View All Products →</a>
-        </div>
-        <div class="row g-4" id="homeProducts">
-            <div class="col-12 text-center"><div class="loading-spinner"><i class="fas fa-spinner fa-spin fa-3x text-primary"></i><p class="mt-3">Loading products...</p></div></div>
-        </div>
-    </section>
+<!-- ===== BOTTOM NAV (USER) ===== -->
+<nav class="bottom-nav" id="bottomNav">
+    <button class="bn-item" id="bn-home" onclick="navigate('/')">
+        <i class="fas fa-home"></i>
+        <span class="bn-label">Home</span>
+    </button>
+    <button class="bn-item" id="bn-about" onclick="navigate('/about')">
+        <i class="fas fa-info-circle"></i>
+        <span class="bn-label">About</span>
+    </button>
+    <button class="bn-item" id="bn-shop" onclick="navigate('/products')">
+        <i class="fas fa-store"></i>
+        <span class="bn-label">Shop</span>
+    </button>
+    <button class="bn-item" id="bn-me" onclick="navigate('/dashboard')">
+        <i class="fas fa-user"></i>
+        <span class="bn-label">Me</span>
+    </button>
+</nav>
 
-    <!-- Business Plan Section -->
-    <section class="bg-light py-5 my-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title">OUR BUSINESS PLAN</h2>
-                <p class="section-subtitle">SIMPLE PLAN. UNLIMITED POSSIBILITIES.</p>
-                <p class="text-primary fw-bold fs-5">EARN LUCRATIVE INCOME THROUGH OUR WELL-STRUCTURED COMPENSATION PLAN</p>
-            </div>
-        </div>
-    </section>
+<!-- ===== BOTTOM NAV (ADMIN) ===== -->
+<nav class="bottom-nav" id="adminBottomNav" style="display:none;">
+    <button class="bn-item" id="bn-a-dash" onclick="navigate('/admin')">
+        <i class="fas fa-tachometer-alt"></i>
+        <span class="bn-label">Home</span>
+    </button>
+    <button class="bn-item" id="bn-a-users" onclick="navigate('/admin/users')">
+        <i class="fas fa-users"></i>
+        <span class="bn-label">Users</span>
+    </button>
+    <button class="bn-item" id="bn-a-prods" onclick="navigate('/admin/products')">
+        <i class="fas fa-box"></i>
+        <span class="bn-label">Products</span>
+    </button>
+    <button class="bn-item" id="bn-a-orders" onclick="navigate('/admin/orders')">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="bn-label">Orders</span>
+    </button>
+</nav>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container text-center">
-            <h3 class="fw-bold">START YOUR JOURNEY TODAY</h3>
-            <p class="lead mb-4">Join thousands of successful people and build your dreams with People Plus Network</p>
-            <a href="register.html" class="btn btn-warning btn-lg text-dark fw-bold px-5"><i class="fas fa-rocket"></i> Join Now - It's Free!</a>
-        </div>
-    </section>
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toastBox" style="position:fixed;bottom:80px;right:0;left:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9999;pointer-events:none;"></div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h4><i class="fas fa-users"></i> People Plus Network</h4>
-                    <p>Build your future, empower lives. Join us and be a part of our growing network.</p>
-                    <div class="social-icons mt-3">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/qr/IG74VRFZSKIRN1"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li><li><a href="about.html">About</a></li><li><a href="#">Contact</a></li></ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Support</h5>
-                    <ul class="list-unstyled"><li><a href="#">FAQ</a></li><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Refund Policy</a></li></ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Contact Us</h5>
-                    <ul class="list-unstyled"><li><i class="fas fa-phone"></i> +91 82357 72175</li><li><i class="fas fa-envelope"></i> support@peopleplus.com</li><li><i class="fab fa-whatsapp"></i> Chat on WhatsApp</li></ul>
-                </div>
-            </div>
-            <hr class="bg-light"><div class="text-center"><p>&copy; 2024 People Plus Network. All rights reserved.</p></div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module">
-        import { getAllProducts } from './js/firebase-config.js';
-        
-        console.log("Firebase module loaded for index page");
-        
-        // Update cart count function
-        function updateCartCount() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-            
-            const desktopBadge = document.getElementById('desktopCartCount');
-            const mobileBadge = document.getElementById('mobileCartCount');
-            const oldBadge = document.getElementById('cartCount'); // For backward compatibility
-            
-            if (desktopBadge) desktopBadge.innerText = count;
-            if (mobileBadge) mobileBadge.innerText = count;
-            if (oldBadge) oldBadge.innerText = count;
-        }
-        
-        window.addToCart = function(product) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existing = cart.find(item => item.id === product.id);
-            if (existing) {
-                existing.quantity = (existing.quantity || 1) + 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            alert(product.name + " added to cart!");
-        };
-
-        // Set active link based on current page
-        function setActiveLink() {
-            const currentPath = window.location.pathname;
-            const currentPage = currentPath.split('/').pop() || 'index.html';
-            
-            // Desktop links
-            document.querySelectorAll('.nav-links li a').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href === currentPage) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-            
-            // Mobile links
-            document.querySelectorAll('.mobile-nav-items li a').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href === currentPage) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-        }
-        
-        async function loadHomeProducts() {
-            const container = document.getElementById('homeProducts');
-            console.log("Loading home products...");
-            
-            try {
-                const isLocal = window.location.hostname === 'localhost' || 
-                               window.location.hostname === '127.0.0.1' || 
-                               !window.location.hostname || 
-                               window.location.protocol === 'file:';
-                
-                const apiBase = isLocal ? 'http://localhost:5000/api' : '/api';
-                
-                let products = null;
-                try {
-                    const controller = new AbortController();
-                    const id = setTimeout(() => controller.abort(), 3000);
-                    
-                    const response = await fetch(`${apiBase}/products`, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(id);
-                    
-                    if (response.ok) {
-                        products = await response.json();
-                    }
-                } catch (e) {
-                    console.warn("Home products backend fetch failed:", e.message);
-                }
-                
-                if (!products || products.length === 0) {
-                    products = await getAllProducts();
-                }
-                
-                if (!products || products.length === 0) {
-                    container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No products available.</p></div>';
-                    return;
-                }
-                
-                const displayProducts = products.slice(0, 4);
-                
-                container.innerHTML = displayProducts.map((product, index) => {
-                    let imageUrl = product.image || '';
-                    if (imageUrl.includes('via.placeholder.com') || !imageUrl.startsWith('http')) {
-                        imageUrl = `https://picsum.photos/300/250?random=${product.id || index}`;
-                    }
-                    
-                    return `
-                        <div class="col-md-3 col-sm-6">
-                            <div class="product-card">
-                                <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://picsum.photos/300/250?random=${Date.now()}'">
-                                <div class="p-3">
-                                    <h5>${product.name}</h5>
-                                    <p class="price">₹${product.price} <span class="mrp">₹${product.mrp}</span></p>
-                                    <button class="btn-add-cart" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "\\'")})'>
-                                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (error) {
-                console.error('Error loading home products:', error);
-                container.innerHTML = '<div class="col-12 text-center text-danger">Failed to load products.</div>';
-            }
-        }
-        
-        function updateNavbarForUser() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const btnJoinNow = document.getElementById('btnJoinNow');
-            const btnJoinNowMobile = document.getElementById('btnJoinNowMobile');
-            
-            if (currentUser) {
-                const userName = (currentUser.name || 'User').split(' ')[0];
-                
-                if (btnJoinNow) {
-                    btnJoinNow.innerHTML = `<i class="fas fa-user"></i> ${userName}`;
-                    btnJoinNow.href = 'user-dashboard.html';
-                }
-                if (btnJoinNowMobile) {
-                    btnJoinNowMobile.innerHTML = `<i class="fas fa-user-circle"></i> <span>Dashboard</span>`;
-                    btnJoinNowMobile.href = 'user-dashboard.html';
-                }
-            }
-        }
-        
-        window.logoutUser = function() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.clear();
-                window.location.href = 'index.html';
-            }
-        };
-        
-        loadHomeProducts();
-        updateCartCount();
-        setActiveLink();
-        updateNavbarForUser();
-    
-    window.updateCartCount = updateCartCount;
-    window.loadHomeProducts = loadHomeProducts;
-    window.updateNavbarForUser = updateNavbarForUser;
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

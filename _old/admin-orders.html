@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .admin-sidebar { background: linear-gradient(180deg, #1a1a2e, #16213e); min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 240px; z-index: 1000; }
+        .sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand img { height: 45px; border-radius: 8px; background: white; padding: 2px; }
+        .admin-sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 11px 20px; border-radius: 10px; margin: 2px 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: rgba(255,255,255,0.12); color: white; }
+        .admin-sidebar .nav-link i { width: 20px; text-align: center; }
+        .admin-content { margin-left: 240px; padding: 20px; }
+        .admin-header { background: white; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .table-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); overflow-x: auto; }
+        table th { font-size: 0.82rem; text-transform: uppercase; color: #888; font-weight: 600; }
+        table td { font-size: 0.88rem; vertical-align: middle; }
+        .badge-status { padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+        .badge-Pending { background: #fff3cd; color: #856404; }
+        .badge-Confirmed { background: #cce5ff; color: #004085; }
+        .badge-Shipped { background: #d4edda; color: #155724; }
+        .badge-Delivered { background: #d1e7dd; color: #0f5132; }
+        .badge-Cancelled { background: #f8d7da; color: #721c24; }
+        .form-control, .form-select { border-radius: 8px; border: 1.5px solid #e0e0e0; padding: 8px 12px; font-family: 'Poppins', sans-serif; }
+        @media (max-width: 992px) { .admin-sidebar { transform: translateX(-100%); } .admin-sidebar.open { transform: translateX(0); } .admin-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+        <img src="img/site-logo.jpg" alt="Logo"><br>
+        <small class="text-white fw-bold mt-1 d-block">ADMIN PANEL</small>
+    </div>
+    <nav class="nav flex-column mt-2">
+        <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
+        <a class="nav-link active" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:10px;">
+        <a class="nav-link" href="index.html" target="_blank"><i class="fas fa-globe"></i> View Site</a>
+        <a class="nav-link text-danger" href="#" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+<div class="admin-content">
+    <div class="admin-header">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+            <h5 class="mb-0 fw-bold">Manage Orders</h5>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <select class="form-select form-select-sm" id="statusFilter" onchange="filterOrders()" style="max-width:160px;">
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+            <input type="text" class="form-control form-control-sm" id="searchOrders" placeholder="Search customer..." oninput="filterOrders()" style="max-width:180px;">
+        </div>
+    </div>
+    <div class="table-card">
+        <div class="mb-3"><small class="text-muted" id="orderCount">Loading...</small></div>
+        <table class="table table-hover">
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="ordersTable"><tr><td colspan="7" class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5>Update Order Status</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <p>Order: <strong id="statusOrderId"></strong></p>
+                <input type="hidden" id="statusDocId">
+                <div class="mb-3">
+                    <label>New Status</label>
+                    <select class="form-select" id="newStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tracking Number (optional)</label>
+                    <input type="text" class="form-control" id="trackingNum" placeholder="e.g. DTDC123456">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="doUpdateStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getCurrentUserData, getAllOrders, updateOrderStatus } from './js/firebase-config.js';
+
+    let allOrders = [];
+
+    async function load() {
+        const user = await getCurrentUserData();
+        if (!user || user.role !== 'admin') { window.location.href = 'register.html'; return; }
+        allOrders = await getAllOrders();
+        renderOrders(allOrders);
+    }
+
+    function renderOrders(orders) {
+        document.getElementById('orderCount').textContent = `${orders.length} order${orders.length !== 1 ? 's' : ''}`;
+        const tbody = document.getElementById('ordersTable');
+        if (!orders.length) { tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No orders found</td></tr>'; return; }
+        tbody.innerHTML = orders.map(o => {
+            const items = (o.items || []).map(i => `${i.name}×${i.quantity}`).join(', ');
+            const date = o.date ? new Date(o.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '---';
+            return `<tr>
+                <td class="fw-bold small">${o.orderId}</td>
+                <td>${o.userName}<br><small class="text-muted">${o.userEmail}</small></td>
+                <td class="small" style="max-width:180px;">${items}</td>
+                <td class="fw-bold text-primary">₹${o.total}</td>
+                <td><span class="badge-status badge-${o.status}">${o.status}</span>${o.trackingNumber ? `<br><small class="text-muted">${o.trackingNumber}</small>` : ''}</td>
+                <td class="small">${date}</td>
+                <td><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openStatus('${o.id}', '${o.orderId}', '${o.status}')"><i class="fas fa-edit me-1"></i>Update</button></td>
+            </tr>`;
+        }).join('');
+    }
+
+    window.filterOrders = function() {
+        const status = document.getElementById('statusFilter').value;
+        const q = document.getElementById('searchOrders').value.toLowerCase();
+        let filtered = allOrders;
+        if (status) filtered = filtered.filter(o => o.status === status);
+        if (q) filtered = filtered.filter(o => (o.userName || '').toLowerCase().includes(q) || (o.orderId || '').toLowerCase().includes(q));
+        renderOrders(filtered);
+    };
+
+    window.openStatus = function(docId, orderId, currentStatus) {
+        document.getElementById('statusDocId').value = docId;
+        document.getElementById('statusOrderId').textContent = orderId;
+        document.getElementById('newStatus').value = currentStatus;
+        document.getElementById('trackingNum').value = '';
+        new bootstrap.Modal(document.getElementById('statusModal')).show();
+    };
+
+    window.doUpdateStatus = async function() {
+        const docId = document.getElementById('statusDocId').value;
+        const status = document.getElementById('newStatus').value;
+        const tracking = document.getElementById('trackingNum').value;
+        await updateOrderStatus(docId, status, tracking);
+        const order = allOrders.find(o => o.id === docId);
+        if (order) { order.status = status; order.trackingNumber = tracking; }
+        bootstrap.Modal.getInstance(document.getElementById('statusModal')).hide();
+        renderOrders(allOrders);
+        showToast('Order status updated!', 'success');
+    };
+
+    function showToast(msg, type) {
+        const t = document.createElement('div');
+        t.style.cssText = `position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:10px;z-index:9999;font-weight:600;color:white;background:${type==='success'?'#28a745':'#e74c3c'};`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    load();
+</script>
+</body>
+</html>

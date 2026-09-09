@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .admin-sidebar { background: linear-gradient(180deg, #1a1a2e, #16213e); min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 240px; z-index: 1000; }
+        .sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand img { height: 45px; border-radius: 8px; background: white; padding: 2px; }
+        .admin-sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 11px 20px; border-radius: 10px; margin: 2px 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: rgba(255,255,255,0.12); color: white; }
+        .admin-sidebar .nav-link i { width: 20px; text-align: center; }
+        .admin-content { margin-left: 240px; padding: 20px; }
+        .admin-header { background: white; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .product-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06); transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-card img { width: 100%; height: 160px; object-fit: cover; }
+        .form-control, .form-select { border-radius: 10px; border: 1.5px solid #e0e0e0; padding: 10px 13px; font-family: 'Poppins', sans-serif; }
+        .form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: none; outline: none; }
+        @media (max-width: 992px) { .admin-sidebar { transform: translateX(-100%); } .admin-sidebar.open { transform: translateX(0); } .admin-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+        <img src="img/site-logo.jpg" alt="Logo"><br>
+        <small class="text-white fw-bold mt-1 d-block">ADMIN PANEL</small>
+    </div>
+    <nav class="nav flex-column mt-2">
+        <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+        <a class="nav-link active" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
+        <a class="nav-link" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:10px;">
+        <a class="nav-link" href="index.html" target="_blank"><i class="fas fa-globe"></i> View Site</a>
+        <a class="nav-link text-danger" href="#" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+<div class="admin-content">
+    <div class="admin-header">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+            <h5 class="mb-0 fw-bold">Manage Products</h5>
+        </div>
+        <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openAddModal()"><i class="fas fa-plus me-1"></i>Add Product</button>
+    </div>
+    <div class="row g-3" id="productsGrid">
+        <div class="col-12 text-center py-5"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>
+    </div>
+</div>
+
+<!-- Add/Edit Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title" id="modalTitle">Add Product</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="row g-3">
+                        <div class="col-md-8"><label class="small fw-600 mb-1">Product Name *</label><input type="text" class="form-control" id="pName" required></div>
+                        <div class="col-md-4">
+                            <label class="small fw-600 mb-1">Status</label>
+                            <select class="form-select" id="pStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4"><label class="small fw-600 mb-1">Selling Price (₹) *</label><input type="number" class="form-control" id="pPrice" required min="1"></div>
+                        <div class="col-md-4"><label class="small fw-600 mb-1">MRP (₹) *</label><input type="number" class="form-control" id="pMrp" required min="1"></div>
+                        <div class="col-md-4"><label class="small fw-600 mb-1">Stock *</label><input type="number" class="form-control" id="pStock" required min="0"></div>
+                        <div class="col-12"><label class="small fw-600 mb-1">Description</label><textarea class="form-control" id="pDesc" rows="2"></textarea></div>
+                        <div class="col-12"><label class="small fw-600 mb-1">Image URL *</label><input type="url" class="form-control" id="pImage" placeholder="https://..." required></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="saveProduct()"><i class="fas fa-save me-1"></i>Save Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getCurrentUserData, getAllProducts, addProduct, updateProduct, deleteProduct } from './js/firebase-config.js';
+
+    let allProducts = [];
+
+    async function load() {
+        const user = await getCurrentUserData();
+        if (!user || user.role !== 'admin') { window.location.href = 'register.html'; return; }
+        allProducts = await getAllProducts();
+        render();
+    }
+
+    function render() {
+        const grid = document.getElementById('productsGrid');
+        if (!allProducts.length) { grid.innerHTML = '<div class="col-12 text-center py-5 text-muted">No products found. Add some!</div>'; return; }
+        grid.innerHTML = allProducts.map(p => `
+            <div class="col-md-3 col-sm-6">
+                <div class="product-card">
+                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/300x160/667eea/white?text=Product'">
+                    <div class="p-3">
+                        <h6 class="fw-bold mb-1">${p.name}</h6>
+                        <div class="small text-muted mb-2">₹${p.price} <span style="text-decoration:line-through;color:#999;">₹${p.mrp}</span></div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge ${p.status === 'active' ? 'bg-success' : 'bg-secondary'}">${p.status || 'active'}</span>
+                            <small class="text-muted">Stock: ${p.stock}</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary flex-grow-1" onclick="openEditModal('${p.id}')"><i class="fas fa-edit me-1"></i>Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="doDelete('${p.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    window.openAddModal = function() {
+        document.getElementById('modalTitle').textContent = 'Add New Product';
+        document.getElementById('productForm').reset();
+        document.getElementById('productId').value = '';
+    };
+
+    window.openEditModal = function(id) {
+        const p = allProducts.find(x => x.id === id);
+        if (!p) return;
+        document.getElementById('modalTitle').textContent = 'Edit Product';
+        document.getElementById('productId').value = id;
+        document.getElementById('pName').value = p.name;
+        document.getElementById('pPrice').value = p.price;
+        document.getElementById('pMrp').value = p.mrp;
+        document.getElementById('pStock').value = p.stock;
+        document.getElementById('pDesc').value = p.desc || '';
+        document.getElementById('pImage').value = p.image;
+        document.getElementById('pStatus').value = p.status || 'active';
+        new bootstrap.Modal(document.getElementById('productModal')).show();
+    };
+
+    window.saveProduct = async function() {
+        const data = {
+            name: document.getElementById('pName').value.trim(),
+            price: Number(document.getElementById('pPrice').value),
+            mrp: Number(document.getElementById('pMrp').value),
+            stock: Number(document.getElementById('pStock').value),
+            desc: document.getElementById('pDesc').value.trim(),
+            image: document.getElementById('pImage').value.trim(),
+            status: document.getElementById('pStatus').value
+        };
+        if (!data.name || !data.price || !data.mrp || !data.image) { alert('Fill all required fields!'); return; }
+        const id = document.getElementById('productId').value;
+        if (id) {
+            await updateProduct(id, data);
+            const idx = allProducts.findIndex(p => p.id === id);
+            if (idx >= 0) allProducts[idx] = { id, ...data };
+            showToast('Product updated!', 'success');
+        } else {
+            const result = await addProduct(data);
+            allProducts.unshift({ id: result.id, ...data });
+            showToast('Product added!', 'success');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+        render();
+    };
+
+    window.doDelete = async function(id) {
+        if (!confirm('Delete this product?')) return;
+        await deleteProduct(id);
+        allProducts = allProducts.filter(p => p.id !== id);
+        render();
+        showToast('Product deleted!', 'success');
+    };
+
+    function showToast(msg, type) {
+        const t = document.createElement('div');
+        t.style.cssText = `position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:10px;z-index:9999;font-weight:600;color:white;background:${type==='success'?'#28a745':'#e74c3c'};`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    load();
+</script>
+</body>
+</html>

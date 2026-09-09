@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Products - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.8rem 0; }
+        .brand-text { font-weight: 800; color: white; font-size: 1.2rem; }
+        .nav-link { color: white !important; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: #ffd700 !important; }
+        .nav-link.active { color: #ffd700 !important; font-weight: 700; }
+        .dropdown-menu { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: none; }
+        .dropdown-item:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
+        .page-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 55px 0; color: white; text-align: center; }
+        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.06); transition: all 0.3s; height: 100%; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .product-card img { width: 100%; height: 220px; object-fit: cover; }
+        .product-body { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-card h5 { font-size: 1rem; margin-bottom: 5px; }
+        .price { font-size: 1.3rem; font-weight: 700; color: #667eea; }
+        .mrp { text-decoration: line-through; color: #999; font-size: 0.85rem; margin-left: 6px; }
+        .discount-badge { background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .btn-add-cart { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px; border-radius: 25px; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; width: 100%; margin-top: auto; }
+        .btn-add-cart:hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .filter-bar { background: white; border-radius: 15px; padding: 15px 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
+        .footer a { color: #ffd700; text-decoration: none; }
+        .loading-spinner { text-align: center; padding: 60px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height:40px;border-radius:6px;background:white;padding:2px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center gap-1">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount" class="badge bg-danger rounded-pill">0</span></a></li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" style="padding:6px 10px;">
+                            <img src="img/default-avatar.png" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);" alt="User">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdown">
+                            <li><a class="dropdown-item fw-bold" href="register.html" style="color:#667eea;"><i class="fas fa-user-plus me-2"></i>Join Now / Login</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="page-header">
+    <div class="container">
+        <h1 class="fw-bold">OUR PRODUCTS</h1>
+        <p class="lead mb-0">High quality products for better life and health</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="filter-bar">
+        <span class="fw-bold text-muted">Filter:</span>
+        <input type="text" id="searchInput" class="form-control" placeholder="Search products..." style="max-width:280px;" oninput="filterProducts()">
+        <span class="text-muted ms-auto" id="productCount"></span>
+    </div>
+    <div class="row g-4" id="productsContainer">
+        <div class="col-12 loading-spinner"><i class="fas fa-spinner fa-spin fa-3x text-primary"></i><p class="mt-3 text-muted">Loading products...</p></div>
+    </div>
+</div>
+
+<footer class="footer"><div class="container text-center"><p>&copy; 2024 People Plus Network. All rights reserved. | <a href="index.html">Home</a></p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getActiveProducts, updateNavbar, updateCartCount, getCurrentUserLocal } from './js/firebase-config.js';
+
+    updateCartCount();
+    updateNavbar(getCurrentUserLocal());
+
+    let allProducts = [];
+
+    window.addToCart = function(product) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const idx = cart.findIndex(i => i.id === product.id);
+        if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + 1;
+        else cart.push({ ...product, quantity: 1 });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#28a745;color:white;padding:12px 20px;border-radius:10px;z-index:9999;font-weight:600;box-shadow:0 4px 15px rgba(0,0,0,0.2);';
+        toast.innerHTML = `<i class="fas fa-check-circle me-2"></i>${product.name} added to cart!`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+    };
+
+    function renderProducts(products) {
+        const container = document.getElementById('productsContainer');
+        document.getElementById('productCount').textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
+        if (!products.length) {
+            container.innerHTML = '<div class="col-12 text-center py-5 text-muted"><i class="fas fa-box-open fa-3x mb-3 d-block"></i>No products found.</div>';
+            return;
+        }
+        container.innerHTML = products.map(p => {
+            const discount = p.mrp > p.price ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
+            return `
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="product-card">
+                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/300x220/667eea/white?text=${encodeURIComponent(p.name)}'">
+                    <div class="product-body">
+                        <h5>${p.name}</h5>
+                        <p class="text-muted small mb-2">${p.desc || ''}</p>
+                        <div class="mb-2">
+                            <span class="price">₹${p.price}</span>
+                            <span class="mrp">₹${p.mrp}</span>
+                            ${discount > 0 ? `<span class="discount-badge ms-1">${discount}% off</span>` : ''}
+                        </div>
+                        <p class="text-muted small mb-2"><i class="fas fa-box me-1"></i>Stock: ${p.stock || 'Available'}</p>
+                        <button class="btn-add-cart" onclick='addToCart(${JSON.stringify({id:p.id,name:p.name,price:p.price,image:p.image})})'>
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    window.filterProducts = function() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        renderProducts(q ? allProducts.filter(p => p.name.toLowerCase().includes(q) || (p.desc || '').toLowerCase().includes(q)) : allProducts);
+    };
+
+    async function loadProducts() {
+        try {
+            allProducts = await getActiveProducts();
+            renderProducts(allProducts);
+        } catch (e) {
+            document.getElementById('productsContainer').innerHTML = '<div class="col-12 text-center text-danger py-5"><i class="fas fa-exclamation-circle fa-2x mb-2 d-block"></i>Failed to load products. Please refresh.</div>';
+        }
+    }
+
+    loadProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .admin-sidebar { background: linear-gradient(180deg, #1a1a2e, #16213e); min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 240px; z-index: 1000; transition: 0.3s; overflow-y: auto; }
+        .sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand img { height: 45px; border-radius: 8px; background: white; padding: 2px; }
+        .admin-sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 11px 20px; border-radius: 10px; margin: 2px 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: rgba(255,255,255,0.12); color: white; }
+        .admin-sidebar .nav-link i { width: 20px; text-align: center; }
+        .admin-content { margin-left: 240px; padding: 20px; min-height: 100vh; }
+        .admin-header { background: white; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .stat-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-card .icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; flex-shrink: 0; }
+        .stat-val { font-size: 1.6rem; font-weight: 700; }
+        .table-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); overflow-x: auto; }
+        .table-card h6 { font-weight: 700; margin-bottom: 15px; }
+        table th { font-size: 0.82rem; text-transform: uppercase; color: #888; font-weight: 600; }
+        table td { font-size: 0.9rem; vertical-align: middle; }
+        .badge-Pending { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Confirmed { background: #cce5ff; color: #004085; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Shipped { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Delivered { background: #d1e7dd; color: #0f5132; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Approved { background: #d1e7dd; color: #0f5132; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Rejected { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-Cancelled { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 5px; }
+        @media (max-width: 992px) { .admin-sidebar { transform: translateX(-100%); } .admin-sidebar.open { transform: translateX(0); } .admin-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+        <img src="img/site-logo.jpg" alt="Logo"><br>
+        <small class="text-white fw-bold mt-1 d-block">ADMIN PANEL</small>
+    </div>
+    <nav class="nav flex-column mt-2">
+        <a class="nav-link active" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
+        <a class="nav-link" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:10px;">
+        <a class="nav-link" href="index.html" target="_blank"><i class="fas fa-globe"></i> View Site</a>
+        <a class="nav-link text-danger" href="#" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+
+<!-- Content -->
+<div class="admin-content">
+    <div class="admin-header">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+            <div>
+                <h5 class="mb-0 fw-bold">Admin Dashboard</h5>
+                <small class="text-muted" id="currentDate"></small>
+            </div>
+        </div>
+        <div><span class="badge bg-danger rounded-pill px-3">Admin</span> <span id="adminName" class="fw-bold">Super Admin</span></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#667eea,#764ba2);"><i class="fas fa-users"></i></div>
+                <div><div class="stat-val" id="totalUsers">--</div><div class="text-muted small">Total Users</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#11998e,#38ef7d);"><i class="fas fa-shopping-cart"></i></div>
+                <div><div class="stat-val" id="totalOrders">--</div><div class="text-muted small">Total Orders</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#f093fb,#f5576c);"><i class="fas fa-rupee-sign"></i></div>
+                <div><div class="stat-val" id="totalSales">--</div><div class="text-muted small">Total Sales</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe);"><i class="fas fa-money-bill-wave"></i></div>
+                <div><div class="stat-val" id="pendingWithdrawals">--</div><div class="text-muted small">Pending Withdrawals</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#fa709a,#fee140);"><i class="fas fa-box"></i></div>
+                <div><div class="stat-val" id="totalProducts">--</div><div class="text-muted small">Total Products</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb);"><i class="fas fa-coins"></i></div>
+                <div><div class="stat-val" id="totalCommissions">--</div><div class="text-muted small">Total Commissions</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#0ba360,#3cba92);"><i class="fas fa-check-circle"></i></div>
+                <div><div class="stat-val" id="activeUsers">--</div><div class="text-muted small">Active Users</div></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card d-flex align-items-center gap-3">
+                <div class="icon" style="background:linear-gradient(135deg,#e0c3fc,#8ec5fc);"><i class="fas fa-clock"></i></div>
+                <div><div class="stat-val" id="pendingOrders">--</div><div class="text-muted small">Pending Orders</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="table-card mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Recent Orders</h6>
+            <a href="admin-orders.html" class="btn btn-sm btn-primary rounded-pill">View All</a>
+        </div>
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="recentOrdersTable"><tr><td colspan="5" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
+        </table>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="table-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Recent Users</h6>
+            <a href="admin-users.html" class="btn btn-sm btn-primary rounded-pill">View All</a>
+        </div>
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Name</th><th>Email</th><th>Sponsor</th><th>Wallet</th><th>Joined</th></tr></thead>
+            <tbody id="recentUsersTable"><tr><td colspan="5" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getCurrentUserData, getDashboardStats, getAllOrders, getAllUsers } from './js/firebase-config.js';
+
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    async function load() {
+        const user = await getCurrentUserData();
+        if (!user) { window.location.href = 'register.html'; return; }
+        if (user.role !== 'admin') { window.location.href = 'user-dashboard.html'; return; }
+        document.getElementById('adminName').textContent = user.name;
+
+        const [stats, orders, users] = await Promise.all([getDashboardStats(), getAllOrders(), getAllUsers()]);
+
+        document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+        document.getElementById('totalOrders').textContent = stats.totalOrders || 0;
+        document.getElementById('totalSales').textContent = '₹' + (stats.totalSales || 0);
+        document.getElementById('pendingWithdrawals').textContent = stats.pendingWithdrawals || 0;
+        document.getElementById('totalProducts').textContent = stats.totalProducts || 0;
+        document.getElementById('totalCommissions').textContent = '₹' + Math.round(stats.totalCommissions || 0);
+        document.getElementById('activeUsers').textContent = stats.activeUsers || 0;
+        document.getElementById('pendingOrders').textContent = stats.pendingOrders || 0;
+
+        // Recent orders (last 5)
+        const recentOrders = orders.slice(0, 5);
+        document.getElementById('recentOrdersTable').innerHTML = recentOrders.length ? recentOrders.map(o =>
+            `<tr><td class="fw-bold">${o.orderId}</td><td>${o.userName}</td><td>₹${o.total}</td><td><span class="badge-${o.status}">${o.status}</span></td><td>${new Date(o.date).toLocaleDateString('en-IN')}</td></tr>`
+        ).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No orders yet</td></tr>';
+
+        // Recent users (last 5, non-admin)
+        const recentUsers = users.filter(u => u.role !== 'admin').slice(0, 5);
+        document.getElementById('recentUsersTable').innerHTML = recentUsers.length ? recentUsers.map(u =>
+            `<tr><td class="fw-bold">${u.name}</td><td>${u.email}</td><td>${u.sponsor || '---'}</td><td class="text-success fw-bold">₹${u.wallet || 0}</td><td>${u.joined ? new Date(u.joined).toLocaleDateString('en-IN') : '---'}</td></tr>`
+        ).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No users yet</td></tr>';
+    }
+
+    load();
+</script>
+</body>
+</html>

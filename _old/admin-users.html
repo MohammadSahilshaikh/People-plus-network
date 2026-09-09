@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .admin-sidebar { background: linear-gradient(180deg, #1a1a2e, #16213e); min-height: 100vh; color: white; position: fixed; left: 0; top: 0; width: 240px; z-index: 1000; }
+        .sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand img { height: 45px; border-radius: 8px; background: white; padding: 2px; }
+        .admin-sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 11px 20px; border-radius: 10px; margin: 2px 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: rgba(255,255,255,0.12); color: white; }
+        .admin-sidebar .nav-link i { width: 20px; text-align: center; }
+        .admin-content { margin-left: 240px; padding: 20px; }
+        .admin-header { background: white; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .table-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); overflow-x: auto; }
+        table th { font-size: 0.82rem; text-transform: uppercase; color: #888; font-weight: 600; }
+        table td { font-size: 0.88rem; vertical-align: middle; }
+        .badge-active { background: #d1e7dd; color: #0f5132; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-blocked { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        @media (max-width: 992px) { .admin-sidebar { transform: translateX(-100%); } .admin-sidebar.open { transform: translateX(0); } .admin-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+        <img src="img/site-logo.jpg" alt="Logo"><br>
+        <small class="text-white fw-bold mt-1 d-block">ADMIN PANEL</small>
+    </div>
+    <nav class="nav flex-column mt-2">
+        <a class="nav-link" href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link active" href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+        <a class="nav-link" href="admin-products.html"><i class="fas fa-box"></i> Products</a>
+        <a class="nav-link" href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a class="nav-link" href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:10px;">
+        <a class="nav-link" href="index.html" target="_blank"><i class="fas fa-globe"></i> View Site</a>
+        <a class="nav-link text-danger" href="#" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+</div>
+<div class="admin-content">
+    <div class="admin-header">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+            <h5 class="mb-0 fw-bold">Manage Users</h5>
+        </div>
+        <div>
+            <input type="text" class="form-control form-control-sm" id="searchUsers" placeholder="Search users..." oninput="filterUsers()" style="max-width:220px;">
+        </div>
+    </div>
+    <div class="table-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted small" id="userCount">Loading...</span>
+        </div>
+        <table class="table table-hover">
+            <thead><tr><th>Name</th><th>Member ID</th><th>Email</th><th>Phone</th><th>Sponsor</th><th>Wallet</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="usersTable"><tr><td colspan="9" class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Wallet Modal -->
+<div class="modal fade" id="walletModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Add/Deduct Wallet</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <p>User: <strong id="walletUserName"></strong></p>
+                <input type="hidden" id="walletUserId">
+                <div class="mb-3"><label>Amount (positive to add, negative to deduct)</label><input type="number" class="form-control" id="walletAmount" placeholder="e.g. 100 or -50"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="doWallet()">Update Wallet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getCurrentUserData, getAllUsers, updateUserStatus, deleteUser, addToUserWallet } from './js/firebase-config.js';
+
+    let allUsers = [];
+
+    async function load() {
+        const user = await getCurrentUserData();
+        if (!user || user.role !== 'admin') { window.location.href = 'register.html'; return; }
+        allUsers = (await getAllUsers()).filter(u => u.role !== 'admin');
+        renderUsers(allUsers);
+    }
+
+    function renderUsers(users) {
+        document.getElementById('userCount').textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
+        const tbody = document.getElementById('usersTable');
+        if (!users.length) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">No users found</td></tr>'; return; }
+        tbody.innerHTML = users.map(u => {
+            const joined = u.joined ? new Date(u.joined).toLocaleDateString('en-IN') : '---';
+            return `<tr>
+                <td class="fw-bold">${u.name}</td>
+                <td>${u.userId}</td>
+                <td>${u.email}</td>
+                <td>${u.phone || '---'}</td>
+                <td>${u.sponsor || '---'}</td>
+                <td class="text-success fw-bold">₹${u.wallet || 0}</td>
+                <td><span class="badge-${u.status}">${u.status || 'active'}</span></td>
+                <td>${joined}</td>
+                <td>
+                    <div class="d-flex gap-1 flex-wrap">
+                        ${u.status === 'active'
+                            ? `<button class="btn btn-sm btn-warning rounded-pill" onclick="toggleStatus('${u.id}', 'blocked')"><i class="fas fa-ban"></i></button>`
+                            : `<button class="btn btn-sm btn-success rounded-pill" onclick="toggleStatus('${u.id}', 'active')"><i class="fas fa-check"></i></button>`
+                        }
+                        <button class="btn btn-sm btn-info rounded-pill text-white" onclick="openWallet('${u.id}', '${u.name}')"><i class="fas fa-wallet"></i></button>
+                        <button class="btn btn-sm btn-danger rounded-pill" onclick="doDelete('${u.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    window.filterUsers = function() {
+        const q = document.getElementById('searchUsers').value.toLowerCase();
+        renderUsers(q ? allUsers.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || (u.userId || '').toLowerCase().includes(q)) : allUsers);
+    };
+
+    window.toggleStatus = async function(uid, status) {
+        await updateUserStatus(uid, status);
+        const user = allUsers.find(u => u.id === uid);
+        if (user) user.status = status;
+        renderUsers(allUsers);
+        showToast(`User ${status === 'active' ? 'activated' : 'blocked'}!`, 'success');
+    };
+
+    window.openWallet = function(uid, name) {
+        document.getElementById('walletUserId').value = uid;
+        document.getElementById('walletUserName').textContent = name;
+        document.getElementById('walletAmount').value = '';
+        new bootstrap.Modal(document.getElementById('walletModal')).show();
+    };
+
+    window.doWallet = async function() {
+        const uid = document.getElementById('walletUserId').value;
+        const amount = parseInt(document.getElementById('walletAmount').value);
+        if (!amount || isNaN(amount)) { alert('Enter a valid amount'); return; }
+        await addToUserWallet(uid, amount);
+        const user = allUsers.find(u => u.id === uid);
+        if (user) user.wallet = (user.wallet || 0) + amount;
+        bootstrap.Modal.getInstance(document.getElementById('walletModal')).hide();
+        renderUsers(allUsers);
+        showToast('Wallet updated!', 'success');
+    };
+
+    window.doDelete = async function(uid) {
+        if (!confirm('Delete this user permanently? This cannot be undone.')) return;
+        await deleteUser(uid);
+        allUsers = allUsers.filter(u => u.id !== uid);
+        renderUsers(allUsers);
+        showToast('User deleted!', 'success');
+    };
+
+    function showToast(msg, type) {
+        const t = document.createElement('div');
+        t.style.cssText = `position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:10px;z-index:9999;font-weight:600;color:white;background:${type==='success'?'#28a745':'#e74c3c'};`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    load();
+</script>
+</body>
+</html>

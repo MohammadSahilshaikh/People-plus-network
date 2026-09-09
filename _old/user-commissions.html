@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Commissions - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f9; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.8rem 0; }
+        .brand-text { font-weight: 800; color: white; font-size: 1.2rem; }
+        .nav-link { color: white !important; font-weight: 500; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
+        .sidebar { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); position: sticky; top: 80px; }
+        .sidebar-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #667eea; object-fit: cover; }
+        .sidebar .nav-link { color: #555 !important; padding: 11px 14px; border-radius: 10px; margin-bottom: 4px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; }
+        .sidebar .nav-link i { width: 18px; text-align: center; }
+        .card-box { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 20px; }
+        .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .sum-card { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 14px; padding: 18px; color: white; text-align: center; }
+        .sum-card.green { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .sum-card.orange { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .commission-row { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+        .commission-row:last-child { border-bottom: none; }
+        .c-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .joining-icon { background: #e8f5e9; color: #28a745; }
+        .purchase-icon { background: #e3f2fd; color: #1565c0; }
+        .l1-tag { background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; }
+        .l2-tag { background: #fff3e0; color: #e65100; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 15px; margin-top: 30px; }
+        @media (max-width: 768px) { .sidebar { position: relative; top: 0; margin-bottom: 20px; } .summary-cards { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height:40px;border-radius:6px;background:white;padding:2px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center gap-2">
+                <li class="nav-item"><button class="btn btn-outline-light btn-sm rounded-pill" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt me-1"></i>Logout</button></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="sidebar">
+                <div class="text-center mb-3">
+                    <img src="img/default-avatar.png" class="sidebar-avatar" id="sidebarImg">
+                    <h6 class="fw-bold mt-2 mb-0" id="sidebarName">Loading...</h6>
+                    <small class="text-muted" id="sidebarId">---</small>
+                </div>
+                <hr>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a class="nav-link" href="user-profile.html"><i class="fas fa-user-edit"></i> My Profile</a>
+                    <a class="nav-link" href="user-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a>
+                    <a class="nav-link" href="user-team.html"><i class="fas fa-users"></i> My Team</a>
+                    <a class="nav-link active" href="user-commissions.html"><i class="fas fa-coins"></i> Commissions</a>
+                    <a class="nav-link" href="user-withdrawal.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+                    <hr>
+                    <a class="nav-link text-danger" href="#" onclick="window._ppnLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="summary-cards" id="summaryCards">
+                <div class="sum-card"><div class="fs-2 fw-bold" id="totalEarned">₹0</div><div class="small">Total Earned</div></div>
+                <div class="sum-card green"><div class="fs-2 fw-bold" id="joiningEarned">₹0</div><div class="small">Joining Bonus</div></div>
+                <div class="sum-card orange"><div class="fs-2 fw-bold" id="purchaseEarned">₹0</div><div class="small">Purchase Commission</div></div>
+            </div>
+            <div class="card-box">
+                <h5 class="fw-bold mb-3"><i class="fas fa-coins me-2 text-warning"></i>Commission History</h5>
+                <div id="commissionsContainer">
+                    <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i><p class="mt-2 text-muted">Loading commissions...</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"><div class="container text-center"><p class="text-muted mb-0">&copy; 2024 People Plus Network. All rights reserved.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { getCurrentUserData, getMyCommissions } from './js/firebase-config.js';
+
+    async function load() {
+        const user = await getCurrentUserData();
+        if (!user) { window.location.href = 'register.html'; return; }
+        document.getElementById('sidebarName').textContent = user.name;
+        document.getElementById('sidebarId').textContent = 'ID: ' + user.userId;
+        if (user.profileImage && user.profileImage !== 'img/default-avatar.png') document.getElementById('sidebarImg').src = user.profileImage;
+
+        const commissions = await getMyCommissions(user.uid);
+        const total = commissions.reduce((s, c) => s + c.amount, 0);
+        const joining = commissions.filter(c => c.type === 'joining').reduce((s, c) => s + c.amount, 0);
+        const purchase = commissions.filter(c => c.type === 'purchase').reduce((s, c) => s + c.amount, 0);
+
+        document.getElementById('totalEarned').textContent = '₹' + total;
+        document.getElementById('joiningEarned').textContent = '₹' + joining;
+        document.getElementById('purchaseEarned').textContent = '₹' + purchase;
+
+        const container = document.getElementById('commissionsContainer');
+        if (!commissions.length) {
+            container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-coins fa-3x mb-3 d-block"></i>No commissions yet! Refer friends to start earning.</div>';
+            return;
+        }
+        container.innerHTML = commissions.map(c => {
+            const isJoining = c.type === 'joining';
+            const levelTag = c.level === 1 ? '<span class="l1-tag">Level 1</span>' : '<span class="l2-tag">Level 2</span>';
+            const date = c.date ? new Date(c.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '---';
+            return `<div class="commission-row">
+                <div class="c-icon ${isJoining ? 'joining-icon' : 'purchase-icon'}"><i class="fas ${isJoining ? 'fa-user-plus' : 'fa-shopping-cart'}"></i></div>
+                <div class="flex-grow-1">
+                    <div class="fw-600">${c.description}</div>
+                    <div class="text-muted small">From: ${c.fromUserName} &bull; ${date} ${levelTag}</div>
+                </div>
+                <div class="text-success fw-bold">+₹${c.amount}</div>
+            </div>`;
+        }).join('');
+    }
+
+    load();
+</script>
+</body>
+</html>

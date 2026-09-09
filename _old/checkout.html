@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - People Plus Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.8rem 0; }
+        .brand-text { font-weight: 800; color: white; font-size: 1.2rem; }
+        .nav-link { color: white !important; font-weight: 500; }
+        @media (max-width: 768px) { .brand-text { font-size: 0.85rem; } }
+        .section-card { background: white; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .section-card h5 { font-weight: 700; margin-bottom: 20px; color: #333; }
+        .form-control, .form-select { border-radius: 10px; border: 1.5px solid #e0e0e0; padding: 11px 14px; font-family: 'Poppins', sans-serif; }
+        .form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); outline: none; }
+        .payment-option { border: 2px solid #e0e0e0; border-radius: 12px; padding: 15px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
+        .payment-option:hover { border-color: #667eea; background: #f0f4ff; }
+        .payment-option input:checked + .payment-label { color: #667eea; }
+        .payment-option.selected { border-color: #667eea; background: #f0f4ff; }
+        .summary-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); position: sticky; top: 20px; }
+        .order-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 0.9rem; }
+        .order-item:last-child { border-bottom: none; }
+        .total-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.95rem; }
+        .btn-place-order { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 100%; padding: 14px; border-radius: 50px; font-weight: 700; font-size: 1rem; transition: all 0.3s; margin-top: 10px; }
+        .btn-place-order:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+        .btn-place-order:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        .footer { background: #1a1a2e; color: white; padding: 30px 0 20px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+            <img src="img/site-logo.jpg" alt="Logo" style="height:40px;border-radius:6px;background:white;padding:2px;">
+            <span class="brand-text">PEOPLE PLUS NETWORK</span>
+        </a>
+        <div class="ms-auto d-flex gap-3">
+            <a class="nav-link" href="cart.html"><i class="fas fa-arrow-left me-1"></i>Back to Cart</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h4 class="fw-bold mb-4"><i class="fas fa-credit-card me-2 text-primary"></i>Checkout</h4>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <!-- Delivery Address -->
+            <div class="section-card">
+                <h5><i class="fas fa-map-marker-alt me-2 text-danger"></i>Delivery Address</h5>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="fw-500 small mb-1">Full Name *</label><input type="text" class="form-control" id="fullName" placeholder="Enter full name" required></div>
+                    <div class="col-md-6"><label class="fw-500 small mb-1">Phone Number *</label><input type="tel" class="form-control" id="phone" placeholder="10-digit mobile" required></div>
+                    <div class="col-12"><label class="fw-500 small mb-1">Address (House/Flat, Street) *</label><input type="text" class="form-control" id="address" placeholder="Enter full address" required></div>
+                    <div class="col-md-4"><label class="fw-500 small mb-1">City *</label><input type="text" class="form-control" id="city" placeholder="City" required></div>
+                    <div class="col-md-4"><label class="fw-500 small mb-1">State *</label><input type="text" class="form-control" id="state" placeholder="State" required></div>
+                    <div class="col-md-4"><label class="fw-500 small mb-1">Pincode *</label><input type="text" class="form-control" id="pincode" placeholder="6-digit pincode" required maxlength="6"></div>
+                </div>
+            </div>
+            <!-- Payment Method -->
+            <div class="section-card">
+                <h5><i class="fas fa-wallet me-2 text-success"></i>Payment Method</h5>
+                <label class="payment-option d-flex align-items-center gap-3 selected" id="payOption1" onclick="selectPay(this)">
+                    <input type="radio" name="payment" value="cod" checked style="accent-color:#667eea;">
+                    <div><div class="fw-600"><i class="fas fa-truck me-2"></i>Cash on Delivery</div><div class="text-muted small">Pay when your order arrives</div></div>
+                </label>
+                <label class="payment-option d-flex align-items-center gap-3" id="payOption2" onclick="selectPay(this)">
+                    <input type="radio" name="payment" value="online" style="accent-color:#667eea;">
+                    <div><div class="fw-600"><i class="fas fa-credit-card me-2"></i>Online Payment</div><div class="text-muted small">UPI / Card / Net Banking (Coming Soon)</div></div>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="summary-card">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                <div id="orderItems"></div>
+                <hr>
+                <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+                <div class="total-row"><span>Delivery</span><span id="delivery">₹0</span></div>
+                <div class="total-row"><span>GST (5%)</span><span id="gst">₹0</span></div>
+                <hr>
+                <div class="total-row fw-bold fs-5"><span>Total</span><span style="color:#667eea;" id="total">₹0</span></div>
+                <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
+                    <i class="fas fa-lock me-2"></i>Place Order
+                </button>
+                <p class="text-center text-muted small mt-3"><i class="fas fa-shield-alt me-1 text-success"></i>Secure checkout</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"><div class="container text-center"><p>&copy; 2024 People Plus Network. All rights reserved.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { placeOrder as firebasePlaceOrder, getCurrentUserLocal, updateUserProfile } from './js/firebase-config.js';
+
+    const user = getCurrentUserLocal();
+    if (!user) { window.location.href = 'register.html'; }
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (!cart.length) { window.location.href = 'products.html'; }
+
+    // Pre-fill user data
+    if (user) {
+        document.getElementById('fullName').value = user.name || '';
+        document.getElementById('phone').value = user.phone || '';
+        if (user.address) {
+            document.getElementById('address').value = user.address.address || '';
+            document.getElementById('city').value = user.address.city || '';
+            document.getElementById('state').value = user.address.state || '';
+            document.getElementById('pincode').value = user.address.pincode || '';
+        }
+    }
+
+    // Render order items
+    function renderSummary() {
+        const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const delivery = subtotal > 500 ? 0 : 50;
+        const gst = Math.round(subtotal * 0.05);
+        const total = subtotal + delivery + gst;
+        document.getElementById('orderItems').innerHTML = cart.map(i =>
+            `<div class="order-item"><span>${i.name} × ${i.quantity}</span><span>₹${i.price * i.quantity}</span></div>`
+        ).join('');
+        document.getElementById('subtotal').textContent = '₹' + subtotal;
+        document.getElementById('delivery').textContent = delivery === 0 ? 'FREE' : '₹' + delivery;
+        document.getElementById('gst').textContent = '₹' + gst;
+        document.getElementById('total').textContent = '₹' + total;
+    }
+
+    window.selectPay = function(label) {
+        document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+        label.classList.add('selected');
+    };
+
+    window.placeOrder = async function() {
+        const address = {
+            fullName: document.getElementById('fullName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            state: document.getElementById('state').value.trim(),
+            pincode: document.getElementById('pincode').value.trim()
+        };
+        if (!address.fullName || !address.phone || !address.address || !address.city || !address.state || !address.pincode) {
+            alert('❌ Please fill all address fields.'); return;
+        }
+        if (!/^\d{10}$/.test(address.phone)) { alert('❌ Enter valid 10-digit phone number.'); return; }
+        if (!/^\d{6}$/.test(address.pincode)) { alert('❌ Enter valid 6-digit pincode.'); return; }
+
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        if (paymentMethod === 'online') { alert('Online payment coming soon! Please use Cash on Delivery.'); return; }
+
+        const btn = document.getElementById('placeOrderBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Placing Order...';
+
+        // Save address for future use
+        await updateUserProfile(user.uid, { address });
+
+        const result = await firebasePlaceOrder({ items: cart, address });
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-lock me-2"></i>Place Order';
+
+        if (result.success) {
+            localStorage.removeItem('cart');
+            alert(`✅ Order placed successfully!\nOrder ID: ${result.orderId}\n\nYour sponsor has earned a commission. Thank you!`);
+            window.location.href = 'user-orders.html';
+        } else {
+            alert('❌ Failed to place order: ' + result.error);
+        }
+    };
+
+    renderSummary();
+</script>
+</body>
+</html>
