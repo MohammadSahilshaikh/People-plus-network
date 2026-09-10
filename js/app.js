@@ -225,17 +225,26 @@ function renderAbout() {
     `;
 }
 
-// 2. Login
+// 2. Login / Register
 function renderLogin() {
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+    const ref = urlParams.get('ref') || '';
+    const initialTab = urlParams.get('tab') || (ref ? 'register' : 'login');
+    
     appDiv.innerHTML = `
         <div class="view-enter container py-4" style="max-width:500px;">
             <div class="card-box p-4">
                 <div class="text-center mb-4">
                     <img src="img/site-logo.jpg" style="height:60px;border-radius:10px;margin-bottom:10px;">
-                    <h4 class="fw-bold">Welcome Back</h4>
+                    <h4 class="fw-bold">Welcome</h4>
+                </div>
+                
+                <div class="d-flex gap-2 mb-4">
+                    <button class="btn flex-fill fw-bold ${initialTab==='login'?'btn-pp':'btn-light'}" id="tabLogin" onclick="switchTab('login')">Login</button>
+                    <button class="btn flex-fill fw-bold ${initialTab==='register'?'btn-pp':'btn-light'}" id="tabReg" onclick="switchTab('register')">Register</button>
                 </div>
 
-                <form id="formLogin" onsubmit="doAuth(event)">
+                <form id="formLogin" onsubmit="doAuth(event, 'login')" style="display:${initialTab==='login'?'block':'none'};">
                     <div class="fgroup">
                         <label class="flabel">Email</label>
                         <input type="email" class="form-f" id="lEmail" required>
@@ -247,27 +256,86 @@ function renderLogin() {
                     <button type="submit" class="btn-pp w100 mt-2" id="lBtn">Login</button>
                 </form>
 
-                <div class="text-center mt-4 pt-4 border-top">
-                    <p class="small text-muted mb-2">Want to join our network?</p>
-                    <button class="btn-outline-pp w100" onclick="navigate('/products')">Buy Product to Register</button>
-                </div>
+                <form id="formReg" onsubmit="doAuth(event, 'register')" style="display:${initialTab==='register'?'block':'none'};">
+                    <div class="row g-2 mb-3">
+                        <div class="col-12"><label class="flabel">Sponsor ID (Optional)</label><input type="text" class="form-f" id="rSponsor" value="${ref}" placeholder="e.g. PPN12345" oninput="this.value=this.value.toUpperCase()"></div>
+                        <div class="col-12"><label class="flabel">Full Name *</label><input type="text" class="form-f" id="rName" required></div>
+                        <div class="col-12"><label class="flabel">Email *</label><input type="email" class="form-f" id="rEmail" required></div>
+                        <div class="col-6"><label class="flabel">Phone *</label><input type="tel" class="form-f" id="rPhone" pattern="[0-9]{10}" placeholder="10 digits" required></div>
+                        <div class="col-6"><label class="flabel">Password *</label><input type="password" class="form-f" id="rPass" minlength="6" required></div>
+                    </div>
+                    
+                    <h6 class="mt-4 mb-2"><i class="fas fa-wallet text-success me-2"></i>Registration Payment (₹499)</h6>
+                    <div class="p-3 border rounded-3 mb-3 bg-light border-primary text-center">
+                        <p class="small text-muted mb-2">Scan QR to pay <strong>₹499</strong>. Enter UTR below to activate account.</p>
+                        <div class="bg-white p-2 d-inline-block rounded shadow-sm mb-2">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=admin@upi&pn=PeoplePlus&am=499" alt="UPI QR" style="width:130px;height:130px;">
+                        </div>
+                        <div class="fw-bold text-primary mb-2">UPI ID: admin@upi</div>
+                    </div>
+                    <div class="fgroup">
+                        <label class="flabel text-danger">Enter 12-Digit UTR *</label>
+                        <input type="text" class="form-f border-danger" id="rUtr" placeholder="e.g. 325412345678" required pattern="[a-zA-Z0-9]{8,15}">
+                    </div>
+                    
+                    <button type="submit" class="btn-pp w100 mt-2" id="rBtn">Register & Submit Payment</button>
+                </form>
             </div>
         </div>
     `;
 
-    window.doAuth = async (e) => {
+    window.switchTab = (tab) => {
+        const isLogin = tab === 'login';
+        document.getElementById('tabLogin').className = `btn flex-fill fw-bold ${isLogin?'btn-pp':'btn-light'}`;
+        document.getElementById('tabReg').className = `btn flex-fill fw-bold ${!isLogin?'btn-pp':'btn-light'}`;
+        document.getElementById('formLogin').style.display = isLogin ? 'block' : 'none';
+        document.getElementById('formReg').style.display = !isLogin ? 'block' : 'none';
+    };
+
+    window.doAuth = async (e, type) => {
         e.preventDefault();
-        const btn = document.getElementById('lBtn');
-        const origText = btn.innerText;
+        const btn = document.getElementById(type === 'login' ? 'lBtn' : 'rBtn');
+        const origText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         btn.disabled = true;
 
         try {
-            const res = await loginUser(document.getElementById('lEmail').value, document.getElementById('lPass').value);
-            if(res.success) {
-                showToast('Login successful!');
-                setTimeout(() => navigate(res.user.role === 'admin' ? '/admin' : (res.user.status === 'pending' ? '/pending' : '/dashboard')), 500);
-            } else throw new Error(res.error);
+            if (type === 'login') {
+                const res = await loginUser(document.getElementById('lEmail').value, document.getElementById('lPass').value);
+                if(res.success) {
+                    showToast('Login successful!');
+                    setTimeout(() => navigate(res.user.role === 'admin' ? '/admin' : (res.user.status === 'pending' ? '/pending' : '/dashboard')), 500);
+                } else throw new Error(res.error);
+            } else {
+                // Register logic
+                const regData = {
+                    name: document.getElementById('rName').value,
+                    email: document.getElementById('rEmail').value,
+                    phone: document.getElementById('rPhone').value,
+                    sponsor: document.getElementById('rSponsor').value,
+                    password: document.getElementById('rPass').value
+                };
+                const utrNumber = document.getElementById('rUtr').value;
+
+                const regRes = await registerUser(regData.email, regData.password, regData);
+                if (!regRes.success) throw new Error(regRes.error);
+                
+                // Registration successful, now place the 499 starter package order
+                const orderData = {
+                    items: [{ id: 'PKG499', name: 'Starter Package (Registration)', price: 499, quantity: 1, image: 'img/site-logo.jpg' }],
+                    address: {},
+                    utr: utrNumber
+                };
+                
+                const res = await placeOrder(orderData);
+                if (res.success) {
+                    showToast('Registration successful! Awaiting verification.');
+                    await syncUser();
+                    navigate('/pending');
+                } else {
+                    throw new Error("Registered successfully, but failed to record payment: " + res.error);
+                }
+            }
         } catch(err) {
             showToast(err.message, 'error');
             btn.innerHTML = origText;
@@ -283,7 +351,7 @@ async function renderProducts() {
     
     appDiv.innerHTML = `
         <div class="view-enter container py-4 pb-5">
-            <h4 class="fw-bold mb-4"><i class="fas fa-store text-primary me-2"></i>Our Packages</h4>
+            <h4 class="fw-bold mb-4"><i class="fas fa-store text-primary me-2"></i>Upgrade Packages</h4>
             <div class="row g-3">
                 ${products.length ? products.map(p => {
                     return `
@@ -301,12 +369,20 @@ async function renderProducts() {
                             </div>
                         </div>
                     </div>`;
-                }).join('') : '<div class="col-12 text-center py-5 text-muted">No products available.</div>'}
+                }).join('') : '<div class="col-12 text-center py-5 text-muted">No upgrade packages available.</div>'}
             </div>
         </div>
     `;
 
     window.buyNow = (id, name, price, image) => {
+        if(!currentUser) {
+            showToast('Please register first!', 'error');
+            return navigate('/login?tab=register');
+        }
+        if(currentUser.status === 'pending') {
+            showToast('Your account is currently pending verification.', 'error');
+            return navigate('/pending');
+        }
         const item = { id, name, price, image, quantity: 1 };
         sessionStorage.setItem('checkoutItem', JSON.stringify(item));
         currentCheckoutItem = item;
@@ -317,14 +393,11 @@ async function renderProducts() {
 // 4. Checkout
 function renderCheckout() {
     if(!currentCheckoutItem) return navigate('/products');
+    if(!currentUser) return navigate('/login');
     
     const item = currentCheckoutItem;
     const total = item.price * item.quantity;
-
-    const u = currentUser || {};
-    const isGuest = !currentUser;
-    const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
-    const ref = urlParams.get('ref') || '';
+    const u = currentUser;
 
     appDiv.innerHTML = `
         <div class="view-enter container py-4">
@@ -336,18 +409,6 @@ function renderCheckout() {
             <div class="row g-4">
                 <div class="col-lg-7">
                     <div class="card-box">
-                        ${isGuest ? `
-                        <div class="alert alert-info small" style="background:#e3f2fd;color:#0d47a1;padding:12px;border-radius:10px;margin-bottom:20px;">
-                            <i class="fas fa-info-circle me-1"></i> <strong>New User?</strong> Fill your details below to create your account and join the network.
-                        </div>
-                        <h6 class="mb-3"><i class="fas fa-user-plus text-primary me-2"></i>Account Details</h6>
-                        <div class="row g-3 mb-4 pb-4 border-bottom">
-                            <div class="col-md-6"><label class="flabel">Sponsor ID (Optional)</label><input type="text" class="form-f" id="rSponsor" value="${ref}" placeholder="e.g. PPN12345" oninput="this.value=this.value.toUpperCase()"></div>
-                            <div class="col-md-6"><label class="flabel">Create Password *</label><input type="password" class="form-f" id="rPass" minlength="6" placeholder="Min 6 characters" required></div>
-                            <div class="col-12"><label class="flabel">Email *</label><input type="email" class="form-f" id="rEmail" required></div>
-                        </div>
-                        ` : ''}
-
                         <h6 class="mb-3"><i class="fas fa-id-badge text-danger me-2"></i>Personal Details</h6>
                         <form id="checkoutForm" onsubmit="doPlaceOrder(event)">
                             <div class="row g-3">
@@ -359,7 +420,6 @@ function renderCheckout() {
                             <div class="p-3 border rounded-3 mb-3 bg-light border-primary text-center">
                                 <p class="small text-muted mb-2">Please scan the QR code or use the UPI ID to make the payment of <strong>₹${total}</strong>. After payment, enter your 12-digit UTR number below.</p>
                                 <div class="bg-white p-3 d-inline-block rounded shadow-sm mb-3">
-                                    <!-- Replace src with actual merchant QR -->
                                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=admin@upi&pn=PeoplePlus&am=${total}" alt="UPI QR" style="width:150px;height:150px;">
                                 </div>
                                 <div class="fw-bold text-primary mb-2">UPI ID: admin@upi</div>
@@ -399,39 +459,20 @@ function renderCheckout() {
         btn.disabled = true;
 
         try {
-            let uid = currentUser?.uid;
-
-            if (isGuest) {
-                // Register user first (will be set to status: "pending")
-                const regData = {
-                    name: document.getElementById('cName').value,
-                    email: document.getElementById('rEmail').value,
-                    phone: document.getElementById('cPhone').value,
-                    sponsor: document.getElementById('rSponsor').value,
-                    password: document.getElementById('rPass').value
-                };
-                
-                const regRes = await registerUser(regData.email, regData.password, regData);
-                if (!regRes.success) throw new Error(regRes.error);
-                
-                uid = regRes.user.uid;
-            }
-
-            // Just update basic profile info
-            await updateUserProfile(uid, {
+            await updateUserProfile(u.uid, {
                 name: document.getElementById('cName').value,
                 phone: document.getElementById('cPhone').value
             });
 
-            // Submit order with UTR
             const utrNumber = document.getElementById('cUtr').value;
             const res = await placeOrder({ items: [currentCheckoutItem], address: {}, utr: utrNumber });
+            
             if (res.success) {
                 currentCheckoutItem = null;
                 sessionStorage.removeItem('checkoutItem');
-                showToast(isGuest ? 'Registration successful! Awaiting verification.' : 'Purchase successful! Awaiting verification.');
+                showToast('Upgrade Purchase successful! Awaiting verification.');
                 await syncUser();
-                navigate('/pending');
+                navigate('/orders');
             } else {
                 throw new Error(res.error);
             }
